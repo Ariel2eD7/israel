@@ -1,0 +1,2244 @@
+# Blank WordPress Pot
+# Copyright 2014 ...
+# This file is distributed under the GNU General Public License v3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Blank WordPress Pot v1.0.0\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2025-07-30 16:28+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Your Team <translations@example.com>\n"
+"Language: he_IL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
+"2 : 3);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;esc_html_e;esc_html_x:1,2c;esc_html__;esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
+"X-Poedit-SearchPathExcluded-1: assets\n"
+"X-Poedit-SearchPathExcluded-2: *.js\n"
+"X-Poedit-SearchPathExcluded-3: .git\n"
+"X-Poedit-SearchPathExcluded-4: vendor\n"
+
+#: ezcache.php:219
+msgid "Every 10 Minutes"
+msgstr "כל 10 דקות"
+
+#: ezcache.php:225 includes/Admin.php:512
+msgid "Hourly"
+msgstr "פעם בשעה"
+
+#: ezcache.php:231
+msgid "Every 3 Hours"
+msgstr "כל 3 שעות"
+
+#: ezcache.php:237
+msgid "Every 6 Hours"
+msgstr "כל 6 שעות"
+
+#: ezcache.php:243
+msgid "Every 12 Hours"
+msgstr "כל 12 שעות"
+
+#: ezcache.php:249 includes/Admin.php:510
+msgid "Daily"
+msgstr "פעם ביום"
+
+#: ezcache.php:255
+msgid "Every 3 Days"
+msgstr "כל 3 ימים"
+
+#: ezcache.php:261
+msgid "Every 5 Days"
+msgstr "כל 5 ימים"
+
+#: ezcache.php:267
+msgid "Every 7 Days"
+msgstr "כל 7 ימים"
+
+#: includes/Admin.php:119
+msgid "Caching"
+msgstr "מטמון"
+
+#: includes/Admin.php:146
+msgid "Do not cache this page"
+msgstr "אל תשמור מטמון עבור עמוד זה"
+
+#: includes/Admin.php:146
+msgid "Do not cache this post"
+msgstr "אל תשמור מטמון עבור פוסט זה"
+
+#: includes/Admin.php:213 includes/Admin.php:241 includes/Admin.php:274
+#: includes/Admin.php:484
+msgid "Settings"
+msgstr "הגדרות"
+
+#: includes/Admin.php:234 includes/Admin.php:264 includes/Admin.php:265
+#: includes/Admin.php:470 includes/Admin.php:666
+msgid "ezCache"
+msgstr "ezCache"
+
+#: includes/Admin.php:248 includes/Admin.php:480
+msgid "Clear Cache"
+msgstr "נקה זיכרון מטמון"
+
+#: includes/Admin.php:273 includes/Admin.php:486
+msgid "Statistics"
+msgstr "סטטיסטיקות"
+
+#: includes/Admin.php:275 includes/Admin.php:485
+msgid "Advanced Settings"
+msgstr "הגדרות מתקדמות"
+
+#: includes/Admin.php:276 includes/Admin.php:487
+msgid "License"
+msgstr "רשיון"
+
+#: includes/Admin.php:393
+msgid "This application requires JavaScript to run"
+msgstr "יישום זה דורש JavaScript"
+
+#: includes/Admin.php:468
+msgid "Select All"
+msgstr "בחר הכל"
+
+#: includes/Admin.php:469
+msgid "Select None"
+msgstr "הסר הכל"
+
+#: includes/Admin.php:471
+msgid "Enabled"
+msgstr "מופעל"
+
+#: includes/Admin.php:472
+msgid "Disabled"
+msgstr "כבוי"
+
+#: includes/Admin.php:473
+msgid "Run a Speed Test"
+msgstr "הרץ בדיקת מהירות"
+
+#: includes/Admin.php:474
+msgid "Save Settings"
+msgstr "שמור שינויים"
+
+#: includes/Admin.php:475
+msgid "Reset"
+msgstr "איפוס"
+
+#: includes/Admin.php:476
+msgid "Reset Settings"
+msgstr "איפוס הגדרות"
+
+#: includes/Admin.php:477
+msgid "Are you sure you want to reset the settings to their default values?"
+msgstr "האם אתה בטוח שברצונך לאפס את ההגדרות לערכי ברירת המחדל שלהן?"
+
+#: includes/Admin.php:478
+msgid "Settings updated."
+msgstr "ההגדרות עודכנו."
+
+#: includes/Admin.php:479
+msgid "Could not save settings."
+msgstr "שגיאה בשמירת הגדרות."
+
+#: includes/Admin.php:481
+msgid "Cache has been cleared."
+msgstr "המטמון נוקה."
+
+#: includes/Admin.php:482
+msgid "Documentation"
+msgstr "תיעוד"
+
+#: includes/Admin.php:483
+msgid "Knowledgebase"
+msgstr "מאגר הידע"
+
+#: includes/Admin.php:488
+msgid "Recommended"
+msgstr "מומלץ"
+
+#: includes/Admin.php:489
+msgid "Basic Settings"
+msgstr "הגדרות בסיסיות"
+
+#: includes/Admin.php:490
+msgid "OK"
+msgstr "אישור"
+
+#: includes/Admin.php:491
+msgid "Cancel"
+msgstr "ביטול"
+
+#: includes/Admin.php:492
+msgid "Delete"
+msgstr "מחיקה"
+
+#: includes/Admin.php:494
+msgid "Don't cache pages for known users"
+msgstr "אל תשמור מטמון עבור משתמשים מוכרים"
+
+#: includes/Admin.php:495
+msgid "This disables cache for logged in users."
+msgstr "פעולה זו מבטלת את השימוש בזיכרון מטמון עבור משתמשים מחוברים."
+
+#: includes/Admin.php:496
+msgid ""
+"The admin bar will be hidden for all users to prevent it being saved into "
+"the cache."
+msgstr "סרגל המנהלים יוסתר עבור כל המשתמשים כדי למנוע את השמירה שלו במטמון."
+
+#: includes/Admin.php:497
+msgid "Don't cache pages for comment authors"
+msgstr "אל תשמור מטמון עבור משתמשים אשר השאירו תגובה"
+
+#: includes/Admin.php:498
+msgid ""
+"Do not save cache for users who saved their name and email for the next time "
+"they comment."
+msgstr ""
+"אל תשמור מטמון עבור משתמשים אשר השאירו תגובה ובחרו לשמור את הפרטים שלהם."
+
+#: includes/Admin.php:499
+msgid "Cache Expiry"
+msgstr "תוקף מטמון"
+
+#: includes/Admin.php:500
+msgid "Cache Timeout"
+msgstr "תוקף מטמון"
+
+#: includes/Admin.php:501
+msgid ""
+"How long to keep the cached data, the recommended and effective starting "
+"point is one day."
+msgstr ""
+"לכמה זמן לשמור את המטמון עבור כל עמוד, נקודת התחלה מומלצת ויעילה היא יום אחד."
+
+#: includes/Admin.php:502
+msgid "Check for stale cache every"
+msgstr "בדוק מטמון אשר פג תוקף כל"
+
+#: includes/Admin.php:503
+msgid ""
+"Automatically check for stale cache files and delete them at a set interval."
+msgstr "אוטומטית בודק תוקף קבצי מטמון ומוחק קבצים אשר פגו."
+
+#: includes/Admin.php:504 includes/Admin.php:508
+msgid "Interval"
+msgstr "מתוזמן"
+
+#: includes/Admin.php:505
+msgid "Every"
+msgstr "כל"
+
+#: includes/Admin.php:506
+msgid "Seconds"
+msgstr "שניות"
+
+#: includes/Admin.php:507
+msgid "At Time"
+msgstr "בשעה"
+
+#: includes/Admin.php:509
+msgid "Weekly"
+msgstr "פעם בשבוע"
+
+#: includes/Admin.php:511
+msgid "Twice Daily"
+msgstr "פעמיים ביום"
+
+#: includes/Admin.php:513
+msgid "At"
+msgstr "ב"
+
+#: includes/Admin.php:514
+msgid "Cache Bypass"
+msgstr "עקיפת מטמון"
+
+#: includes/Admin.php:515
+msgid "Don't cache pages where the URLs contain parameters in the query string"
+msgstr "אל תשמור מטמון עבור קישורים המכילים פרמטרים בכתובת (Query string)"
+
+#: includes/Admin.php:516
+msgid ""
+"Don't save cache when the URL contains query string parameters, such as ?"
+"page_id=15 at the end of the URL."
+msgstr ""
+"אל תשמור מטמון לעמוד אם הקישור מכיר פרמטרים, לדוגמה ?page_id=15 בסוף הקישור."
+
+#: includes/Admin.php:517
+msgid "Separate cache for mobile devices"
+msgstr "שמור מטמון נפרד למובייל"
+
+#: includes/Admin.php:518
+msgid ""
+"Save separate cache files for mobile browsers and a separate file for "
+"desktop browsers, you should only enable this option if your theme is not "
+"responsive and you use a theme or a plugin that produces a separate mobile "
+"version of the website."
+msgstr ""
+"שמור קבצי מטמון נפרדים בעבור דפדפנים ממכשירים ניידים וקובץ נפרד עבור דפדפנים "
+"במחשבים, מומלץ להפעיל אפשרות זו רק במידה והתבנית אינה רספונסיבית והינך משתמש "
+"בתבנית או תוסף המייצרים גירסה נפרדת למובייל."
+
+#: includes/Admin.php:519
+msgid "Clear cache when a post or page is published or updated"
+msgstr "נקה באופן אוטומטי את זכרון המטמון עבור פוסט או דף שעודכן"
+
+#: includes/Admin.php:520
+msgid ""
+"Keep your posts up to date even when they are updated by clearing their "
+"cache."
+msgstr "נקה באופן אוטומטי את זכרון המטמון עבור פוסט או דף שעודכן."
+
+#: includes/Admin.php:521
+msgid "Clear homepage cache when a post or page is published or updated"
+msgstr "נקה באופן אוטומטי את זכרון המטמון של דף הבית כאשר פוסט או דף מתעדכן"
+
+#: includes/Admin.php:522
+msgid ""
+"Make sure your visitors read the latest posts by clearing the cache when you "
+"update or publish a post."
+msgstr ""
+"ודא שהמבקרים שלך קוראים את ההודעות העדכניות ביותר על ידי ניקוי המטמון בעת "
+"עדכון או פרסום של פוסט, וכאשר גולשים משאירים תגובות על פוסט."
+
+#: includes/Admin.php:523
+msgid "Disable caching for the following pages"
+msgstr "בטל מטמון לסוגי העמודים הבאים"
+
+#: includes/Admin.php:524
+msgid "Single Posts"
+msgstr "עמוד פוסט"
+
+#: includes/Admin.php:525
+msgid "Pages"
+msgstr "עמודים"
+
+#: includes/Admin.php:526
+msgid "Front Page"
+msgstr "דף ראשי"
+
+#: includes/Admin.php:527
+msgid "Home"
+msgstr "דף הבית"
+
+#: includes/Admin.php:528
+msgid "Archives"
+msgstr "ארכיון"
+
+#: includes/Admin.php:529
+msgid "Tags"
+msgstr "תגיות"
+
+#: includes/Admin.php:530
+msgid "Categories"
+msgstr "קטגוריות"
+
+#: includes/Admin.php:531
+msgid "Feeds"
+msgstr "פידים"
+
+#: includes/Admin.php:532
+msgid "Search Results"
+msgstr "תוצאות חיפוש"
+
+#: includes/Admin.php:533
+msgid "Author Pages"
+msgstr "ארכיון מחבר"
+
+#: includes/Admin.php:534
+msgid "Links (URLs) which will never get cached"
+msgstr "קישורים (URLs) אשר לעולם לא יקבלו מטמון"
+
+#: includes/Admin.php:535
+msgid ""
+"Do not serve cached content if the URL matches any link in the following list"
+msgstr "אל תשמור מטמון אם הקישור של העמוד תואם לאחד מהקישורים הרשימה הבאה"
+
+#: includes/Admin.php:536
+msgid ""
+"The domain part of the URL will be stripped automatically. Use * wildcard "
+"character to match multiple characters at this position (eg. /product/*)."
+msgstr ""
+"הדומיין של האתר שלך יוסר באופן אוטומטי, יש להשתמש בתו * כדי להכיל מספר תווים "
+"במיקום זה (למשל: /product/*)."
+
+#: includes/Admin.php:537
+msgid "User Agents which will never receive cached data"
+msgstr "User Agents אשר לעולם לא יקבלו מטמון"
+
+#: includes/Admin.php:538
+msgid "Do not serve cached content to the following useragents"
+msgstr ""
+"אל תשמור מטמון אם ה- User Agent שניגש לעמוד תואם לאחד מהנתונים ברשימה הבאה"
+
+#: includes/Admin.php:539
+msgid "Cookies which will prevent pages from getting cached"
+msgstr "עוגיות אשר כאשר מוגדרות לא יקבלו מטמון"
+
+#: includes/Admin.php:540
+msgid ""
+"Specify the cookies that when set in the visitor's browser, should prevent a "
+"page from getting cached (one per line)"
+msgstr ""
+"ציין את העוגיות שכאשר הן מוגדרות בדפדפן הגולש, יש למנוע מהעמוד להיות מאוחסן "
+"במטמון (אחד בכל שורה)"
+
+#: includes/Admin.php:541
+msgctxt "rejected cookies example"
+msgid "wordpress_logged_in_"
+msgstr "wordpress_logged_in_"
+
+#: includes/Admin.php:542
+#, php-format
+msgid "%s Minutes"
+msgstr "%s דקות"
+
+#: includes/Admin.php:543
+#, php-format
+msgid "%s Hours"
+msgstr "%s שעות"
+
+#: includes/Admin.php:544
+#, php-format
+msgid "%s Days"
+msgstr "%s ימים"
+
+#: includes/Admin.php:545
+msgid "Never Expire"
+msgstr "לעולם לא יפוג"
+
+#: includes/Admin.php:546
+msgid "WP_CACHE is disabled in your wp-config.php, caching will not work."
+msgstr "WP_CACHE מבוטל בקובץ ההגדרות wp-config.php, המטמון לא יעבוד."
+
+#: includes/Admin.php:547
+msgid ""
+"advanced-cache.php is missing from your wp-content folder, caching will not "
+"work."
+msgstr ""
+"advanced-cache.php חסר בתקית ה wp-content של האתר שלך, המטמון לא יעבוד."
+
+#: includes/Admin.php:548
+msgid ""
+"Plugin is not installed properly, please reinstall, caching will not work."
+msgstr "התוסף לא מותקן כמו שצריך, אנא התקן אותו מחדש, המטמון לא יעבוד."
+
+#: includes/Admin.php:549
+msgctxt "statistics block title"
+msgid "Desktop"
+msgstr "מחשב שולחני"
+
+#: includes/Admin.php:550
+msgctxt "statistics block title"
+msgid "Mobile"
+msgstr "מובייל"
+
+#: includes/Admin.php:551
+msgctxt "statistics block title"
+msgid "Expire Cache"
+msgstr "מטמון פג תוקף"
+
+#: includes/Admin.php:552
+msgctxt "statistics block title"
+msgid "JavaScript Files"
+msgstr "קבצי JavaScript"
+
+#: includes/Admin.php:553
+msgctxt "statistics block title"
+msgid "CSS Files"
+msgstr "קבצי CSS"
+
+#: includes/Admin.php:554
+msgctxt "statistics block title"
+msgid "WebP Images"
+msgstr "תמונות WebP"
+
+#: includes/Admin.php:555
+msgid "ezCache Cache Usage"
+msgstr "נתוני שימוש מטמון ezCache"
+
+#: includes/Admin.php:556
+msgid "Images optimized with WebP."
+msgstr "תמונות אשר עברו מיטוב עם WebP."
+
+#: includes/Admin.php:557
+msgctxt "settings block title"
+msgid "Cache Bypass"
+msgstr "עקיפת מטמון"
+
+#: includes/Admin.php:558
+msgctxt "settings block title"
+msgid "Caching"
+msgstr "שמירת מטמון"
+
+#: includes/Admin.php:559
+msgctxt "settings block title"
+msgid "Performance"
+msgstr "ביצועים"
+
+#: includes/Admin.php:560
+msgctxt "settings block title"
+msgid "Cache Expiration"
+msgstr "תוקף מטמון"
+
+#: includes/Admin.php:561
+msgid "Optimize Google fonts"
+msgstr "מיטוב הגופנים של גוגל"
+
+#: includes/Admin.php:562
+msgid "Combine multiple Google Fonts declerations into one."
+msgstr "שילוב של מספר בקשות עבור גופני גוגל לתוך בקשה אחת."
+
+#: includes/Admin.php:563
+msgid "Minify HTML"
+msgstr "הפעל מזעור HTML"
+
+#: includes/Admin.php:564
+msgid "Minify the cached HTML to make cached files smaller."
+msgstr "צמצם את ה- HTML בכדי להקטין את משקל הקובץ השמור."
+
+#: includes/Admin.php:565
+msgid "Minify Inline JavaScript"
+msgstr "מזער JavaScript מוטמע"
+
+#: includes/Admin.php:566
+msgid "Include JavaScript embedded in the HTML in the minification process."
+msgstr "כלול JavaScript מוטמע ב- HTML בתהליך המזעור."
+
+#: includes/Admin.php:567
+msgid "Minify Inline CSS"
+msgstr "מזער CSS מוטמע"
+
+#: includes/Admin.php:568
+msgid "Include CSS embedded in the HTML in the minification process."
+msgstr "כלול CSS מוטמע ב- HTML בתהליך המזעור."
+
+#: includes/Admin.php:569
+msgid "Minify JavaScript"
+msgstr "הפעל מזעור JavaScript"
+
+#: includes/Admin.php:570
+msgid "Minify JavaScript files to reduce their size."
+msgstr "מזער קבצי JavaScript על מנת לצמצם את משקלם."
+
+#: includes/Admin.php:571
+msgid "Remove HTML comments"
+msgstr "הסר הערות HTML"
+
+#: includes/Admin.php:572
+msgid "Remove embeded comments from minified HTML."
+msgstr "הסר הערות בקוד HTML ממוזער."
+
+#: includes/Admin.php:573
+msgid "Combine JavaScript in Head"
+msgstr "איחוד JavaScript בראש העמוד"
+
+#: includes/Admin.php:574
+msgid ""
+"Combine multiple JavaScript files found in the head section of the HTML into "
+"one file."
+msgstr ""
+"איחוד קבצי JavaScript מרובים הנמצאים בראש העמוד לקובץ אחד על מנת לצמצם בקשות "
+"HTTP."
+
+#: includes/Admin.php:575
+msgid "Combine JavaScript in Body"
+msgstr "איחוד JavaScript בגוף העמוד"
+
+#: includes/Admin.php:576
+msgid ""
+"Combine multiple JavaScript files found in the body section of the HTML into "
+"one file."
+msgstr ""
+"איחוד קבצי JavaScript מרובים הנמצאים בגוף העמוד לקובץ אחד על מנת לצמצם בקשות "
+"HTTP."
+
+#: includes/Admin.php:577
+msgid "Combine Inline JavaScript in Head"
+msgstr "איחוד JavaScript מוטמע בראש העמוד"
+
+#: includes/Admin.php:578
+msgid ""
+"Combine JavaScript scripts found in the head section of the HTML into the "
+"combined JS file."
+msgstr "איחוד קבצי JavaScript מוטמעים הנמצאים בראש העמוד לקובץ המאוחד."
+
+#: includes/Admin.php:579
+msgid "Combine Inline JavaScript in Body"
+msgstr "איחוד JavaScript מוטמע בגוף העמוד"
+
+#: includes/Admin.php:580
+msgid ""
+"Combine JavaScript scripts found in the body section of the HTML into the "
+"combined JS file."
+msgstr "איחוד קבצי JavaScript מוטמעים הנמצאים בגוף העמוד לקובץ המאוחד."
+
+#: includes/Admin.php:581
+msgid ""
+"Elementor generates a unique JS file for each post/page which can cause the "
+"cache to use large amounts of disk space, to fix this make sure to exclude "
+"Elementor JS files (`elementor/js/post-*`) from optimizations."
+msgstr ""
+"אלמנטור יוצר קובץ JS ייחודי לכל פוסט/עמוד - דבר אשר עלול לגרום לקאש לגדול "
+"לכמויות גדולות של נפח דיסק, על מנת לטפל בבעיה יש להחריג את קבצי ה- JS של "
+"אלמנטור (`elementor/js/post-*`) ממזעור/איחוד."
+
+#: includes/Admin.php:582
+msgid "Minify CSS"
+msgstr "הפעל מזעור CSS"
+
+#: includes/Admin.php:583
+msgid "Minify CSS files to reduce their size."
+msgstr "מזער קבצי CSS על מנת להקטין את משקלם."
+
+#: includes/Admin.php:584
+msgid "Combine CSS"
+msgstr "איחוד CSS"
+
+#: includes/Admin.php:585
+msgid "Combine multiple CSS files into one to reduce HTTP requests."
+msgstr "איחוד קבצי CSS מרובים לקובץ אחד על מנת לצמצם בקשות HTTP."
+
+#: includes/Admin.php:586
+msgid ""
+"Elementor generates a unique CSS file for each post/page which can cause the "
+"cache to use large amounts of disk space, to fix this make sure to exclude "
+"Elementor CSS files (`elementor/css/post-*`) from optimizations."
+msgstr ""
+"אלמנטור יוצר קובץ CSS ייחודי לכל פוסט/עמוד - דבר אשר עלול לגרום לקאש לגדול "
+"לכמויות גדולות של נפח דיסק, על מנת לטפל בבעיה יש להחריג את קבצי ה- CSS של "
+"אלמנטור (`elementor/css/post-*`) ממזעור/איחוד."
+
+#: includes/Admin.php:587
+msgid "Disable WordPress Emoji"
+msgstr "בטל Emojis"
+
+#: includes/Admin.php:588
+msgid ""
+"Remove extra code related to Emoji from WordPress which was added recently "
+"to support Emoji in an older browsers."
+msgstr ""
+"הסר קוד הקשור ל- Emoji אשר נוספה לאחרונה לוורדפרס בכדי לתמוך ב- Emoji "
+"בדפדפנים ישנים."
+
+#: includes/Admin.php:589
+msgid ""
+"Your server supports HTTP/2 which benefits from having this option kept "
+"disabled"
+msgstr "השרת שברשותך תומך ב- HTTP/2 אשר מפיק יותר תועלת כאשר אפשרות זו מכובה"
+
+#: includes/Admin.php:590
+msgid "Optimize Images With WebP"
+msgstr "מיטוב תמונות עם WebP"
+
+#: includes/Admin.php:592
+#, no-php-format
+msgid ""
+"WebP is a modern image format that provides superior lossless and lossy "
+"compression for images on the web. WebP lossless images are 26% smaller in "
+"size compared to PNGs, and 25-34% smaller than comparable JPEG images."
+msgstr ""
+"WebP הוא פורמט תמונה מודרני המספק דחיסה מעולה עבור תמונות באינטרנט. תמונות "
+"WebP קטנות ב- 26% לעומת תמונות PNG, וקטנות ב- 25-34% לעומת תמונות JPEG "
+"תואמות."
+
+#: includes/Admin.php:593
+msgid "Requires a premium license"
+msgstr "דורש מפתח רשיון"
+
+#: includes/Admin.php:594
+msgctxt "user agent example"
+msgid "Googlebot"
+msgstr "Googlebot"
+
+#: includes/Admin.php:595
+msgctxt "rejected uri example"
+msgid "/products/*"
+msgstr "/products/*"
+
+#: includes/Admin.php:596
+msgid "Optimized and cached CSS files."
+msgstr "קבצי CSS אשר עברו אופטימיזציה ונשמרו בזיכרון המטמון."
+
+#: includes/Admin.php:597
+msgid "Optimized and cached JavaScript files."
+msgstr "קבצי JavaScript אשר עברו אופטימיזציה ונשמרו בזיכרון המטמון."
+
+#: includes/Admin.php:598
+msgid "Cache data that has expired and waiting to be cleaned up."
+msgstr "זיכרון מטמון אשר אינו בשימוש משום שפג תוקפו וממתין לניקוי."
+
+#: includes/Admin.php:599
+msgid "Cache data for pages viewed from mobile devices."
+msgstr "שימוש ביזכרון מטמון הנעשה על ידי דפדפנים במכשירים ניידים."
+
+#: includes/Admin.php:600
+msgid "Cache data for pages viewed from desktop computers."
+msgstr "שימוש ביזכרון מטמון הנעשה על ידי דפדפנים במחשבים שולחניים."
+
+#: includes/Admin.php:601
+msgid "General"
+msgstr "כללי"
+
+#: includes/Admin.php:603
+msgid "Move combined CSS to footer"
+msgstr "העבר קובץ CSS מאוחד לתחתית העמוד"
+
+#: includes/Admin.php:604
+msgid ""
+"Eliminate render blocking CSS by moving the combined CSS file to the footer "
+"section."
+msgstr ""
+"מנע עיכוב טעינה של העמוד עקב טעינת קוד CSS על ידי העברת טעינת קובץ ה- CSS "
+"המאוחד לתחתית העמוד."
+
+#: includes/Admin.php:605
+msgid "Critical CSS"
+msgstr "CSS קריטי"
+
+#: includes/Admin.php:606
+msgid ""
+"Critical CSS is the minimum set of blocking CSS required to render the first "
+"screen's worth of content to the user in order to render content to the user "
+"as fast as possible.\n"
+"The Critical CSS can (and should) be manually created to fit the website "
+"perfectly, however there are tools that can automatically generate the "
+"Critical CSS for you."
+msgstr ""
+"CSS קריטי הוא קטע קוד CSS הנדרש אך ורק בכדי להציג למשתמש את התוכן של המסך "
+"הראשון על מנת להציג את התוכן למשתמש בהקדם האפשרי.\n"
+"CSS קריטי ניתן (ואף מומלץ) לייצר בצורה ידנית בהתאם לתוכן האתר ותוכנו, אך "
+"ישנם כלים אשר יכולים לייצר CSS קריטי בצורה אוטומטית."
+
+#: includes/Admin.php:607
+msgid "More information about Critical CSS"
+msgstr "למידע נוסף על CSS קריטי"
+
+#: includes/Admin.php:608
+msgid "Online Critical CSS Generator"
+msgstr "כלי יצירת CSS קריטי"
+
+#: includes/Admin.php:609
+msgid "Moving combined CSS to footer requires the Combine CSS option enabled."
+msgstr "העברת קובץ CSS מאוחד דורשת שאופצית איחוד CSS תהיה פעילה."
+
+#: includes/Admin.php:610
+msgid "Exclude JS/CSS files from optimization"
+msgstr "קבצי CSS/JS אשר לא יעברו אופטימיזציה"
+
+#: includes/Admin.php:611
+msgid ""
+"List filenames or paths to files which should be excluded from minification "
+"or combining."
+msgstr "רשימת שמות קבצים או נתיבים לקבצים אשר לא יעברו איחוד או מזעור."
+
+#: includes/Admin.php:612
+msgid ""
+"jquery.js\n"
+"recaptcha/api.js\n"
+"googleadservices.com"
+msgstr ""
+"jquery.js\n"
+"recaptcha/api.js\n"
+"googleadservices.com"
+
+#: includes/Admin.php:614
+msgid "Advanced Tools"
+msgstr "כלים מתקדמים"
+
+#: includes/Admin.php:615
+msgid "Clear WebP Images Cache"
+msgstr "נקה את מטמון תמונות WebP"
+
+#: includes/Admin.php:616
+msgid ""
+"Are you sure that you want to delete all of the cached WebP images?\n"
+"Theses images will have to be converted again which may take some time."
+msgstr ""
+"האם אתה בטוח שברצונך למחוק את כל תמונות ה-WebP שמאוחסנות במטמון? תמונות אלה "
+"יצטרכו לעבור המרה מחדש, מה שעלול לקחת זמן מה."
+
+#: includes/Admin.php:617
+msgid "Error clearing WebP image cache"
+msgstr "שגיאה בניקוי תמונות WebP"
+
+#: includes/Admin.php:618
+msgid "Scheduled task queued"
+msgstr "משימה מתוזמנת נשלחה לתור"
+
+#: includes/Admin.php:619
+msgid "Error scheduling WebP process"
+msgstr "שגיאה בתזמון תהליך WebP"
+
+#: includes/Admin.php:620
+msgid "Re-Schedule WebP Process Scheduled Task"
+msgstr "תזמון מחדש של משימת המרת תמונות WebP"
+
+#: includes/Admin.php:622
+msgid "License Key"
+msgstr "מפתח רשיון"
+
+#: includes/Admin.php:623
+msgid ""
+"ezCache pro license will allow you to use the WebP image optimization "
+"without limits."
+msgstr "רישיון ezCache Pro יאפשר לך לבצע אופטימיזצית WebP לתמונות ללא מגבלות."
+
+#: includes/Admin.php:624
+msgid "Deactivate License"
+msgstr "בטל רשיון"
+
+#: includes/Admin.php:625
+msgid "Activate License"
+msgstr "הפעל רשיון"
+
+#: includes/Admin.php:626
+msgid "License is valid"
+msgstr "רשיון תקין"
+
+#: includes/Admin.php:627
+msgid "License is invalid"
+msgstr "הרשיון אינו תקין"
+
+#: includes/Admin.php:628
+#, php-format
+msgid "License expires at %s"
+msgstr "הרשיון יפוג ב %s"
+
+#: includes/Admin.php:629
+msgid "Unknown"
+msgstr "לא ידוע"
+
+#: includes/Admin.php:630
+msgid "Status"
+msgstr "סטטוס"
+
+#: includes/Admin.php:631
+msgid "License Details"
+msgstr "פרטי רשיון"
+
+#: includes/Admin.php:632
+msgid "License Type"
+msgstr "סוג רשיון"
+
+#: includes/Admin.php:633
+msgctxt "license type"
+msgid "Trial"
+msgstr "נסיון"
+
+#: includes/Admin.php:634
+msgctxt "license type"
+msgid "Pro"
+msgstr "Pro"
+
+#: includes/Admin.php:635
+msgid "Expires In"
+msgstr "יפוג בעוד"
+
+#: includes/Admin.php:636
+msgid "Expires At"
+msgstr "יפוג בתאריך"
+
+#: includes/Admin.php:637
+msgid "Convertions Left"
+msgstr "המרות נותרות"
+
+#: includes/Admin.php:638
+#, php-format
+msgid "%s days after first usage"
+msgstr "%s לאחר השימוש הראשון"
+
+#: includes/Admin.php:639
+msgid "Get a Pro License"
+msgstr "קבל רשיון Pro"
+
+#: includes/Admin.php:640
+msgid "Expired"
+msgstr "פג תוקף"
+
+#: includes/Admin.php:641
+msgid "Will not expire while hosted on uPress"
+msgstr "לא יפוג כאשר מאוחסן ב uPress"
+
+#: includes/Admin.php:643
+msgid "uPress Premium WordPress Hosting"
+msgstr "uPress אחסון וורדפרס מנוהל"
+
+#: includes/Admin.php:644
+msgid "www.upress.io"
+msgstr "www.upress.co.il"
+
+#: includes/Admin.php:645
+msgid ""
+"https://www.upress.io/?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+"https://www.upress.co.il/?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+
+#: includes/Admin.php:646
+#, php-format
+msgid ""
+"https://speedom.net/?url=%s&location=US-"
+"NY&utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+"https://speedom.co.il/?"
+"url=%s&location=IL&utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+
+#: includes/Admin.php:647
+msgid ""
+"https://ezcache.app/documentation?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+"https://ezcache.app/documentation?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+
+#: includes/Admin.php:648
+msgid ""
+"https://ezcache.app/knowledgebase?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+"https://ezcache.app/knowledgebase?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+
+#: includes/Admin.php:649
+msgid ""
+"https://ezcache.app/pricing?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+"https://ezcache.app/pricing?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+
+#: includes/Admin.php:666
+#, php-format
+msgid "WebP Processing is currently running, %d images remaining."
+msgstr "עיבוד WebP פועל כעת, %d תמונות נותרות."
+
+#: includes/LicenseApi.php:76
+msgid "Can't set empty license key"
+msgstr "לא ניתן להגדיר מספר רשיון ריק"
+
+#: includes/LicenseApi.php:202 includes/LicenseApi.php:203
+msgctxt "license API response message"
+msgid "Licence key successfully activated for the current domain"
+msgstr "האתר אושר לשימוש ברשיון זה"
+
+#: includes/LicenseApi.php:204
+msgctxt "license API response message"
+msgid "Licence key successfully unassigned"
+msgstr "האתר הוסר מהרשיון"
+
+#: includes/LicenseApi.php:205
+msgctxt "license API response message"
+msgid "Licence key is not valid for this website"
+msgstr "הרשיון אינו תקף עבור אתר זה"
+
+#: includes/LicenseApi.php:206
+msgctxt "license API response message"
+msgid "Licence key is active and valid for this website"
+msgstr "הרשיון פעיל ותקף בעבור אתר זה"
+
+#: includes/LicenseApi.php:210
+msgctxt "license API response message"
+msgid "Licence key successfully deleted"
+msgstr "מפתח הרשיון נמחק בהצלחה"
+
+#: includes/LicenseApi.php:213
+msgctxt "license API response message"
+msgid "Invalid provided data"
+msgstr "הוזנו נתונים לא תקינים"
+
+#: includes/LicenseApi.php:214
+msgctxt "license API response message"
+msgid "Invalid licence key"
+msgstr "מפתח רשיון לא תקין"
+
+#: includes/LicenseApi.php:215
+msgctxt "license API response message"
+msgid "Order does not exists anymore"
+msgstr "ההזמנה אינה קיימת יותר"
+
+#: includes/LicenseApi.php:216
+msgctxt "license API response message"
+msgid "Order status not allowed"
+msgstr "סטטוס הזמנה לא מאופשר"
+
+#: includes/LicenseApi.php:217
+msgctxt "license API response message"
+msgid "Invalid licence key or licence not active for domain"
+msgstr "מפתח רשיון לא תקין או לא תקף עבור דומיין זה"
+
+#: includes/LicenseApi.php:218
+msgctxt "license API response message"
+msgid "Invalid data"
+msgstr "מידע לא תקין"
+
+#: includes/LicenseApi.php:219
+msgctxt "license API response message"
+msgid "You had reached the maximum number of domains for this key"
+msgstr "הגעת למכסת האתרים שניתן להפעיל על מפתח רשיון זה"
+
+#: includes/LicenseApi.php:220
+msgctxt "license API response message"
+msgid "Licence key not active for current domain"
+msgstr "מפתח רשיון אינו תקף על דומיין זה"
+
+#: includes/LicenseApi.php:221
+msgctxt "license API response message"
+msgid "Licence key does not match this product"
+msgstr "מפתח הרשיון אינו תואם למוצר זה"
+
+#: includes/LicenseApi.php:222
+msgctxt "license API response message"
+msgid "Licence is not active"
+msgstr "הרשיון אינו פעיל"
+
+#: includes/LicenseApi.php:223
+msgctxt "license API response message"
+msgid "Invalid product unique ID"
+msgstr "מזהה מוצר לא תקין"
+
+#: includes/LicenseApi.php:226
+msgid "Unknown error"
+msgstr "שגיאה לא ידועה"
+
+#~ msgid ""
+#~ "Critical CSS is the minimum set of blocking CSS required to render the "
+#~ "first screen's worth of content to the user."
+#~ msgstr ""
+#~ "CSS קריטי הוא קטע קוד CSS הנדרש אך ורק בכדי להציג למשתמש את התוכן של המסך "
+#~ "הראשון."
+
+#~ msgid "ezCache detected and repaired installation problems."
+#~ msgstr "ezCache מצא בעיות הגדרה ותיקן אותן."
+
+#, php-format
+#~ msgid "Every %d Minutes"
+#~ msgstr "כל %d דקות"
+
+#~ msgid "ezCache installation repaired."
+#~ msgstr "התקנת ezCache תוקנה בהצלחה."
+
+#~ msgid "WP_CACHE is disabled in your wp-config.php"
+#~ msgstr "WP_CACHE מבוטל בקובץ ההגדרות של וורדפרס"
+
+#~ msgid "advanced-cache.php is missing from your wp-content folder"
+#~ msgstr "advanced-cache.php חסר בתקית ה wp-content של האתר"
+
+#~ msgid "Invalid advanced-cache.php file detected"
+#~ msgstr "זוהה קובץ advanced-cache.php לא תקין"
+
+#~ msgid "Repair ezCache Installation"
+#~ msgstr "תיקון התקנת ezCache"
+
+#~ msgctxt "settings block title"
+#~ msgid "File Optimizations"
+#~ msgstr "מיטוב קבצים"
+
+#~ msgid "Bandwidth saved by using WebP images replacement."
+#~ msgstr "תעבורה שנחסכה על ידי שימוש בהמרת התמונות ל- WebP."
+
+#~ msgctxt "license API response message"
+#~ msgid "Licence key is unassigned"
+#~ msgstr "האתר הוסר מהרשיון"
+
+#~ msgid "WP Boost"
+#~ msgstr "WP Boost"
+
+#~ msgid "Don’t cache pages with GET parameters (?x=y at the end of a url)"
+#~ msgstr "אל תשמור מטמון עבור קישורים המכילים פרמטרים בכתובת (Query String)"
+
+#~ msgid "Don't cache pages that may be different for each user."
+#~ msgstr ""
+#~ "פעולה זו תבטל את זיכרון המטמון כאשר הקישור מכיל פרמטרים, למשל ?page_id=15 "
+#~ "בסוף הקישור."
+
+#~ msgid "Never Cache URL(s)"
+#~ msgstr "קישורים (URLs) אשר לעולם לא יקבלו מטמון"
+
+#~ msgid ""
+#~ "Do not serve cached content if any of the following strings appears in "
+#~ "the URL"
+#~ msgstr "אל תשמור מטמון אם הקישור של העמוד תואם לאחד מהקישורים הרשימה הבאה"
+
+#~ msgid "Never Cache User Agent(s)"
+#~ msgstr "User Agents אשר לעולם לא יקבלו מטמון"
+
+#~ msgid "not recommended when HTTPS/2 is enabled on the server"
+#~ msgstr "לא מומלץ כאשר HTTPS/2 מופעל על השרת"
+
+#~ msgid "Process Completed"
+#~ msgstr "הפעולה בוצעה"
+
+#~ msgid "GZIP Compression"
+#~ msgstr "כיווץ GZIP"
+
+#~ msgid "Compress pages so they're served more quickly to visitors."
+#~ msgstr "דחוס דפים כך שיוצגו במהירות רבה יותר לאורחים."
+
+#~ msgid "Cache rebuild"
+#~ msgstr "בנית מטמון"
+
+#~ msgid ""
+#~ "Shows the cached page if a new file is in the process of being generated."
+#~ msgstr "מציג את הדף השמור אם קובץ חדש נמצא בתהליך של יצירה."
+
+#~ msgid "Repair"
+#~ msgstr "תיקון"
+
+#~ msgid "Enable Preload"
+#~ msgstr "הפעל טעינה מראש"
+
+#~ msgid ""
+#~ "Preload will crawl your website every day and save a cached version of "
+#~ "each page visited."
+#~ msgstr ""
+#~ "טעינה מראש תסרוק את האתר מדי יום ותשמור מטמון עבור כל עמוד ופוסט באתר."
+
+#~ msgid "Preload is not available when cache timeout is less than a day."
+#~ msgstr "טעינה מראש אינה זמינה כאשר הזמן הקצוב למטמון הוא פחות מיום."
+
+#~ msgid "Cache timeout is limited to 1 or more days when preload is active."
+#~ msgstr "זמן הקצוב למטמון מוגבל ל -1 ימים או יותר כאשר טעינה מראש פעילה."
+
+#~ msgid "Start Preload"
+#~ msgstr "התחל טעינה מראש"
+
+#~ msgid "Clear cache when commenting on a post"
+#~ msgstr "נקה מטמון כשמשאירים תגובה על פוסט"
+
+#~ msgid ""
+#~ "When someone leaves a comment on a post this option will clear the cache "
+#~ "for that post."
+#~ msgstr "אפשרות זו תנקה את המטמון בעבור פוסט ספציפי כאשר מישהו מגיב עליו."
+
+#~ msgid ""
+#~ "Doesn’t cache pages that are different for each user (unique sales pages "
+#~ "if you run Facebook/Google ads, membership profiles, conditional logic on "
+#~ "contact forms). GET Params is a great plugin for this."
+#~ msgstr ""
+#~ "אל תשמור במטמון עמודים אשר ייחודיים לכל משתמש (עמודי מכירה מקושרים "
+#~ "מפרסומות Google/Facebook, פרופיל משתמש, לוגיקה מותאמת בעמודי צור קשר "
+#~ "וכו')."
+
+#~ msgid "Mobile device support (External plugin or theme required)"
+#~ msgstr "תמיכה בתבנית מובייל"
+
+#~ msgid ""
+#~ "If using mobile plugin like WPtouch, or a mobile theme, this caches "
+#~ "mobile pages."
+#~ msgstr ""
+#~ "אם אתה משתמש בתוסף מובייל כמו WPtouch, או תבנית נפרדת למובייל, אפשרות זו "
+#~ "תפעיל מטמון נפרד לתבניות אלו."
+
+#~ msgid ""
+#~ "If you publish a post, and you also have a blogroll (eg. on your "
+#~ "homepage) and want to make sure it's updated with the newest post, this "
+#~ "will clear the cache and make sure the new content is being shown."
+#~ msgstr ""
+#~ "אם אתה מפרסם פוסט, ויש לך גם blogroll (למשל בדף הבית שלך) ואתה רוצה לוודא "
+#~ "שזה מעודכן עם ההודעה החדשה ביותר, זה יהיה לנקות את המטמון ולוודא את התוכן "
+#~ "החדש מוצג."
+
+#~ msgid "Only refresh current page when comments made"
+#~ msgstr "רענן את הדף הנוכחי רק כאשר מפורסמות תגובות"
+
+#~ msgid ""
+#~ "Enable this if you have lots of comments, as readers want to see the "
+#~ "latest content (you don’t want to refresh all the cache to do this)."
+#~ msgstr ""
+#~ "הפעל זאת אם יש לך הערות רבות, שכן הקוראים רוצים לראות את התוכן העדכני "
+#~ "ביותר (אינך רוצה לרענן את כל המטמון כדי לעשות זאת)."
+
+#~ msgid ""
+#~ "Enabling this doesn’t show cached pages for people who have been on your "
+#~ "website before. This is good because regular visitors want to see new "
+#~ "content (eg. in your blogroll) that otherwise wouldn’t show up if you "
+#~ "disable this."
+#~ msgstr ""
+#~ "הפעלת אפשרות זו אינה מציגה דפים בקובץ שמור עבור אנשים שנמצאים באתר שלך "
+#~ "בעבר. זה טוב כי מבקרים קבועים רוצים לראות תוכן חדש (למשל בבלוג שלך) כי "
+#~ "אחרת לא יופיע אם להשבית את זה."
+
+#~ msgid ""
+#~ "This is the \"Gzip Compression\" item in GTmetrix/Pingdom. After enable "
+#~ "this, view your homepage and look for noticeable formatting errors. If "
+#~ "there are any, disable it. Otherwise, definitely enable this."
+#~ msgstr ""
+#~ "זהו \"דחיסת Gzip\" פריט ב GTmetrix / Pingdom. לאחר שתפעיל זאת, הצג את דף "
+#~ "הבית שלך וחפש שגיאות עיצוב בולטות. אם יש, לבטל את זה. אחרת, בהחלט לאפשר "
+#~ "את זה."
+
+#~ msgid ""
+#~ "Cache rebuild. Serve a supercache file to anonymous users while a new "
+#~ "file is being generated."
+#~ msgstr ""
+#~ "מטמון לבנות מחדש. הגש קובץ מטמון סופר למשתמשים אנונימיים בעת יצירת קובץ "
+#~ "חדש."
+
+#~ msgid ""
+#~ "304 Not Modified browser caching. Indicate when a page has not been "
+#~ "modified since it was last requested."
+#~ msgstr ""
+#~ "304 לא השתנה במטמון הדפדפן. ציין מתי דף לא השתנה מאז שהתבקש לאחרונה."
+
+#~ msgid "Prevents updating the cache on ‘tag’ pages."
+#~ msgstr "מונע עדכון המטמון בדפי 'תג'."
+
+#~ msgid "On"
+#~ msgstr "מופעל"
+
+#~ msgid "Off"
+#~ msgstr "כבוי"
+
+#~ msgid "Debug"
+#~ msgstr "ניפוי תקלות"
+
+#~ msgid "Sorry, you are not allowed to access this page."
+#~ msgstr "מצטערים, אינך מורשה לגשת לדף זה."
+
+#~ msgctxt "404 log report email"
+#~ msgid "Hi,"
+#~ msgstr "היי,"
+
+#~ msgctxt "404 log report email"
+#~ msgid "This is a daily 404 errors report for the %s website."
+#~ msgstr "זהו דו\"ח שגיאות ה- 404 היומי לאתר %s."
+
+#~ msgctxt "404 log report email"
+#~ msgid ""
+#~ "Today, a total of %s pages were identified with a 404 error. This is the "
+#~ "list of the %s most viewed pages:"
+#~ msgstr ""
+#~ "היום אותרו בסה\"כ %s עמודים בהם התקבלה שגיאה 404, זוהי רשימת %s העמודים "
+#~ "הנצפים ביותר:"
+
+#~ msgid "1 hit"
+#~ msgid_plural "%s hits"
+#~ msgstr[0] "כניסה אחת"
+#~ msgstr[1] "%s כניסות"
+#~ msgstr[2] "%s כניסות"
+#~ msgstr[3] "%s כניסות"
+
+#~ msgctxt "404 log report email"
+#~ msgid ""
+#~ "If these links are unused, go to WordPress dashboard -> Settings -> "
+#~ "Booter - Crawlers Manager, and block the links with a 410 status code, "
+#~ "and/or block them via robots.txt file, to make search engines not index "
+#~ "these pages."
+#~ msgstr ""
+#~ "במידה ומדובר בקישורים שאינם בשימוש - יש להיכנס ללוח הבקרה -> הגדרות -> "
+#~ "Booter - ניהול זחלנים, ולטפל בקישורים על ידי חסימת 410 ו/או חסימה באמצעות "
+#~ "robots.txt על מנת לגרום למנועי החיפוש לא לאנדקס את העמודים האלו."
+
+#~ msgctxt "404 log report email subject"
+#~ msgid "Daily 404 Log Report"
+#~ msgstr "סיכום יומי עבור שגיאות 404"
+
+#~ msgid "Are you sure you want to disable the plugins?"
+#~ msgstr "האם אתה בטוח שברצונך לכבות את התוספים?"
+
+#~ msgid "Toggle Panel"
+#~ msgstr "הרחב/צמצם פאנל"
+
+#~ msgid "Are You Sure?"
+#~ msgstr "האם אתה בטוח?"
+
+#~ msgid "Allow"
+#~ msgstr "אפשר"
+
+#~ msgid "Disallow"
+#~ msgstr "חסום"
+
+#~ msgid "Add"
+#~ msgstr "הוספה"
+
+#~ msgid "Remove"
+#~ msgstr "הסרה"
+
+#~ msgid "No"
+#~ msgstr "לא"
+
+#~ msgid "Yes"
+#~ msgstr "כן"
+
+#~ msgid "Manage"
+#~ msgstr "ניהול"
+
+#~ msgid "Save"
+#~ msgstr "שמירה"
+
+#~ msgid "Add a string to block"
+#~ msgstr "הוסף מחרוזת לחסימה"
+
+#~ msgid "Add allowed URL"
+#~ msgstr "הוסף קישור מאושר"
+
+#~ msgid "Add disallowed URL"
+#~ msgstr "הוסף קישור אסור"
+
+#~ msgid "All Crawlers"
+#~ msgstr "כל הזחלנים"
+
+#~ msgid "Add New Crawler"
+#~ msgstr "הוסף זחלן חדש"
+
+#~ msgid "User-Agent"
+#~ msgstr "מזהה זחלן (User-Agent)"
+
+#~ msgid "Crawl Rate"
+#~ msgstr "הגבלת קצב זחילה"
+
+#~ msgid "Not Defined"
+#~ msgstr "לא מוגדר"
+
+#~ msgid "Delay between scans"
+#~ msgstr "המתנה בין סריקות"
+
+#~ msgid ""
+#~ "Use this rule to throttle a crawler if they are crawling your website too "
+#~ "frequently. Some crawlers (eg. GoogleBot) will ignore this rule, and some "
+#~ "others might interpret it a little differently."
+#~ msgstr ""
+#~ "השתמש בחוק זה על מנת להגביל זחלן במידה והוא סורק את האתר שלך לעתים קרובות "
+#~ "מדי. זחלנים מסוימים (לדוגמה, GoogleBot) יתעלמו מחוק זה, וחלקם עשויים לפרש "
+#~ "אותו קצת אחרת."
+
+#~ msgid ""
+#~ "No defined rate will allow the robots to crawl at their own discretion."
+#~ msgstr "קצב זחילה לא מוגדר יאפשר לרובוטים לזחול על פי שיקול דעתם."
+
+#~ msgid "%s ignores this rule"
+#~ msgstr "%s מתעלם מכלל זה"
+
+#~ msgid "Disallow Rejected Strings"
+#~ msgstr "איסור סריקה למחרוזות שנדחו"
+
+#~ msgid "Include the rejected strings in the disallowed links list."
+#~ msgstr "כלול את המחרוזות שנדחו ברשימת הקישורים האסורים."
+
+#~ msgid "Manage Rejected Strings"
+#~ msgstr "ניהול מחרוזות שנדחו"
+
+#~ msgid "Disallow Dashboard"
+#~ msgstr "איסור גישה לממשק ניהול"
+
+#~ msgid "Block all URLs starting with %s."
+#~ msgstr "חסום את כל כתובות האתר המתחילות ב- %s."
+
+#~ msgid "Allow AJAX"
+#~ msgstr "אפשר גישה ל AJAX"
+
+#~ msgid ""
+#~ "Blocking the dashboard will block the %s file as well, if your theme uses "
+#~ "AJAX to display content - AJAX has to be enabled for search engines to be "
+#~ "able to see this content."
+#~ msgstr ""
+#~ "אסירת גישה לממשק הניהול תאסור גישה גם אל הקובץ %s, אם תבנית העיצוב שלך "
+#~ "משתמשת ב- AJAX עבור הצגת תוכן - יש לאפשר AJAX על מנת שמנועי חיפוש יוכלו "
+#~ "לראות את התוכן הזה."
+
+#~ msgctxt "tab label for new crawler when no user agent is defined"
+#~ msgid "New Crawler"
+#~ msgstr "זחלן חדש"
+
+#~ msgid "Use * as a user agent to affect all crawlers."
+#~ msgstr "השתמש ב * בתור User Agent בכדי להחיל חוקים על כל הזחלנים."
+
+#~ msgid "You currently do not have any crawler settings defined."
+#~ msgstr "לא קיימות הגדרות עבור זחלנים."
+
+#~ msgid "This user-agent already exists."
+#~ msgstr "מזהה זחלן כבר קיים."
+
+#~ msgid ""
+#~ "The user-agent can not contain spaces, tabs, and any of the following "
+#~ "charactes: ()<>@,;:\"/[]?={}"
+#~ msgstr ""
+#~ "מזהה זחלן לא יכול להכיל רווחים, טאבים, ואת התווים הבאים: ()<>@,;:\"/[]?={}"
+
+#~ msgid "Disallowed Links"
+#~ msgstr "קישורים אסורים לסריקה"
+
+#~ msgid "Allowed Links"
+#~ msgstr "קישורים מותרים לסריקה"
+
+#~ msgid "Manage Blocked Bots"
+#~ msgstr "ניהול רובוטים חסומים"
+
+#~ msgid "No disallowed links means that all pages will be indexed."
+#~ msgstr ""
+#~ "רשימה ריקה של קישורים אסורים משמעותה שכל הקישורים באתר ניתנים לסריקה."
+
+#~ msgid "Update Bad Bots From Predefined List"
+#~ msgstr "עדכון רשימת בוטים מרשימת הבוטים של Booter"
+
+#~ msgid ""
+#~ "Any bots included in this list will be automatically blocked. You can "
+#~ "update the list from our predefined list of known bad bots by clicking "
+#~ "the above link (your current list will not be overwritten)."
+#~ msgstr ""
+#~ "כל בוט שנמצא ברשימה זו ייחסם אוטומטית. ניתן להוסיף בוטים מרשימת הבוטים "
+#~ "הרעים שלנו על ידי לחיצה על הכפתור למעלה (הרשימה הנוכחית לא תוחלף)."
+
+#~ msgid ""
+#~ "Some crawlers support a limited form of \"wildcards\" for path values:"
+#~ msgstr ""
+#~ "חלק מהזחלנים תומכים בצורה מוגבלת של \"תווים כלליים\" עבור ערכי נתיב:"
+
+#~ msgid ""
+#~ "<code>*</code> designates 0 or more instances of any valid character."
+#~ msgstr "<code>*</code> מציין 0 או יותר מקרים של כל תו חוקי."
+
+#~ msgid "<code>$</code> designates the end of the URL."
+#~ msgstr "<code>$</code> מציין את סוף הקישור."
+
+#~ msgid "Booter - Bots & Crawlers Manager"
+#~ msgstr "Booter - ניהול זחלנים ובוטים"
+
+#~ msgid ""
+#~ "Booter - Bots & Crawlers Manager has found the following 404 redirect "
+#~ "plugin active: %s"
+#~ msgid_plural ""
+#~ "Booter - Bots & Crawlers Manager has found the following 404 redirect "
+#~ "plugins active: %s"
+#~ msgstr[0] ""
+#~ "Booter - ניהול זחלנים ובוטים מצא את התוסף הבא פעיל אשר מבצע הפניה מעמודי "
+#~ "404: %s"
+#~ msgstr[1] ""
+#~ "Booter - ניהול זחלנים ובוטים מצא את התוספים הבאים פעילים אשר מבצעים הפניה "
+#~ "מעמודי 404: %s"
+#~ msgstr[2] ""
+#~ "Booter - ניהול זחלנים ובוטים מצא את התוספים הבאים פעילים אשר מבצעים הפניה "
+#~ "מעמודי 404: %s"
+#~ msgstr[3] ""
+#~ "Booter - ניהול זחלנים ובוטים מצא את התוספים הבאים פעילים אשר מבצעים הפניה "
+#~ "מעמודי 404: %s"
+
+#~ msgid ""
+#~ "Such redirects prevents Booter from detecting 404 errors as well as being "
+#~ "the wrong way to handle broken links."
+#~ msgstr ""
+#~ "הפניות אלו מונעות מ- Booter לגלות שגיאות 404, כמו כן זוהי דרך לא נכונה "
+#~ "לטפל בקישורים שבורים."
+
+#~ msgid ""
+#~ "A 404 error is the correct response to invalid URLs while a redirect "
+#~ "(30X) tells search engines that the URLs exists (in another location)."
+#~ msgstr ""
+#~ "שגיאת 404 היא התגובה הנכונה לקישור שבור/לא קיים, ואילו הפניה (30X) אומרת "
+#~ "למנועי חיפוש שקישור זה אכן קיים (אך במיקום אחר)."
+
+#~ msgid "We therefore recommend that you disable these plugins."
+#~ msgstr "לכן אנו ממליצים לכבות את התוספים האלו."
+
+#~ msgid "Disable The Plugin"
+#~ msgid_plural "Disable The Plugins"
+#~ msgstr[0] "כבה את התוסף"
+#~ msgstr[1] "כבה את התוספים"
+#~ msgstr[2] "כבה את התוספים"
+#~ msgstr[3] "כבה את התוספים"
+
+#~ msgid "The plugins have been disabled."
+#~ msgstr "התוספים כובו."
+
+#~ msgid ""
+#~ "Logging 404 errors allows you to detect bad or spam URLs search engines "
+#~ "trying to crawl."
+#~ msgstr ""
+#~ "רישום שגיאות 404 מאפשר לך לזהות קישורים רעים או קישורי ספאם שמנועי חיפוש "
+#~ "מנסים לסרוק."
+
+#~ msgid "Send 404 Errors Daily Report"
+#~ msgstr "שלח דיווח יומי על שגיאות 404"
+
+#~ msgid ""
+#~ "Receive a daily report for 404 errors. By default we will send the report "
+#~ "to the admin email address %s."
+#~ msgstr ""
+#~ "קבל דוח יומי עבור שגיאות 404. כברירת מחדל, נשלח את הדוח לכתובת האימייל של "
+#~ "מנהל המערכת %s."
+
+#~ msgid "Email Address"
+#~ msgstr "כתובת אימייל"
+
+#~ msgid "URL"
+#~ msgstr "קישור"
+
+#~ msgid "Hits"
+#~ msgstr "כניסות"
+
+#~ msgid "First Seen"
+#~ msgstr "נראה לראשונה"
+
+#~ msgid "Last Hit"
+#~ msgstr "כניסה אחרונה"
+
+#~ msgctxt "%s = human-readable time difference"
+#~ msgid "%s ago"
+#~ msgstr "לפני %s"
+
+#~ msgid "No 404 Logs"
+#~ msgstr "אין רישומי 404"
+
+#~ msgid ""
+#~ "Booter - Bots & Crawlers Manager is a preventative measure (treatment in "
+#~ "advance) as well as  retroactive treatment for damages caused by crawlers "
+#~ "and bots."
+#~ msgstr ""
+#~ "Booter - ניהול זחלנים ובוטים הינו תוסף מניעה מתקדם (טיפול מבעוד מועד) "
+#~ "ובנוסף טיפול בדיעבד בנזק שנגרם על ידי זחלנים ובוטים."
+
+#~ msgid ""
+#~ "The plugin uses a number of existing technologies which are known by "
+#~ "crawlers and bots and takes them one step forward - smartly and almost "
+#~ "completely automatically."
+#~ msgstr ""
+#~ "התוסף עושה שימוש במספר טכנולוגיות קיימות ומוכרות על ידי זחלנים ובוטים "
+#~ "ולוקח אותם צעד נוסף קדימה באופן חכם וכמעט אוטומטי לגמרי."
+
+#~ msgid ""
+#~ "To allow the plugin to function correctly, you must follow the "
+#~ "instructions and manually enter some data (which must be done by a human "
+#~ "being to avoid errors)."
+#~ msgstr ""
+#~ "כדי לאפשר לתוסף לבצע את פעולתו בצורה מושלמת יש לעבוד על פי הוראות השימוש "
+#~ "ולהזין לו מספר נתונים באופן ידני (פעולה שחייבת להתבצע על ידי אדם אנושי "
+#~ "כדי למנוע טעויות)."
+
+#~ msgid "At the prevention level"
+#~ msgstr "ברמת מניעה"
+
+#~ msgid ""
+#~ "Booter allows you to manage and create an advanced dynamic robots.txt "
+#~ "file."
+#~ msgstr "התוסף מאפשר לנהל וליצור קובץ robots.txt דינאמי ומתקדם."
+
+#~ msgid "View a 404 error log to see the most common bad links."
+#~ msgstr ""
+#~ "צפייה ביומן שגיאות 404 המאפשר לראות את הקישורי ה\"לא נמצא\" הנפוצים באתר."
+
+#~ msgid ""
+#~ "Blocking bad bots that cause high server loads due to very frequent page "
+#~ "crawls, or are used to search for security vulnerabilities."
+#~ msgstr ""
+#~ "חסימת בוטים רעים אשר לעיתים גורמים לעומסי שרת גבוהים עקב סריקות דפים "
+#~ "תכופות מאוד, או שמשמשים לחיפוש של פרצות אבטחה."
+
+#~ msgid "At the treatment level"
+#~ msgstr "ברמת הטיפול"
+
+#~ msgid ""
+#~ "Booter allows you to limit the amount of requests from crawlers and bots, "
+#~ "if or when they exceed the specified amount of requests per minute, it "
+#~ "will be rejected for a specified period of time."
+#~ msgstr ""
+#~ "הגבלת כמות בקשות מזחלנים שונים ובוטים, ואם כאשר הם יעברו את הכמות המוגדרת "
+#~ "של הבקשות לדקה הם ידחו לתקופה של זמן מוגדר."
+
+#~ msgid ""
+#~ "Rejecting links that we do not want in the fastest way, not by just "
+#~ "blocking but by sending the appropriate HTTP status code to make search "
+#~ "engines forget them."
+#~ msgstr ""
+#~ "אפשרות של דחיית קישורים כדי להיפרד מקישורים שאנחנו לא מעוניינים בהם בצורה "
+#~ "הכי מהירה, לא על ידי חסימה פשוטה, אלא על ידי סטטוס HTTP מתאים האומר "
+#~ "למנועי חיפוש לשכוח אותם."
+
+#~ msgid ""
+#~ "After many years of experience in the hosting world, we identified the "
+#~ "great usage trend of WordPress. We decided to invest our best efforts in "
+#~ "developing a unique product that will change the rules of the game "
+#~ "regarding the WordPress hosting."
+#~ msgstr ""
+#~ "אחרי ניסיון של שנים ארוכות בעולם האחסון זיהנו את מגמת השימוש הגדולה באתרי "
+#~ "WordPress, החלטנו להשקיע את מירב המאמצים והיכולות שלנו בפיתוח מוצר ייחודי "
+#~ "שישנה את חוקי המשחק בכל הקשור לאחסון אתרי WordPress."
+
+#~ msgid ""
+#~ "We created a group of network administrators, software developers, cyber "
+#~ "experts, networking specialists, UX-UI designers, and WordPress experts"
+#~ msgstr ""
+#~ "הקמנו יחד קבוצה של מנהלי רשתות, מפתחי תוכנה, מומחי סייבר, מומחי תקשורת, "
+#~ "מעצבי UX-UI, מומחי WordPress"
+
+#~ msgid ""
+#~ "And together developed the hosting solution we dreamed of, a "
+#~ "revolutionary and unique management panel that makes managing your server "
+#~ "and the WordPress experience as easy and efficient as possible for Both "
+#~ "beginners and advanced users alike."
+#~ msgstr ""
+#~ "ויחדיו הקמנו את פתרון האחסון שחלמנו שיהיה לנו בתור משתמשים, פאנל ניהול "
+#~ "מהפכני וייחודי שהופך את ניהול שרת האחסון ואת חווית השימוש באתר WordPress "
+#~ "לפשוטה ויעילה עבור משתמשים מתחילים ומתקדמים כאחד."
+
+#~ msgid ""
+#~ "Thanks to the advanced technological tools we have developed on our "
+#~ "servers, we can ensure peak speeds and strong security."
+#~ msgstr ""
+#~ "בזכות כלים טכנולוגיים מתקדמים שפיתחנו הפועלים על גבי השרתים שלנו אנו "
+#~ "יכולים להבטיח מהירויות שיא ואבטחה חזקה."
+
+#~ msgid ""
+#~ "Every day we improve our systems to continue to stand at the forefront of "
+#~ "managed hosting services, with an emphasis on WordPress."
+#~ msgstr ""
+#~ "בכל יום אנחנו משפרים ומחדשים את המערכות שלנו בכדי להמשיך ולעמוד בחוד-"
+#~ "החנית של שירותי אחסון אתרים מנוהל, עם דגש על WordPress."
+
+#~ msgid ""
+#~ "We at uPress believe that security should not be limited to tech-savvy "
+#~ "people and should be something everyone can accomplish with ease."
+#~ msgstr ""
+#~ "אנחנו ב uPress מאמינים כי אבטחה לא צריך להיות מוגבלת לאנשים עם ידע טכני "
+#~ "אלא שזה צריך להיות משהו שכולם יכולים להשיג בקלות."
+
+#~ msgid ""
+#~ "This is the cornerstone for unleashing the potential WordPress has with "
+#~ "its features, speed, stability and security."
+#~ msgstr ""
+#~ "זוהי אבן הפינה לפתיחת הפוטנציאל של WordPress על תכונותיו, מהירות, יציבות "
+#~ "ואבטחה."
+
+#~ msgctxt "uPress contact link at about page"
+#~ msgid "https://www.upress.io/contact/?utm_source=booter&utm_medium=about"
+#~ msgstr ""
+#~ "https://www.upress.co.il/contact/?utm_source=booter&utm_medium=about"
+
+#~ msgid "Under attack? Contact us"
+#~ msgstr "תחת מתקפה? צור איתנו קשר"
+
+#~ msgid ""
+#~ "Block bots we identified as malicious, which are causing high server "
+#~ "loads from very frequent page crawls, or are used as part of a "
+#~ "vulnerability/security breach scans."
+#~ msgstr ""
+#~ "חסום את הרובוטים שזיהינו כזדוניים, שגורמים לעומסי שרת גבוהים מסריקות דפים "
+#~ "תכופות מאוד, או שמשמשים לחיפוש של פרצות אבטחה לפני נסיון פריצה."
+
+#~ msgid "Blocked Bot User Agents"
+#~ msgstr "מזהה בוטים רעים חסומים"
+
+#~ msgid ""
+#~ "Block access to predefined URLs, or cleanup old spam URLs by setting a "
+#~ "corresponding HTTP status code."
+#~ msgstr ""
+#~ "חסום את הגישה לכתובות אתר מוגדרות מראש או נקה כתובות ספאם ישנות של על ידי "
+#~ "הגדרת סטטוס HTTP תואם."
+
+#~ msgid ""
+#~ "Note: If you are in the process of handling spam links, make sure to "
+#~ "disable all types of automatic redirects to https/www, this is done to "
+#~ "allow search engines to crawl the links and reach the HTTP 410 status. If "
+#~ "this is not done, search engines will see a redirect - which will cause "
+#~ "the link to remain indexed for a long time. After the treatment is "
+#~ "complete make sure to re-enable all required redirects."
+#~ msgstr ""
+#~ "הערה: במידה ואתם נמצאים בתהליך של טיפול במקרה של קישורי ספאם, יש לבטל את "
+#~ "כל סוגי ההפניות האוטומטיות אל https/www, וזאת על מנת לאפשר לקישורי הספאם "
+#~ "להיסרק על ידי מנועי החיפוש ולהגיע אל סטטוס HTTP 410, במידה ופעולה זו לא "
+#~ "תבוצע - מנוע החיפוש יראו הפניה - מה שיגרום לקישור להישאר מאונדקס למשך "
+#~ "תקופה ארוכה. בסיום הטיפול יש לזכור להפעיל מחדש את ההפניות."
+
+#~ msgid "Apply To"
+#~ msgstr "החל על"
+
+#~ msgid "Known Bots"
+#~ msgstr "בוטים ידועים"
+
+#~ msgid ""
+#~ "Choose who will be blocked by Booter, only known bots, or everyone "
+#~ "including logged-in users."
+#~ msgstr ""
+#~ "בחר מי יחסם על ידי Booter, רק רובוטים ידועים או כולם - כולל משתמשים "
+#~ "מחוברים."
+
+#~ msgid "Include WooCommerce Filtering URLs"
+#~ msgstr "כלול קישורי סינון של WooCommerce"
+
+#~ msgid ""
+#~ "Some of the WooCommerce URLs such as add-to-cart buttons and filters can "
+#~ "cause infinite loops for search engines if when the theme doesn't provide "
+#~ "a noindex/nofollow property."
+#~ msgstr ""
+#~ "חלק מהקישורים שווקומרס יוצר, כמו קישורי הוסף לסל קניות וסינונים, יכולים "
+#~ "לגרום למנועי חיפוש להכנס ללולאות סריקה אינסופיות במידה והתבנית לא מגדירה "
+#~ "קישורים בצורה תקינה."
+
+#~ msgid ""
+#~ "For example for a badly coded theme: %s which includes a URL to the same "
+#~ "URL with another (same) filter %s which again includes the same filter, "
+#~ "and so on."
+#~ msgstr ""
+#~ "לדוגמה בתבנית לא תקינה: %s מכיל קישור לאותו העמוד  עם פרמטר סינון נוסף "
+#~ "זהה %s שמכיל שוב קישור לאותו הסינון עם פרמטר נוסף, וכך הלאה."
+
+#~ msgid "URL Strings"
+#~ msgstr "מחרוזות בקישורים"
+
+#~ msgid ""
+#~ "Booter will search for these strings in the URL a bot is trying to access "
+#~ "and will block the request if it finds one of the strings."
+#~ msgstr ""
+#~ "Booter יחפש את המחרוזות הללו בקישור אליו הבוט מנסה לגשת, במידה והמחורזת "
+#~ "נמצאה הבוט ייחסם."
+
+#~ msgid "Regular Expression Based Blocks"
+#~ msgstr "חסימה על בסיס ביטוי רגולרי"
+
+#~ msgid ""
+#~ "This is an advanced option, only enable if you know what you are doing."
+#~ msgstr "זוהי אפשרות מתקדמת, הפעל אותה רק אם אתה יודע מה אתה עושה."
+
+#~ msgid "Regular Expressions"
+#~ msgstr "ביטוי רגולרי"
+
+#~ msgctxt "regular expression string placeholder"
+#~ msgid "Regular Expression eg. ^/index.php?filter=.*$"
+#~ msgstr "ביטוי רגולרי, לדוגמה ^/index.php?filter=.*$"
+
+#~ msgid "Block HTTP Response"
+#~ msgstr "סטטוס HTTP בחסימה"
+
+#~ msgid "401 Unauthorized - The crawler is not permitted to access this URL"
+#~ msgstr "401 לא מורשה - הזחלן אינו מורשה לגשת לקישור זה"
+
+#~ msgid "403 Forbidden - Access to this specific URL is not allowed"
+#~ msgstr "403 - אסור - הגישה לקישור זה אסורה"
+
+#~ msgid ""
+#~ "404 Page Not Found - There is nothing in this URL (search engines might "
+#~ "continue crawling this URL in case something will be there in the future)"
+#~ msgstr ""
+#~ "404 העמוד לא נמצא - בקישור זה לא קיים תוכן (מנועי חיפוש עלולים להמשיך "
+#~ "לסרוק את הקישור למקרה שבעתיד יהיה שם תוכן)"
+
+#~ msgid "410 Gone - The URL will never be available"
+#~ msgstr "410 נעלם - הקישור לעולם לא יהיה זמין"
+
+#~ msgid "(Recommended)"
+#~ msgstr "(מומלץ)"
+
+#~ msgid ""
+#~ "This is the response returned when blocking. Each response means "
+#~ "something different to search engines, so make sure to use the most "
+#~ "correct response."
+#~ msgstr ""
+#~ "זוהי התגובה שתוחזר בעת החסימה. כל תגובה פירושה משהו שונה למנועי החיפוש, "
+#~ "לכן הקפד להשתמש בתגובה הנכונה ביותר."
+
+#~ msgid ""
+#~ "Log all block events with the rule which caused it and help you find "
+#~ "rules causing false-positives."
+#~ msgstr ""
+#~ "רשום את כל אירועי החסימה והחוקים שגרמו להם, מצב זה יעזור לזהות חוקים אשר "
+#~ "גורמים לחסימות שגויות."
+
+#~ msgid ""
+#~ "In most cases, search engines can evaluate which links to your site are "
+#~ "trusted based on the linking website's reputation."
+#~ msgstr ""
+#~ "ברוב המקרים, מנועי החיפוש יכולים להעריך אילו קישורים לאתר שלך מהימנים על "
+#~ "סמך המוניטין של האתר המקשר."
+
+#~ msgid ""
+#~ "But sometimes you would like to make search engines disregard links from "
+#~ "specific websites that have a high number of spammy links, artificial "
+#~ "links, or low quality links pointing to your website."
+#~ msgstr ""
+#~ "אבל לפעמים נרצה לגרום למנועי החיפוש להתעלם מקישורים שמגיעים מאתרים "
+#~ "ספציפיים שיש להם מספר גבוה של קישורי ספאם, קישורים מלאכותיים, או קישורים "
+#~ "באיכות נמוכה המצביעים אל אתר שלך."
+
+#~ msgid ""
+#~ "Disavowing links allows you to do that in case you are currently "
+#~ "experiencing such an attack or want to defend yourself in advance."
+#~ msgstr ""
+#~ "התנערות מקישורים מאפשרת לך לעשות את זה במקרה והינך חווה התקפה כזו או רוצה "
+#~ "להגן על עצמך מראש."
+
+#~ msgid "To do this, follow these steps:"
+#~ msgstr "לשם כך, בצע את הפעולות הבאות:"
+
+#~ msgid "Download the provided list file"
+#~ msgstr "הורד את הקובץ המצורף"
+
+#~ msgid "Go to the appropriate disavow links page:"
+#~ msgstr "עבור אל הדף המתאים להתנערות מקישורים:"
+
+#~ msgid "Google Search Console"
+#~ msgstr "Google Search Console"
+
+#~ msgid "Bing Webmaster Tools"
+#~ msgstr "Bing Webmaster Tools"
+
+#~ msgid "Click Deny Links"
+#~ msgstr "לחץ על דחה קישורים"
+
+#~ msgid "Select the file you downloaded and submit it"
+#~ msgstr "בחר את הקובץ שהורדת ושלח אותו"
+
+#~ msgid ""
+#~ "*It may take several weeks for search engines to process the information "
+#~ "you've uploaded."
+#~ msgstr "*ייתכן שיחלפו מספר שבועות עד שמנועי החיפוש יעבדו את המידע שהעלית."
+
+#~ msgid "Download Disavow List"
+#~ msgstr "הורד רשימת קישורים"
+
+#~ msgid "The File was not yet downloaded"
+#~ msgstr "הקובץ עדיין לא הורד"
+
+#~ msgid "The file was downloaded at %s"
+#~ msgstr "הקובץ הורד ב %s"
+
+#~ msgid "Not sure where to start?"
+#~ msgstr "לא בטוח איפה להתחיל?"
+
+#~ msgid "View the help page"
+#~ msgstr "צפה בעמוד העזרה"
+
+#~ msgid "Block Bad Robots"
+#~ msgstr "חסימת רובוטים רעים"
+
+#~ msgid "robots.txt Management"
+#~ msgstr "ניהול robots.txt"
+
+#~ msgid ""
+#~ "Allow Booter - Crawlers Manager to manage your robots.txt file. Existing "
+#~ "file will be renamed as a backup, but Booter robots.txt file will be "
+#~ "overwritten automatically when saving the settings."
+#~ msgstr ""
+#~ "אפשר ל- Booter לנהל את קובץ ה- robots.txt שלך. במידה וקיים כבר קובץ כזה "
+#~ "השם שלו ישונה לגיבוי, אך קובץ robots.txt של Booter יוחלף אוטומטית בעת "
+#~ "שמירת ההגדרות."
+
+#~ msgid "Reject Links"
+#~ msgstr "דחיית קישורים"
+
+#~ msgid "Rate Limiting"
+#~ msgstr "הגבלת קצב גישה"
+
+#~ msgid "Throttle excessive access from bots, crawlers, and malicious users."
+#~ msgstr "הגבלת כמות בקשות  מרובוטים, זחלנים ומשתמשים זדוניים."
+
+#~ msgid "404 Logging"
+#~ msgstr "רישום שגיאות 404"
+
+#~ msgid "Uninstall"
+#~ msgstr "הסרת התקנה"
+
+#~ msgid "Delete all settings when deactivating the plugin."
+#~ msgstr "מחק את כל ההגדרות כאשר הינך מכבה את התוסף."
+
+#~ msgid "Debug Mode"
+#~ msgstr "מצב ניפוי תקלות"
+
+#~ msgid "Instructions for use in case of damage treatment"
+#~ msgstr "הוראות השימוש במקרה של טיפול בנזק"
+
+#~ msgid ""
+#~ "This is recommended only if you think there are a high number of spammy "
+#~ "links, artificial links, or low quality links pointing to your website"
+#~ msgstr ""
+#~ "תהליך זה מומלץ רק אם אתה חושב שיש מספר רב של קישורים ספאם, קישורים "
+#~ "מלאכותיים או קישורים באיכות נמוכה המצביעים אל האתר שלך"
+
+#~ msgid ""
+#~ "and the links have caused manual action against your website, or there is "
+#~ "a high probability that it will happen in the future (due to paid links "
+#~ "or other link fraud that violate search engine quality guidelines)."
+#~ msgstr ""
+#~ "וקישורים אלו גרמו פעולה ידנית נגד האתר שלך, או שיש סבירות גבוהה שזה יקרה "
+#~ "בעתיד (עקב קישורים בתשלום או קישורי הונאה המפרים את הנחיות איכות מנוע "
+#~ "החיפוש)."
+
+#~ msgid "Activate the plugin."
+#~ msgstr "הפעל את התוסף."
+
+#~ msgid "Enable the 404 error log option."
+#~ msgstr "הפעל את האפשרות של יומן שגיאות 404."
+
+#~ msgid "Set the access rate limit."
+#~ msgstr "הפעל את הגבלת קצב הגישה."
+
+#~ msgid ""
+#~ "Make sure that you do not disallow the links you want to be removed in "
+#~ "the robots.txt file, you should allow search engines to attempt to "
+#~ "retrieve the page and fail."
+#~ msgstr ""
+#~ "וודא שאינך חוסם על ידי robots.txt את הקישורים שהנך מעוניין להיפטר "
+#~ "מהם ,עליך לאפשר למנועי החיפוש לנסות לאחזר את האתר ולהיכשל."
+
+#~ msgid ""
+#~ "Download the <a%s>disavow list</a> (spam domains or links that we want "
+#~ "search engines to ignore when they see links to our website on them) "
+#~ "created by Booter and submit it to search engines. (It's important to "
+#~ "protect all variations of the URL that lead to the content you want to "
+#~ "not index, with www, https, or without.)"
+#~ msgstr ""
+#~ "הורד רשימת <a%s>קישורים להתנערות</a> שנוצרת על ידי Booter (קישורים או "
+#~ "שמות מתחם אשר לא ניהיה מעוניינים שמנועי חיפוש יאנדקסו קישורים לאתר שלנו "
+#~ "שמופיעים בהם) והגש אותה למנועי החיפוש. (חשוב להגן על כל הווריאציות של "
+#~ "כתובת האתר שמובילות אל התוכן שאתה רוצה לא לאנדקס, עם www, עם https או "
+#~ "בלי)."
+
+#~ msgid ""
+#~ "Watch the 404 log, try to find common parts in the URLs that repeats most "
+#~ "often."
+#~ msgstr ""
+#~ "צפה ביומן שגיאות ה- 404, נסה למצוא מכנה משותף שחוזר על עצמו בקישורים."
+
+#~ msgid ""
+#~ "Enter the common parts to the \"reject links\" page, and ensure the "
+#~ "rejection code is 410."
+#~ msgstr ""
+#~ "הכניס את הביטוי שמצאת במסך \"דחיית הקישורים\", וודא שסטטוס החסימה יהיה "
+#~ "410."
+
+#~ msgid "Clear the 404 error log."
+#~ msgstr "רוקן את יומן השגיאות 404."
+
+#~ msgid ""
+#~ "Repeat the process once every few hours until the 404 error log remains "
+#~ "blank."
+#~ msgstr ""
+#~ "חזור על התהליך פעם במספר שעות (בשלב הראשוני), עד אשר יומן השגיאות 404 "
+#~ "יישאר נקי מקישורי זבל."
+
+#~ msgid "Check the status of your website's index coverage every few days."
+#~ msgstr ""
+#~ "בדוק מידי מספר ימים את סטטוס כיסוי האינדקס של האתר שלך, ואת תאריך הסריקה "
+#~ "האחרון לקישורי הזבל."
+
+#~ msgid "Instructions for routine maintenance and defence"
+#~ msgstr "הוראות לתחזוקה שוטפת ולהגנה"
+
+#~ msgid ""
+#~ "This is recommended if your site has successfully remedied links from "
+#~ "spam websites, or there are no artificial or low-quality links pointing "
+#~ "to your website."
+#~ msgstr ""
+#~ "תהליך זה מומלץ אם האתר שלך עבר תיקון של קישורים מאתרי ספאם, או אין "
+#~ "קישורים מלאכותיים או באיכות נמוכה המצביעים אל האתר שלך."
+
+#~ msgid "Disable the access rate limit (to not waste server resources)."
+#~ msgstr "כבה את הגבלת קצב הגישה (על מנת לא לבזבז משאבי שרת)."
+
+#~ msgid ""
+#~ "Submit a list disavowed backlinks and/or domains to search engines, this "
+#~ "will request the search engine to not index the link if it is coming from "
+#~ "one of the links or domains provided in the list."
+#~ msgstr ""
+#~ "שלח רשימת קישורים ו/או שמות מתחם דחויים למנועי החיפוש, פעולה זו תבקש "
+#~ "ממנוע החיפוש לא לאינדקס את הקישור במידה והוא מופיע מאחד הקישורים או משמות "
+#~ "המתחם המסופקים ברשימה."
+
+#~ msgid ""
+#~ "Enable the robots.txt management, Set a crawl rate other than the "
+#~ "default, and include the rejected links in the disallowed list."
+#~ msgstr ""
+#~ "הפעל את ניהול ה- robots.txt, הגדר קצב סריקה שאינו ברירת המחדל, והוסף את "
+#~ "הקישורים שנדחו ברשימת הקישורים האסורים לסריקה."
+
+#~ msgid "Hide search results within a single day"
+#~ msgstr "הסתרת תוצאות חיפוש בטווח של יום בודד"
+
+#~ msgid ""
+#~ "The URL removal tool allows you to temporarily hide (up to 90 days) pages "
+#~ "from search engine results for websites you own."
+#~ msgstr ""
+#~ "הכלי להסרת כתובות אתרים מאפשר לחסום באופן זמני (עד 90 יום) דפים מתוצאות "
+#~ "החיפוש של מנועי החיפוש באתרים שבבעלותך."
+
+#~ msgid ""
+#~ "It's important to remember that hiding the page does not imply removing "
+#~ "it from the search index, it will still be indexed and crawled, they just "
+#~ "won't be shown in the search results."
+#~ msgstr ""
+#~ "חשוב לזכור שהסתרת העמוד אינה תסיר אותו לגמרי מהאינדקס של מנועי החיפוש, "
+#~ "העמוד עדיין יהיה שמור באינדקס ויסרק, אבל פשוט לא יוצג בתוצאות החיפוש."
+
+#~ msgid ""
+#~ "Search engines will continue to crawl the URL, so it's important to "
+#~ "\"reject\" the URL with Booter. If the hiding period will end without "
+#~ "rejecting the URL this page will appear again in search results."
+#~ msgstr ""
+#~ "מנועי החיפוש ימשיכו לסרוק את העמוד, לכן חשוב לבצע \"דחייה\" בצורה מיטבית "
+#~ "על ידי Booter. במידה והקישור לא יידחה העמוד יחזור להופיע בתוצאות חיפוש "
+#~ "שוב בסיום ההסתרה הזמנית."
+
+#~ msgid "Open the URL removal tool."
+#~ msgstr "פתח את הכלי להסרת כתובות URL."
+
+#~ msgid "Click Hide temporarily."
+#~ msgstr "לחץ על הסתר באופן זמני."
+
+#~ msgid "Enter the relative path for the URL you want to hide."
+#~ msgstr "הזן את הנתיב היחסי לעמוד שאותו ברצונך להסתיר."
+
+#~ msgid "For example:"
+#~ msgstr "לדוגמה:"
+
+#~ msgid "Click continue."
+#~ msgstr "לוחצים על המשך."
+
+#~ msgid "Choose clear cache and temporarily hide all URLs starting with..."
+#~ msgstr "בוחרים בניקוי המטמון והסתרה זמנית של כל כתובות האתר שמתחילות ב..."
+
+#~ msgid "To permanently remove a URL, reject the URL with Booter."
+#~ msgstr "כדי להסיר כתובת URL לצמיתות יש לבצע דחייה על ידי Booter."
+
+#~ msgid ""
+#~ "When a user exceeds the defined amount of requests per minute he will be "
+#~ "blocked for a period of time defined."
+#~ msgstr ""
+#~ "כאשר משתמש עולה על כמות מוגדרת של בקשות לדקה הוא ייחסם לתקופה של זמן "
+#~ "מוגדר."
+
+#~ msgid ""
+#~ "The block will return a 429 HTTP status code (too many requests), which "
+#~ "tells legitimate users/bots to reduce the crawl rate, making them realize "
+#~ "that they make request too frequently but are still desirable, unlike 403 "
+#~ "status code which means that they are not allowed here."
+#~ msgstr ""
+#~ "החסימה תחזיר סטטוס 429 (בקשות רבות מדי), סטטוס זה אומר לזחלנים/משתמשים "
+#~ "לגיטימיים שהם מתבקשים להאט את קצב הסריקה שלהם אך שהם עדיין רצויים ויכולים "
+#~ "להמשיך בסריקות, זאת לעומת סטטוס 403 אשר אומר לזחלן שהגישה שלו אסורה והוא "
+#~ "אינו רצוי."
+
+#~ msgid "Rate Limit Logged In Users"
+#~ msgstr "הגבלת משתמשים מחוברים"
+
+#~ msgid ""
+#~ "Choose if you want to rate limit logged in users, otherwise only guests "
+#~ "will be rate limited."
+#~ msgstr ""
+#~ "בחר אם ברצונך להגביל גם את המשתמשים המחוברים, אחרת רק אורחים יהיו מוגבלים."
+
+#~ msgid "Requests Limit Per Minute"
+#~ msgstr "כמות בקשות בדקה"
+
+#~ msgid "per minute"
+#~ msgstr "לדקה"
+
+#~ msgid ""
+#~ "This is the maximum number of request a user can make to the website "
+#~ "before getting blocked."
+#~ msgstr ""
+#~ "זהו המספר המרבי של הבקשות שהמשתמש יכול לשלוח אל האתר לפני שתבוצע חסימה."
+
+#~ msgid "Block For"
+#~ msgstr "חסום לתקופה של"
+
+#~ msgid "%s Minute"
+#~ msgid_plural "%s Minutes"
+#~ msgstr[0] "דקה"
+#~ msgstr[1] "%s דקות"
+#~ msgstr[2] "%s דקות"
+#~ msgstr[3] "%s דקות"
+
+#~ msgid ""
+#~ "This is the time the user will be blocked for with a 429 status code "
+#~ "after reaching the requests limit."
+#~ msgstr "לאחר הגעה למגבלת הבקשות המשתמש ייחסם לזמן מוגדר זה."
+
+#~ msgid ""
+#~ "Crawlers are not required to follow these guidelines, but most legitimate "
+#~ "crawler will."
+#~ msgstr ""
+#~ "רובוטים אינם נדרשים לפעול לפי הנחיות אלו, אך הרובוטים הלגיטימיים לרוב "
+#~ "יעשו זאת."
+
+#~ msgid ""
+#~ "The crawler creator decides which rules to obey and may ignore some of "
+#~ "them."
+#~ msgstr "יוצר הזחלן מחליט לאיזה חוקים לציית ויתכן ויתעלם מחלק מהם."
+
+#~ msgid "Deny All Crawlers"
+#~ msgstr "חסום גישה לכל הזחלנים"
+
+#~ msgid ""
+#~ "This will disallow all URLs for all user agents, it is essentially a no-"
+#~ "index request."
+#~ msgstr ""
+#~ "פעולה זו תאסור סריקה של כל הקישורים באתר בעבור כל הזחלנים, זוהי למעשה "
+#~ "בקשה לא לבצע אינדקס של האתר."
+
+#~ msgid "Include A URL To The Sitemap"
+#~ msgstr "הוסף לקובץ קישור למפת האתר"
+
+#~ msgid ""
+#~ "Make it easier for search engines to find your sitemap by including a "
+#~ "link to it in the robots.txt file."
+#~ msgstr ""
+#~ "הקל על מנועי החיפוש למצוא את מפת האתר של האתר שלך על ידי הוספת קישור אליו "
+#~ "בקובץ robots.txt."
+
+#~ msgid "Sitemap URL"
+#~ msgstr "קישור למפת אתר"
+
+#~ msgid "Management Type"
+#~ msgstr "סוג ניהול"
+
+#~ msgid "Simple"
+#~ msgstr "פשוט"
+
+#~ msgid ""
+#~ "Simple management type will create the most common robots.txt file fit "
+#~ "for WordPress, advanced management will allow you to manually control the "
+#~ "crawler settings."
+#~ msgstr ""
+#~ "סוג הניהול הפשוט יצור את הקובץ robots.txt הנפוץ ביותר עבור WordPress, "
+#~ "ניהול מתקדם יאפשר לך לשלוט באופן ידני בהגדרות הזחלנים."
+
+#~ msgid "Robot Specific Settings"
+#~ msgstr "הגדרות עבור זחלנים"
+
+#~ msgid ""
+#~ "When defining settings for a specific crawler it will ignore the settings "
+#~ "for all crawlers (*), all settings will have to be defined again for that "
+#~ "crawler."
+#~ msgstr ""
+#~ "בעת הגדרת הגדרות עבור זחלן מסוים הוא יתעלם מהגדרות שהוגדרו בעבור כל "
+#~ "הזחלנים (*), כל ההגדרות יצטרכו להיות מוגדרות שוב עבור אותו הזחלן."
+
+#~ msgid ""
+#~ "Saving changes will overwrite the robots.txt file, if there is an "
+#~ "existing file (not generated by Booter) it will be renamed to "
+#~ "robots.txt.old."
+#~ msgstr ""
+#~ "שמירת השינויים תדרוס את הקובץ robots.txt הקיים, במידה וקיים קובץ שלא נוצר "
+#~ "על ידי Booter השם שלו ישונה אל robots.txt.old."
+
+#~ msgid "View robots.txt file"
+#~ msgstr "צפייה בקובץ robots.txt"
+
+#~ msgid "The easy way to correctly manage crawlers and bots."
+#~ msgstr "הדרך הקלה לניהול נכון של זחלנים ובוטים."
+
+#~ msgid "Bad Bots Blocking"
+#~ msgstr "חסימת בוטים רעים"
+
+#~ msgid "Robots.txt"
+#~ msgstr "Robots.txt"
+
+#~ msgid "Rate Limit"
+#~ msgstr "הגבלת קצב גישה"
+
+#~ msgid "404 Errors Log"
+#~ msgstr "יומן שגיאות 404"
+
+#~ msgid "Disavow Backlinks"
+#~ msgstr "התנערות מקישורים"
+
+#~ msgid "Help"
+#~ msgstr "עזרה"
+
+#~ msgid "About"
+#~ msgstr "אודות"
+
+#~ msgid ""
+#~ "For example: /public_html\n"
+#~ "/index.php?\n"
+#~ "/test"
+#~ msgstr ""
+#~ "לדוגמה: /public_html\n"
+#~ "/index.php?\n"
+#~ "/test"
+
+#~ msgid "Learn more at uPress website"
+#~ msgstr "למדו עוד באתר הבית של uPress"
+
+#~ msgid "Rate limit excessive requests and block unwanted bots."
+#~ msgstr "הגבלת קצב גישה לאתר וחסימת רובוטים לא רצויים."
+
+#~ msgid "Booter - Crawlers Manager"
+#~ msgstr "Booter - ניהול זחלנים ובוטים"
+
+#~ msgid "WooCommerce Blocks"
+#~ msgstr "חסימות WooCommerce"
+
+#~ msgid "401 Unauthorized"
+#~ msgstr "401 לא מורשה"
+
+#~ msgid "403 Forbidden"
+#~ msgstr "403 אסור"
+
+#~ msgid "404 Page Not Found"
+#~ msgstr "404 עמוד לא נמצא"
+
+#~ msgid "410 Gone"
+#~ msgstr "410 לא קיים יותר"
+
+#~ msgid "All Robots"
+#~ msgstr "כל הרובוטים"
+
+#~ msgid "Some crawlers will ignore some of the rules defined."
+#~ msgstr "חלק מהסורקים יתעלמו מחלק מהכללים שהוגדרו."
+
+#~ msgid "Add Sitemap"
+#~ msgstr "כלול קישור למפת אתר"
+
+#~ msgid "Daily Report Email"
+#~ msgstr "דיווח יומי במייל"
+
+#~ msgid "Robots.txt file already exists."
+#~ msgstr "קובץ robots.txt כבר קיים."
+
+#~ msgid ""
+#~ "Booter works with a virtualized robots.txt file, an existing file will "
+#~ "prevent Booter robots.txt management from working."
+#~ msgstr ""
+#~ "Booter עובד על גבי קובץ robots.txt וירטואלי, קובץ פיזי מונע עבודה תקינה "
+#~ "של ניהול הגדרות robots.txt."
+
+#~ msgid "Try to get settings from robots.txt file"
+#~ msgstr "נסה לטעון הגדרות מקובץ robots.txt"
+
+#~ msgid "Enable URL Block"
+#~ msgstr "הפעל חסימות קישורים"
+
+#~ msgid "Enable Rate Limiting"
+#~ msgstr "הפעל הגבלת קצב גישה"
+
+#, fuzzy
+#~| msgid "(Recommended)"
+#~ msgid "command"
+#~ msgstr "(מומלץ)"
+
+#, fuzzy
+#~| msgid "Default"
+#~ msgid "default:"
+#~ msgstr "ברירת מחדל"
+
+#~ msgid "Restrict Dashboard"
+#~ msgstr "חסימת פאנל ניהול"
+
+#~ msgid "Restrict AJAX"
+#~ msgstr "חסימת AJAX"
+
+#~ msgid "Add a URL to disallow"
+#~ msgstr "הוסף קישור אסור"
+
+#~ msgid "Add a URL to allow"
+#~ msgstr "הוסף קישור מותר"
+
+#~ msgid "Default Robots Access"
+#~ msgstr "ברירת מחדל לרובוטים"
+
+#~ msgid "uPress Rate Limiting & URL Blocking"
+#~ msgstr "uPress הגבלת קצב גישה וחסימות"
+
+#~ msgid "Enforcement"
+#~ msgstr "אכיפה"

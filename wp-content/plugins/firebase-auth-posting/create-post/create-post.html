@@ -1,0 +1,23 @@
+<section class="fap-boxx" dir="ltr" style="
+  background-color: var(--bg-color); 
+  min-height: 100vh; 
+  padding: 20px;
+
+">
+  <h1 style="font-size:24px; margin-bottom:20px;">Create Post</h1>
+
+  <form id="createPostForm" method="post">
+    <label for="post_title" style="display:block; margin-bottom:6px;">Title:</label>
+    <input type="text" id="post_title" name="post_title" required maxlength="300"
+           style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #aaa; border-radius:10px; background-color: transparent; color: var(--text-color);">
+
+    <label for="post_content" style="display:block; margin-bottom:6px; font-weight:bold;">Body (optional):</label>
+    <textarea id="post_content" name="post_content" rows="6"
+              style="width:100%; padding:10px; border:1px solid #aaa; border-radius:10px; margin-bottom:20px; background-color: transparent; color: var(--text-color);"></textarea>
+
+    <button type="submit" name="submit_post"
+            style="background-color: var(--button-bg-color) !important; color: var(--text-color); padding:10px 20px; border:none; border-radius:999px !important; cursor:pointer;">
+      Post
+    </button>
+  </form>
+</section>

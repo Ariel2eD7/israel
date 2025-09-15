@@ -1,0 +1,143 @@
+= 1.6.6 =
+- Update tested up to
+- Added option to purge WebP images
+- Update frontend dependencies
+- Optimize WebP convertion process
+
+= 1.6.5 =
+- Added purge of Varnish cache
+
+= 1.6.4 =
+- Update tested up to
+- Disable WebP by default
+
+= 1.6.3 =
+- Fix display of statistics
+
+= 1.6.2 =
+- Fix external JS files not being ignored while combining
+- Added an exclusion for Elementor per-page JS/CSS files so that the manual exclusion is no longer required
+
+= 1.6.1 =
+- Fix problem setting up scheduled task for old cache cleanup
+
+= 1.6.0 =
+- Log only when debug is enabled
+- Fixed problem with caching of campaign URLs
+- Clearing homepage cache on post save will clear posts page as well
+- Fixed problem with duplicate IDs when saving WebP images
+- Added option to skip combining inline scripts
+
+= 1.5.2 =
+- Fix possible processing problems with WebP images
+- Added support for more image possibilities to WebP converter
+
+= 1.5.1 =
+- Fix error when wp_query is not available
+- Fix misspelling in plugin description
+- Fix REST API namespace warning
+- Fix REST API endpoint URL
+- Uninstall will not delete settings
+- Added reset settings button
+
+= 1.5 =
+- Rewritten the WebP converter functionality to less strain the system while running
+- Fixed WPML support
+- Fixed WebP converter duplicating .webp extension when replacing images in specific circumstances
+- Fixed Activation/Deactivation hooks not properly running
+- Added more cache lifetime options
+- Added option to clear homepage cache when updating a post
+- Removed session usage to prevent interfering with WordPress' loopback
+
+= 1.4.1 =
+- FIX: Reverted minified CSS position
+- FIX: Translation will now load correctly
+- FIX: CSS minification optimization
+- ADD: WebP now supports <style> tags
+
+= 1.4 =
+- FIX: Clearing cache will delete cache for all languages on a multi language or multisite website
+- FIX: CSS Combiner not combining files in multi language websites
+- FIX: UI fixes and improvements
+- ADD: Separated option to not serve cached content to comment authors from the logged in users
+- ADD: Added additional detections for images. WebP Conversion should take effect on images with srcset and images set as background images in inline CSS
+- ADD: ezCache will now automatically fix installation problems
+- ADD: When choosing to cache pages for logged in users the Admin Bar will be automatically hidden
+- ADD: Added option to combine CSS files to the footer
+- ADD: Added option to insert Critical CSS - use with "Combine CSS in footer" to eliminate render blocking CSS
+
+= 1.3.11 =
+- FIX: Moved WebP image clearing to uninstall procedure
+
+= 1.3.10 =
+- FIX: WebP iamges sometimes get wrong extension
+- FIX: Cache bust minified files
+
+= 1.3.9 =
+- ADD: Option to clear all WebP images on when clearing cache
+- ADD: Exclude ?woo_ajax requests from receiving cache
+- FIX: Include file extension when creating WebP images
+- FIX: Plugin activation/repair now checks database tables
+- FIX: Plugin show repair message on first activation
+- FIX: Deactivation hook should run properly now
+
+= 1.3.8 =
+- FIX: WebP convertion did not detect images with non unicode URLs
+- FIX: Whitelist Knockout.js HTML comments
+- ADD: Option to not remove HTML comments when minifing
+- ADD: Option to disable caching by cookie
+
+= 1.3.7 =
+- FIX: CLI requests getting cached
+- FIX: Fail to minify protocol relative URLs
+
+= 1.3.6 =
+- FIX: Error saving settings with Simple permalinks setting
+- FIX: WebP conversion may cuase blank cache file
+
+= 1.3.5 =
+- FIX: Sometimes plugin saves empty cached file
+- ADD: Do not serve cached data for files not using WordPress' theme
+- ADD: Allow to disable gzip compression via a wp-config define: `define( 'EZCACHE_DISABLE_GZIP', false );`
+
+= 1.3.4 =
+- FIX: Store only gzipped cache data to save on disk space
+- FIX: External images processed as internal
+
+= 1.3.3 =
+- FIX: Error preventing media file deletion
+
+= 1.3.2 =
+- FIX: Error preventing saving in plugin/theme editor
+
+= 1.3.1 =
+- FIX: Translations
+
+= 1.3 =
+- FIX: Possible error when installing over older version
+- FIX: Hebrew URL Rejection
+- ADD: Google Font optimization
+- ADD: Disable Emoji
+- ADD: Auto detection for Woocommerce cart and checkout pages
+
+= 1.2.4 =
+- FIX: Error when installing with another caching plugin
+- FIX: Better WordPress compatibility
+- FIX: Rest API support for older server software not supporting HTTP methods other than GET/POST
+
+= 1.2.3 =
+- FIX: WebP saved broken images
+- FIX: Admin visual bugs
+- FIX: Admin quality of life improvements
+
+= 1.2.1 =
+- FIX: Fatal error on admin
+
+= 1.2 =
+- FIX: LTR/RTL visual bug
+
+= 1.1 =
+- bug fixes
+
+= 1.0 =
+- initial release

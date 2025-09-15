@@ -1,0 +1,63 @@
+<section class="fap-post fap-boxx" dir="ltr" data-post-id="" style="width: 100%; max-width: none; border-radius: 0; border: none; box-shadow: none; padding: 12px 16px; border-bottom: none; background-color: var(--bg-color);">
+
+  <header class="fap-post-header fap-boxx" style="margin-bottom: 8px; background-color: var(--bg-color);">
+    <div class="fap-post-subreddit" style="display: flex; align-items: center; font-size: 14px; color: #787c7e; gap: 6px; margin-bottom: 6px;">
+      <a href="https://indexing.co.il/profile-2?email=OWNER_EMAIL" class="fap-profile-link" id="profile-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; color: inherit;">
+        <img id="avatar" src="https://www.gravatar.com/avatar?d=mp" alt="User Avatar" width="32" height="32" 
+          style="border-radius: 50%; object-fit: cover; height: 32px; width: 32px;" />
+        <span class="fap-sub-name" id="username" style="font-weight: 600; color:#787c7e;">Anonymous</span>
+      </a>
+      <span class="fap-post-dot" aria-hidden="true" style="margin: 0 6px;">•</span>
+      <time class="fap-post-time" id="post-date" style="color: #787c7e;">just now</time>
+    </div>
+    <strong class="fap-post-title" style="font-size: 18px; color: var(--text-color); margin-bottom: 6px; cursor: pointer;">
+      <a href="#" id="post-title" style="color: inherit; text-decoration: none;">Post Title</a>
+    </strong>
+  </header>
+
+  <article>
+<div id="post-content" style="font-size: 15px; color: var(--text-color); background-color: var(--bg-color); margin: 0 0 12px 0;">Post content goes here...</div>
+  </article>
+
+  <nav class="fap-post-actions" style="margin-top: 10px; display: flex; align-items: center; gap: 12px;">
+    <button id="like-btn" class="like-button" aria-label="Like this post" 
+      style="border: none !important; background-color: var(--button-bg-color) !important; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; height: 32px; border-radius: 999px; color: var(--text-color); font-weight: 600; font-size: 14px; border: 1px solid #ccc; cursor: pointer;  gap: 6px; white-space: nowrap;">
+      <span class="heart" aria-hidden="true">
+        <span class="heart-gray" style="display: inline;">🤍</span>
+        <span class="heart-red" style="display: none;">❤️</span> 
+      </span>
+      <span id="like-count" class="like-count" style="margin-left: auto; color: var(--text-color); font-weight: 600;">0</span>
+    </button>
+
+    <button id="comment-btn" class="comment-button" aria-label="Show comments"
+    style="border: none !important; background-color: var(--button-bg-color) !important; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; height: 32px; border-radius: 999px; color: var(--text-color); font-weight: 600; font-size: 14px; border: 1px solid #ccc; cursor: pointer; transition: background-color 0.2s ease; gap: 6px; white-space: nowrap;">
+    <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor" height="16" icon-name="comment-outline" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"> <!--?lit$196685649$--><!--?lit$196685649$--><path d="M10 19H1.871a.886.886 0 0 1-.798-.52.886.886 0 0 1 .158-.941L3.1 15.771A9 9 0 1 1 10 19Zm-6.549-1.5H10a7.5 7.5 0 1 0-5.323-2.219l.54.545L3.451 17.5Z"></path><!--?--> </svg>
+    <span id="comment-count">0</span>
+    </button>
+
+    <button id="share-btn" class="share-button" aria-label="Share this post"
+      style="border: none !important; background-color: var(--button-bg-color) !important; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; height: 32px; border-radius: 999px; color: var(--text-color); font-weight: 600; font-size: 14px; border: 1px solid #ccc; cursor: pointer; transition: background-color 0.2s ease; gap: 6px; white-space: nowrap;">
+      <svg rpl="" aria-hidden="true" class="icon-share" fill="currentColor" height="16" icon-name="share-new-outline" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.239 18.723A1.235 1.235 0 0 1 1 17.488C1 11.5 4.821 6.91 10 6.505V3.616a1.646 1.646 0 0 1 2.812-1.16l6.9 6.952a.841.841 0 0 1 0 1.186l-6.9 6.852A1.645 1.645 0 0 1 10 16.284v-2.76c-2.573.243-3.961 1.738-5.547 3.445-.437.47-.881.949-1.356 1.407-.23.223-.538.348-.858.347ZM10.75 7.976c-4.509 0-7.954 3.762-8.228 8.855.285-.292.559-.59.832-.883C5.16 14 7.028 11.99 10.75 11.99h.75v4.294a.132.132 0 0 0 .09.134.136.136 0 0 0 .158-.032L18.186 10l-6.438-6.486a.135.135 0 0 0-.158-.032.134.134 0 0 0-.09.134v4.36h-.75Z"></path>
+    </svg>
+      Share  
+    </button>
+  </nav>
+
+  <section class="fap-comments" id="comments-section" style="margin-top: 10px;">
+    <div id="comment-list" style="">Loading comments...</div>
+    <textarea id="comment-input" placeholder="Add a comment..." aria-label="Comment input" 
+      style="width: 100%; padding: 8px; margin-top: 8px; border-radius: 999px; background: transparent; color: var(--text-color);"></textarea>
+    <button id="post-comment-btn" 
+      style="margin-top: 6px; padding: 6px 12px; color: var(--text-color); border: none !important; background-color: var(--button-bg-color) !important; border-radius: 999px; cursor: pointer;">
+      Comment 
+    </button>
+  </section>
+
+  <footer style="margin-top: 1em; border: none;">
+    <button id="back-btn" 
+      style="color: var(--text-color); padding: 6px 12px; border: none !important; background-color: var(--button-bg-color) !important;  border: 1px solid #ccc; border-radius: 999px; cursor: pointer;">
+      ← Back
+    </button>
+  </footer>
+</section>

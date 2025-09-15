@@ -1,0 +1,1286 @@
+# Blank WordPress Pot
+# Copyright 2014 ...
+# This file is distributed under the GNU General Public License v3 or later.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Blank "
+"WordPress Pot v1.0.0\n"
+"Report-Msgid-Bugs-To: "
+"Translator Name "
+"<translations@example.com>\n"
+"POT-Creation-Date: "
+"2025-07-30 16:28+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Your "
+"Name <you@example.com>\n"
+"Language-Team: Your Team "
+"<translations@example.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; "
+"charset=UTF-8\n"
+"Content-Transfer-"
+"Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; "
+"plural=n != 1;\n"
+"X-Textdomain-Support: "
+"yesX-Generator: Poedit "
+"1.6.4\n"
+"X-Poedit-SourceCharset: "
+"UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;esc_html_e;esc_html_x:1,2c;esc_html__;esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-"
+"SearchPathExcluded-0: "
+"node_modules\n"
+"X-Poedit-"
+"SearchPathExcluded-1: "
+"assets\n"
+"X-Poedit-"
+"SearchPathExcluded-2: "
+"*.js\n"
+"X-Poedit-"
+"SearchPathExcluded-3: .git\n"
+"X-Poedit-"
+"SearchPathExcluded-4: "
+"vendor\n"
+
+#: ezcache.php:219
+msgid "Every 10 Minutes"
+msgstr ""
+
+#: ezcache.php:225
+#: includes/Admin.php:512
+msgid "Hourly"
+msgstr ""
+
+#: ezcache.php:231
+msgid "Every 3 Hours"
+msgstr ""
+
+#: ezcache.php:237
+msgid "Every 6 Hours"
+msgstr ""
+
+#: ezcache.php:243
+msgid "Every 12 Hours"
+msgstr ""
+
+#: ezcache.php:249
+#: includes/Admin.php:510
+msgid "Daily"
+msgstr ""
+
+#: ezcache.php:255
+msgid "Every 3 Days"
+msgstr ""
+
+#: ezcache.php:261
+msgid "Every 5 Days"
+msgstr ""
+
+#: ezcache.php:267
+msgid "Every 7 Days"
+msgstr ""
+
+#: includes/Admin.php:119
+msgid "Caching"
+msgstr ""
+
+#: includes/Admin.php:146
+msgid ""
+"Do not cache this page"
+msgstr ""
+
+#: includes/Admin.php:146
+msgid ""
+"Do not cache this post"
+msgstr ""
+
+#: includes/Admin.php:213
+#: includes/Admin.php:241
+#: includes/Admin.php:274
+#: includes/Admin.php:484
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin.php:234
+#: includes/Admin.php:264
+#: includes/Admin.php:265
+#: includes/Admin.php:470
+#: includes/Admin.php:666
+msgid "ezCache"
+msgstr ""
+
+#: includes/Admin.php:248
+#: includes/Admin.php:480
+msgid "Clear Cache"
+msgstr ""
+
+#: includes/Admin.php:273
+#: includes/Admin.php:486
+msgid "Statistics"
+msgstr ""
+
+#: includes/Admin.php:275
+#: includes/Admin.php:485
+msgid "Advanced Settings"
+msgstr ""
+
+#: includes/Admin.php:276
+#: includes/Admin.php:487
+msgid "License"
+msgstr ""
+
+#: includes/Admin.php:393
+msgid ""
+"This application requires "
+"JavaScript to run"
+msgstr ""
+
+#: includes/Admin.php:468
+msgid "Select All"
+msgstr ""
+
+#: includes/Admin.php:469
+msgid "Select None"
+msgstr ""
+
+#: includes/Admin.php:471
+msgid "Enabled"
+msgstr ""
+
+#: includes/Admin.php:472
+msgid "Disabled"
+msgstr ""
+
+#: includes/Admin.php:473
+msgid "Run a Speed Test"
+msgstr ""
+
+#: includes/Admin.php:474
+msgid "Save Settings"
+msgstr ""
+
+#: includes/Admin.php:475
+msgid "Reset"
+msgstr ""
+
+#: includes/Admin.php:476
+msgid "Reset Settings"
+msgstr ""
+
+#: includes/Admin.php:477
+msgid ""
+"Are you sure you want to "
+"reset the settings to "
+"their default values?"
+msgstr ""
+
+#: includes/Admin.php:478
+msgid "Settings updated."
+msgstr ""
+
+#: includes/Admin.php:479
+msgid ""
+"Could not save settings."
+msgstr ""
+
+#: includes/Admin.php:481
+msgid ""
+"Cache has been cleared."
+msgstr ""
+
+#: includes/Admin.php:482
+msgid "Documentation"
+msgstr ""
+
+#: includes/Admin.php:483
+msgid "Knowledgebase"
+msgstr ""
+
+#: includes/Admin.php:488
+msgid "Recommended"
+msgstr ""
+
+#: includes/Admin.php:489
+msgid "Basic Settings"
+msgstr ""
+
+#: includes/Admin.php:490
+msgid "OK"
+msgstr ""
+
+#: includes/Admin.php:491
+msgid "Cancel"
+msgstr ""
+
+#: includes/Admin.php:492
+msgid "Delete"
+msgstr ""
+
+#: includes/Admin.php:494
+msgid ""
+"Don't cache pages for "
+"known users"
+msgstr ""
+
+#: includes/Admin.php:495
+msgid ""
+"This disables cache for "
+"logged in users."
+msgstr ""
+
+#: includes/Admin.php:496
+msgid ""
+"The admin bar will be "
+"hidden for all users to "
+"prevent it being saved "
+"into the cache."
+msgstr ""
+
+#: includes/Admin.php:497
+msgid ""
+"Don't cache pages for "
+"comment authors"
+msgstr ""
+
+#: includes/Admin.php:498
+msgid ""
+"Do not save cache for "
+"users who saved their "
+"name and email for the "
+"next time they comment."
+msgstr ""
+
+#: includes/Admin.php:499
+msgid "Cache Expiry"
+msgstr ""
+
+#: includes/Admin.php:500
+msgid "Cache Timeout"
+msgstr ""
+
+#: includes/Admin.php:501
+msgid ""
+"How long to keep the "
+"cached data, the "
+"recommended and effective "
+"starting point is one day."
+msgstr ""
+
+#: includes/Admin.php:502
+msgid ""
+"Check for stale cache "
+"every"
+msgstr ""
+
+#: includes/Admin.php:503
+msgid ""
+"Automatically check for "
+"stale cache files and "
+"delete them at a set "
+"interval."
+msgstr ""
+
+#: includes/Admin.php:504
+#: includes/Admin.php:508
+msgid "Interval"
+msgstr ""
+
+#: includes/Admin.php:505
+msgid "Every"
+msgstr ""
+
+#: includes/Admin.php:506
+msgid "Seconds"
+msgstr ""
+
+#: includes/Admin.php:507
+msgid "At Time"
+msgstr ""
+
+#: includes/Admin.php:509
+msgid "Weekly"
+msgstr ""
+
+#: includes/Admin.php:511
+msgid "Twice Daily"
+msgstr ""
+
+#: includes/Admin.php:513
+msgid "At"
+msgstr ""
+
+#: includes/Admin.php:514
+msgid "Cache Bypass"
+msgstr ""
+
+#: includes/Admin.php:515
+msgid ""
+"Don't cache pages where "
+"the URLs contain "
+"parameters in the query "
+"string"
+msgstr ""
+
+#: includes/Admin.php:516
+msgid ""
+"Don't save cache when the "
+"URL contains query string "
+"parameters, such as ?"
+"page_id=15 at the end of "
+"the URL."
+msgstr ""
+
+#: includes/Admin.php:517
+msgid ""
+"Separate cache for mobile "
+"devices"
+msgstr ""
+
+#: includes/Admin.php:518
+msgid ""
+"Save separate cache files "
+"for mobile browsers and a "
+"separate file for desktop "
+"browsers, you should only "
+"enable this option if "
+"your theme is not "
+"responsive and you use a "
+"theme or a plugin that "
+"produces a separate "
+"mobile version of the "
+"website."
+msgstr ""
+
+#: includes/Admin.php:519
+msgid ""
+"Clear cache when a post "
+"or page is published or "
+"updated"
+msgstr ""
+
+#: includes/Admin.php:520
+msgid ""
+"Keep your posts up to "
+"date even when they are "
+"updated by clearing their "
+"cache."
+msgstr ""
+
+#: includes/Admin.php:521
+msgid ""
+"Clear homepage cache when "
+"a post or page is "
+"published or updated"
+msgstr ""
+
+#: includes/Admin.php:522
+msgid ""
+"Make sure your visitors "
+"read the latest posts by "
+"clearing the cache when "
+"you update or publish a "
+"post."
+msgstr ""
+
+#: includes/Admin.php:523
+msgid ""
+"Disable caching for the "
+"following pages"
+msgstr ""
+
+#: includes/Admin.php:524
+msgid "Single Posts"
+msgstr ""
+
+#: includes/Admin.php:525
+msgid "Pages"
+msgstr ""
+
+#: includes/Admin.php:526
+msgid "Front Page"
+msgstr ""
+
+#: includes/Admin.php:527
+msgid "Home"
+msgstr ""
+
+#: includes/Admin.php:528
+msgid "Archives"
+msgstr ""
+
+#: includes/Admin.php:529
+msgid "Tags"
+msgstr ""
+
+#: includes/Admin.php:530
+msgid "Categories"
+msgstr ""
+
+#: includes/Admin.php:531
+msgid "Feeds"
+msgstr ""
+
+#: includes/Admin.php:532
+msgid "Search Results"
+msgstr ""
+
+#: includes/Admin.php:533
+msgid "Author Pages"
+msgstr ""
+
+#: includes/Admin.php:534
+msgid ""
+"Links (URLs) which will "
+"never get cached"
+msgstr ""
+
+#: includes/Admin.php:535
+msgid ""
+"Do not serve cached "
+"content if the URL "
+"matches any link in the "
+"following list"
+msgstr ""
+
+#: includes/Admin.php:536
+msgid ""
+"The domain part of the "
+"URL will be stripped "
+"automatically. Use * "
+"wildcard character to "
+"match multiple characters "
+"at this position (eg. /"
+"product/*)."
+msgstr ""
+
+#: includes/Admin.php:537
+msgid ""
+"User Agents which will "
+"never receive cached data"
+msgstr ""
+
+#: includes/Admin.php:538
+msgid ""
+"Do not serve cached "
+"content to the following "
+"useragents"
+msgstr ""
+
+#: includes/Admin.php:539
+msgid ""
+"Cookies which will "
+"prevent pages from "
+"getting cached"
+msgstr ""
+
+#: includes/Admin.php:540
+msgid ""
+"Specify the cookies that "
+"when set in the visitor's "
+"browser, should prevent a "
+"page from getting cached "
+"(one per line)"
+msgstr ""
+
+#: includes/Admin.php:541
+msgctxt ""
+"rejected cookies example"
+msgid "wordpress_logged_in_"
+msgstr ""
+
+#: includes/Admin.php:542
+#, php-format
+msgid "%s Minutes"
+msgstr ""
+
+#: includes/Admin.php:543
+#, php-format
+msgid "%s Hours"
+msgstr ""
+
+#: includes/Admin.php:544
+#, php-format
+msgid "%s Days"
+msgstr ""
+
+#: includes/Admin.php:545
+msgid "Never Expire"
+msgstr ""
+
+#: includes/Admin.php:546
+msgid ""
+"WP_CACHE is disabled in "
+"your wp-config.php, "
+"caching will not work."
+msgstr ""
+
+#: includes/Admin.php:547
+msgid ""
+"advanced-cache.php is "
+"missing from your wp-"
+"content folder, caching "
+"will not work."
+msgstr ""
+
+#: includes/Admin.php:548
+msgid ""
+"Plugin is not installed "
+"properly, please "
+"reinstall, caching will "
+"not work."
+msgstr ""
+
+#: includes/Admin.php:549
+msgctxt ""
+"statistics block title"
+msgid "Desktop"
+msgstr ""
+
+#: includes/Admin.php:550
+msgctxt ""
+"statistics block title"
+msgid "Mobile"
+msgstr ""
+
+#: includes/Admin.php:551
+msgctxt ""
+"statistics block title"
+msgid "Expire Cache"
+msgstr ""
+
+#: includes/Admin.php:552
+msgctxt ""
+"statistics block title"
+msgid "JavaScript Files"
+msgstr ""
+
+#: includes/Admin.php:553
+msgctxt ""
+"statistics block title"
+msgid "CSS Files"
+msgstr ""
+
+#: includes/Admin.php:554
+msgctxt ""
+"statistics block title"
+msgid "WebP Images"
+msgstr ""
+
+#: includes/Admin.php:555
+msgid "ezCache Cache Usage"
+msgstr ""
+
+#: includes/Admin.php:556
+msgid ""
+"Images optimized with "
+"WebP."
+msgstr ""
+
+#: includes/Admin.php:557
+msgctxt ""
+"settings block title"
+msgid "Cache Bypass"
+msgstr ""
+
+#: includes/Admin.php:558
+msgctxt ""
+"settings block title"
+msgid "Caching"
+msgstr ""
+
+#: includes/Admin.php:559
+msgctxt ""
+"settings block title"
+msgid "Performance"
+msgstr ""
+
+#: includes/Admin.php:560
+msgctxt ""
+"settings block title"
+msgid "Cache Expiration"
+msgstr ""
+
+#: includes/Admin.php:561
+msgid ""
+"Optimize Google fonts"
+msgstr ""
+
+#: includes/Admin.php:562
+msgid ""
+"Combine multiple Google "
+"Fonts declerations into "
+"one."
+msgstr ""
+
+#: includes/Admin.php:563
+msgid "Minify HTML"
+msgstr ""
+
+#: includes/Admin.php:564
+msgid ""
+"Minify the cached HTML to "
+"make cached files smaller."
+msgstr ""
+
+#: includes/Admin.php:565
+msgid ""
+"Minify Inline JavaScript"
+msgstr ""
+
+#: includes/Admin.php:566
+msgid ""
+"Include JavaScript "
+"embedded in the HTML in "
+"the minification process."
+msgstr ""
+
+#: includes/Admin.php:567
+msgid "Minify Inline CSS"
+msgstr ""
+
+#: includes/Admin.php:568
+msgid ""
+"Include CSS embedded in "
+"the HTML in the "
+"minification process."
+msgstr ""
+
+#: includes/Admin.php:569
+msgid "Minify JavaScript"
+msgstr ""
+
+#: includes/Admin.php:570
+msgid ""
+"Minify JavaScript files "
+"to reduce their size."
+msgstr ""
+
+#: includes/Admin.php:571
+msgid "Remove HTML comments"
+msgstr ""
+
+#: includes/Admin.php:572
+msgid ""
+"Remove embeded comments "
+"from minified HTML."
+msgstr ""
+
+#: includes/Admin.php:573
+msgid ""
+"Combine JavaScript in Head"
+msgstr ""
+
+#: includes/Admin.php:574
+msgid ""
+"Combine multiple "
+"JavaScript files found in "
+"the head section of the "
+"HTML into one file."
+msgstr ""
+
+#: includes/Admin.php:575
+msgid ""
+"Combine JavaScript in Body"
+msgstr ""
+
+#: includes/Admin.php:576
+msgid ""
+"Combine multiple "
+"JavaScript files found in "
+"the body section of the "
+"HTML into one file."
+msgstr ""
+
+#: includes/Admin.php:577
+msgid ""
+"Combine Inline JavaScript "
+"in Head"
+msgstr ""
+
+#: includes/Admin.php:578
+msgid ""
+"Combine JavaScript "
+"scripts found in the head "
+"section of the HTML into "
+"the combined JS file."
+msgstr ""
+
+#: includes/Admin.php:579
+msgid ""
+"Combine Inline JavaScript "
+"in Body"
+msgstr ""
+
+#: includes/Admin.php:580
+msgid ""
+"Combine JavaScript "
+"scripts found in the body "
+"section of the HTML into "
+"the combined JS file."
+msgstr ""
+
+#: includes/Admin.php:581
+msgid ""
+"Elementor generates a "
+"unique JS file for each "
+"post/page which can cause "
+"the cache to use large "
+"amounts of disk space, to "
+"fix this make sure to "
+"exclude Elementor JS "
+"files (`elementor/js/post-"
+"*`) from optimizations."
+msgstr ""
+
+#: includes/Admin.php:582
+msgid "Minify CSS"
+msgstr ""
+
+#: includes/Admin.php:583
+msgid ""
+"Minify CSS files to "
+"reduce their size."
+msgstr ""
+
+#: includes/Admin.php:584
+msgid "Combine CSS"
+msgstr ""
+
+#: includes/Admin.php:585
+msgid ""
+"Combine multiple CSS "
+"files into one to reduce "
+"HTTP requests."
+msgstr ""
+
+#: includes/Admin.php:586
+msgid ""
+"Elementor generates a "
+"unique CSS file for each "
+"post/page which can cause "
+"the cache to use large "
+"amounts of disk space, to "
+"fix this make sure to "
+"exclude Elementor CSS "
+"files (`elementor/css/"
+"post-*`) from "
+"optimizations."
+msgstr ""
+
+#: includes/Admin.php:587
+msgid ""
+"Disable WordPress Emoji"
+msgstr ""
+
+#: includes/Admin.php:588
+msgid ""
+"Remove extra code related "
+"to Emoji from WordPress "
+"which was added recently "
+"to support Emoji in an "
+"older browsers."
+msgstr ""
+
+#: includes/Admin.php:589
+msgid ""
+"Your server supports HTTP/"
+"2 which benefits from "
+"having this option kept "
+"disabled"
+msgstr ""
+
+#: includes/Admin.php:590
+msgid ""
+"Optimize Images With WebP"
+msgstr ""
+
+#: includes/Admin.php:592
+#, no-php-format
+msgid ""
+"WebP is a modern image "
+"format that provides "
+"superior lossless and "
+"lossy compression for "
+"images on the web. WebP "
+"lossless images are 26% "
+"smaller in size compared "
+"to PNGs, and 25-34% "
+"smaller than comparable "
+"JPEG images."
+msgstr ""
+
+#: includes/Admin.php:593
+msgid ""
+"Requires a premium license"
+msgstr ""
+
+#: includes/Admin.php:594
+msgctxt "user agent example"
+msgid "Googlebot"
+msgstr ""
+
+#: includes/Admin.php:595
+msgctxt ""
+"rejected uri example"
+msgid "/products/*"
+msgstr ""
+
+#: includes/Admin.php:596
+msgid ""
+"Optimized and cached CSS "
+"files."
+msgstr ""
+
+#: includes/Admin.php:597
+msgid ""
+"Optimized and cached "
+"JavaScript files."
+msgstr ""
+
+#: includes/Admin.php:598
+msgid ""
+"Cache data that has "
+"expired and waiting to be "
+"cleaned up."
+msgstr ""
+
+#: includes/Admin.php:599
+msgid ""
+"Cache data for pages "
+"viewed from mobile "
+"devices."
+msgstr ""
+
+#: includes/Admin.php:600
+msgid ""
+"Cache data for pages "
+"viewed from desktop "
+"computers."
+msgstr ""
+
+#: includes/Admin.php:601
+msgid "General"
+msgstr ""
+
+#: includes/Admin.php:603
+msgid ""
+"Move combined CSS to "
+"footer"
+msgstr ""
+
+#: includes/Admin.php:604
+msgid ""
+"Eliminate render blocking "
+"CSS by moving the "
+"combined CSS file to the "
+"footer section."
+msgstr ""
+
+#: includes/Admin.php:605
+msgid "Critical CSS"
+msgstr ""
+
+#: includes/Admin.php:606
+msgid ""
+"Critical CSS is the "
+"minimum set of blocking "
+"CSS required to render "
+"the first screen's worth "
+"of content to the user in "
+"order to render content "
+"to the user as fast as "
+"possible.\n"
+"The Critical CSS can (and "
+"should) be manually "
+"created to fit the "
+"website perfectly, "
+"however there are tools "
+"that can automatically "
+"generate the Critical CSS "
+"for you."
+msgstr ""
+
+#: includes/Admin.php:607
+msgid ""
+"More information about "
+"Critical CSS"
+msgstr ""
+
+#: includes/Admin.php:608
+msgid ""
+"Online Critical CSS "
+"Generator"
+msgstr ""
+
+#: includes/Admin.php:609
+msgid ""
+"Moving combined CSS to "
+"footer requires the "
+"Combine CSS option "
+"enabled."
+msgstr ""
+
+#: includes/Admin.php:610
+msgid ""
+"Exclude JS/CSS files from "
+"optimization"
+msgstr ""
+
+#: includes/Admin.php:611
+msgid ""
+"List filenames or paths "
+"to files which should be "
+"excluded from "
+"minification or combining."
+msgstr ""
+
+#: includes/Admin.php:612
+msgid ""
+"jquery.js\n"
+"recaptcha/api.js\n"
+"googleadservices.com"
+msgstr ""
+
+#: includes/Admin.php:614
+msgid "Advanced Tools"
+msgstr ""
+
+#: includes/Admin.php:615
+msgid ""
+"Clear WebP Images Cache"
+msgstr ""
+
+#: includes/Admin.php:616
+msgid ""
+"Are you sure that you "
+"want to delete all of the "
+"cached WebP images?\n"
+"Theses images will have "
+"to be converted again "
+"which may take some time."
+msgstr ""
+
+#: includes/Admin.php:617
+msgid ""
+"Error clearing WebP image "
+"cache"
+msgstr ""
+
+#: includes/Admin.php:618
+msgid ""
+"Scheduled task queued"
+msgstr ""
+
+#: includes/Admin.php:619
+msgid ""
+"Error scheduling WebP "
+"process"
+msgstr ""
+
+#: includes/Admin.php:620
+msgid ""
+"Re-Schedule WebP Process "
+"Scheduled Task"
+msgstr ""
+
+#: includes/Admin.php:622
+msgid "License Key"
+msgstr ""
+
+#: includes/Admin.php:623
+msgid ""
+"ezCache pro license will "
+"allow you to use the WebP "
+"image optimization "
+"without limits."
+msgstr ""
+
+#: includes/Admin.php:624
+msgid "Deactivate License"
+msgstr ""
+
+#: includes/Admin.php:625
+msgid "Activate License"
+msgstr ""
+
+#: includes/Admin.php:626
+msgid "License is valid"
+msgstr ""
+
+#: includes/Admin.php:627
+msgid "License is invalid"
+msgstr ""
+
+#: includes/Admin.php:628
+#, php-format
+msgid ""
+"License expires at %s"
+msgstr ""
+
+#: includes/Admin.php:629
+msgid "Unknown"
+msgstr ""
+
+#: includes/Admin.php:630
+msgid "Status"
+msgstr ""
+
+#: includes/Admin.php:631
+msgid "License Details"
+msgstr ""
+
+#: includes/Admin.php:632
+msgid "License Type"
+msgstr ""
+
+#: includes/Admin.php:633
+msgctxt "license type"
+msgid "Trial"
+msgstr ""
+
+#: includes/Admin.php:634
+msgctxt "license type"
+msgid "Pro"
+msgstr ""
+
+#: includes/Admin.php:635
+msgid "Expires In"
+msgstr ""
+
+#: includes/Admin.php:636
+msgid "Expires At"
+msgstr ""
+
+#: includes/Admin.php:637
+msgid "Convertions Left"
+msgstr ""
+
+#: includes/Admin.php:638
+#, php-format
+msgid ""
+"%s days after first usage"
+msgstr ""
+
+#: includes/Admin.php:639
+msgid "Get a Pro License"
+msgstr ""
+
+#: includes/Admin.php:640
+msgid "Expired"
+msgstr ""
+
+#: includes/Admin.php:641
+msgid ""
+"Will not expire while "
+"hosted on uPress"
+msgstr ""
+
+#: includes/Admin.php:643
+msgid ""
+"uPress Premium WordPress "
+"Hosting"
+msgstr ""
+
+#: includes/Admin.php:644
+msgid "www.upress.io"
+msgstr ""
+
+#: includes/Admin.php:645
+msgid ""
+"https://www.upress.io/?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+
+#: includes/Admin.php:646
+#, php-format
+msgid ""
+"https://speedom.net/?"
+"url=%s&location=US-"
+"NY&utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+
+#: includes/Admin.php:647
+msgid ""
+"https://ezcache.app/"
+"documentation?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+
+#: includes/Admin.php:648
+msgid ""
+"https://ezcache.app/"
+"knowledgebase?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+
+#: includes/Admin.php:649
+msgid ""
+"https://ezcache.app/"
+"pricing?"
+"utm_source=wordpress&utm_medium=cpc&utm_campaign=ezcache"
+msgstr ""
+
+#: includes/Admin.php:666
+#, php-format
+msgid ""
+"WebP Processing is "
+"currently running, %d "
+"images remaining."
+msgstr ""
+
+#: includes/LicenseApi.php:76
+msgid ""
+"Can't set empty license "
+"key"
+msgstr ""
+
+#: includes/LicenseApi.php:202
+#: includes/LicenseApi.php:203
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence key successfully "
+"activated for the current "
+"domain"
+msgstr ""
+
+#: includes/LicenseApi.php:204
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence key successfully "
+"unassigned"
+msgstr ""
+
+#: includes/LicenseApi.php:205
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence key is not valid "
+"for this website"
+msgstr ""
+
+#: includes/LicenseApi.php:206
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence key is active and "
+"valid for this website"
+msgstr ""
+
+#: includes/LicenseApi.php:210
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence key successfully "
+"deleted"
+msgstr ""
+
+#: includes/LicenseApi.php:213
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Invalid provided data"
+msgstr ""
+
+#: includes/LicenseApi.php:214
+msgctxt ""
+"license API response "
+"message"
+msgid "Invalid licence key"
+msgstr ""
+
+#: includes/LicenseApi.php:215
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Order does not exists "
+"anymore"
+msgstr ""
+
+#: includes/LicenseApi.php:216
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Order status not allowed"
+msgstr ""
+
+#: includes/LicenseApi.php:217
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Invalid licence key or "
+"licence not active for "
+"domain"
+msgstr ""
+
+#: includes/LicenseApi.php:218
+msgctxt ""
+"license API response "
+"message"
+msgid "Invalid data"
+msgstr ""
+
+#: includes/LicenseApi.php:219
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"You had reached the "
+"maximum number of domains "
+"for this key"
+msgstr ""
+
+#: includes/LicenseApi.php:220
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence key not active "
+"for current domain"
+msgstr ""
+
+#: includes/LicenseApi.php:221
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence key does not "
+"match this product"
+msgstr ""
+
+#: includes/LicenseApi.php:222
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Licence is not active"
+msgstr ""
+
+#: includes/LicenseApi.php:223
+msgctxt ""
+"license API response "
+"message"
+msgid ""
+"Invalid product unique ID"
+msgstr ""
+
+#: includes/LicenseApi.php:226
+msgid "Unknown error"
+msgstr ""

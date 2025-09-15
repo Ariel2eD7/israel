@@ -1,0 +1,207 @@
+<section id="fap-auth-modal-section">
+  <!-- Auth Modal Overlay -->
+  <section
+    class="auth-flow-modal-overlay"
+    id="fap-login-popup"
+    role="dialog"
+    aria-modal="true"
+    style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999;"
+  >
+    <article
+      class="auth-flow-modal"
+      style="height: 100vh; background: var(--ui-modalbackground, #fff); max-width: 400px; width: 100%; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; position: relative; direction: ltr;"
+    >
+      <!-- Close Button -->
+      <button
+        aria-label="Close"
+        id="auth-close-btn"
+        class="close-button"
+        type="button"
+        style="position:absolute; top:12px; right:12px; width:32px; height:32px; background:lightgray; border:none; border-radius:50%; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; margin:0; box-sizing:border-box; transition:background-color 0.2s ease, color 0.2s ease;"
+      >
+        <svg
+          viewBox="0 0 20 20"
+          style="width:16px; height:16px; display:block; fill:black;"
+        >
+          <path
+            d="M11.06 10l6.22-6.22a.77.77 0 0 0-.015-1.046.77.77 0 0 0-1.045-.014L10 8.94 3.78 2.72a.77.77 0 0 0-1.042.018.77.77 0 0 0-.018 1.042L8.94 10l-6.22 6.22a.758.758 0 0 0-.02 1.08.758.758 0 0 0 1.08-.02L10 11.06l6.22 6.22a.77.77 0 0 0 1.041-.018.77.77 0 0 0 .019-1.042L11.06 10z"
+          />
+        </svg>
+      </button>
+
+      <!-- Modal Body -->
+      <section class="auth-modal-body" style="margin-top: 32px; flex-grow: 1; display: flex; flex-direction: column;">
+
+        <!-- Login Form -->
+        <form
+          id="auth-login-form"
+          style="display: flex; flex-direction: column; flex-grow: 1;"
+          onsubmit="event.preventDefault(); fapLogin();"
+        >
+          <!-- Scrollable content -->
+          <div style="flex-grow: 1; overflow-y: auto; padding-right: 8px;">
+            <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; text-align: center;">
+              Log In
+            </h1>
+            <p style="font-size: 0.9rem; margin-bottom: 24px; color: #555; text-align: center;">
+              By continuing, you agree to our
+              <a href="#" style="color: #0079d3; text-decoration: none;">User Agreement</a> and
+              <a href="#" style="color: #0079d3; text-decoration: none;">Privacy Policy</a>.
+            </p>
+
+            
+            <button
+  id="fap-google-login-btn"
+  type="button"
+  style="
+    position: relative;
+    width: 100%;
+    height: 44px;
+    padding: 0 24px;
+    border: 1px solid #dadce0;
+    border-radius: 9999px;
+    background-color: #fff;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    color: #3c4043;
+    cursor: pointer;
+    text-align: center;
+    line-height: 44px;
+    overflow: hidden;
+  "
+>
+  <img
+    src="https://developers.google.com/identity/images/g-logo.png"
+    alt="Google logo"
+    style="
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+    "
+  />
+  Continue with Google
+</button>
+
+
+
+            <div style="display: flex; align-items: center; margin-bottom: 16px;">
+              <hr style="flex-grow: 1; border: none; height: 1px; background: #ccc;" />
+              <span style="margin: 0 10px; color: #888;">OR</span>
+              <hr style="flex-grow: 1; border: none; height: 1px; background: #ccc;" />
+            </div>
+
+            <input
+              type="email"
+              id="fap-login-email"
+              placeholder="Email or username"
+              required
+              style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 1.25rem; border: 1px solid #ccc;"
+            />
+            <input
+              type="password"
+              id="fap-login-password"
+              placeholder="Password"
+              required
+              style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 1.25rem; border: 1px solid #ccc;"
+            />
+
+            <div style="margin-bottom: 16px;">
+              <a href="#" style="font-size: 0.9rem; color: #0079d3; text-decoration: none;">Forgot password?</a>
+              <p style="margin-top: 15px; font-size: 0.9rem; color: #555;">
+                New to Reddit?
+                <a href="#" id="switch-to-register" style="color: #0079d3; text-decoration: none;">Sign Up</a>
+              </p>
+            </div>
+          </div>
+
+          <!-- Submit button fixed at bottom -->
+          <div style="padding-top: 12px;">
+          <button
+  id="fap-login-submit"
+  type="submit"
+  disabled
+  style="
+    width: 100%;
+    height: 44px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 9999px;
+    background-color: #0079d3;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    color: white;
+    font-weight: 600;
+    cursor: not-allowed;
+    text-align: center;
+    line-height: 44px;
+    opacity: 0.5;
+  "
+>
+  Log In
+</button>
+
+          </div>
+        </form>
+
+        <!-- Register Form -->
+        <form
+          id="auth-register-form"
+          style="display: none;  flex-direction: column; flex-grow: 1;"
+          onsubmit="event.preventDefault(); fapRegister();"
+        >
+          <!-- Scrollable content -->
+          <div style="flex-grow: 1; overflow-y: auto; padding-right: 8px;">
+            <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; text-align: center;">
+              Sign Up
+            </h1>
+            <p style="font-size: 0.9rem; margin-bottom: 24px; color: #555; text-align: center;">
+              By continuing, you agree to our
+              <a href="#" style="color: #0079d3; text-decoration: none;">User Agreement</a> and
+              <a href="#" style="color: #0079d3; text-decoration: none;">Privacy Policy</a>.
+            </p>
+
+            <input
+              type="text"
+              id="fap-register-name"
+              placeholder="Username"
+              required
+              style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #ccc;"
+            />
+            <input
+              type="email"
+              id="fap-register-email"
+              placeholder="Email"
+              required
+              style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #ccc;"
+            />
+            <input
+              type="password"
+              id="fap-register-password"
+              placeholder="Password"
+              required
+              style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #ccc;"
+            />
+
+            <p style="margin-top: 24px; font-size: 0.9rem; color: #555;">
+              Already have an account?
+              <a href="#" id="switch-to-login" style="color: #0079d3; text-decoration: none;">Log in</a>
+            </p>
+          </div>
+
+          <!-- Submit button fixed at bottom -->
+          <div style="padding-top: 12px;">
+            <button
+              type="submit"
+              style="width: 100%; padding: 12px; border-radius: 6px; border: none; background: #0079d3; color: white; font-weight: 600; cursor: pointer;"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </section>
+    </article>
+  </section>
+</section>
