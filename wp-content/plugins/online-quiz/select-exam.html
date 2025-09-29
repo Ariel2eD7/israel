@@ -1,39 +1,76 @@
-<section style="padding-top: 57px; display: flex; flex-direction: column; align-items: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+<section style="padding-top: 57px; display: flex; flex-direction: column; align-items: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
 
-    <label for="university" style="margin-bottom: 8px; font-weight: 600; color: #333;">בחר מוסד:</label>
-    <select id="university" style="width: 300px; padding: 10px; font-size: 16px; margin-bottom: 20px; border: 1.5px solid #ccc; border-radius: 8px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
-        <option disabled selected>Select an option...</option>
-        <option value="uni1">University 1</option>
-        <option value="uni2">University 2</option>
-    </select>
+<!-- Dropdown 1: University -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <label for="firstDropdown" style="margin-bottom: 8px; display: block; font-weight: 600; color: #333;">בחר מוסד:</label>
+    <div id="firstDropdownBox" onclick="toggleDropdown('firstDropdown')" style="width: 100%; padding: 10px 12px; font-size: 16px; cursor: pointer; border: 1.5px solid #ccc; border-radius: 8px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: #fff; transition: border-color 0.3s;">
+      Select an option...
+    </div>
+    <div id="firstDropdownOptions" style="display: none; position: absolute; border: 1.5px solid #ccc; border-radius: 8px; background-color: white; max-height: 180px; overflow-y: auto; width: 100%; z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+        <input type="text" oninput="filterOptions('firstDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 10px 12px; margin-bottom: 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; outline:none;">
+    </div>
+</div>
 
-    <label for="faculty" style="margin-bottom: 8px; font-weight: 600; color: #333;">בחר פקולטה:</label>
-    <select id="faculty" disabled style="width: 300px; padding: 10px; font-size: 16px; margin-bottom: 20px; border: 1.5px solid #ddd; border-radius: 8px; background-color: #f9f9f9; color: #aaa; cursor: not-allowed;">
-        <option selected>Select an option...</option>
-    </select>
+<!-- Dropdown 2: School -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <label for="secondDropdown" style="margin-bottom: 8px; display: block; font-weight: 600; color: #333;">בחר פקולטה:</label>
+    <div id="secondDropdownBox" class="disabled" onclick="toggleDropdown('secondDropdown')" disabled style="width: 100%; padding: 10px 12px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f9f9f9; border: 1.5px solid #ddd; border-radius: 8px; color: #aaa; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+      Select an option...
+    </div>
+    <div id="secondDropdownOptions" style="display: none; position: absolute; border: 1.5px solid #ccc; border-radius: 8px; background-color: white; max-height: 180px; overflow-y: auto; width: 100%; z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+        <input type="text" oninput="filterOptions('secondDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 10px 12px; margin-bottom: 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; outline:none;">
+    </div>
+</div>
 
-    <label for="course" style="margin-bottom: 8px; font-weight: 600; color: #333;">בחר קורס:</label>
-    <select id="course" disabled style="width: 300px; padding: 10px; font-size: 16px; margin-bottom: 20px; border: 1.5px solid #ddd; border-radius: 8px; background-color: #f9f9f9; color: #aaa; cursor: not-allowed;">
-        <option selected>Select an option...</option>
-    </select>
+<!-- Dropdown 3: Course -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <label for="thirdDropdown" style="margin-bottom: 8px; display: block; font-weight: 600; color: #333;">בחר קורס:</label>
+    <div id="thirdDropdownBox" class="disabled" onclick="toggleDropdown('thirdDropdown')" disabled style="width: 100%; padding: 10px 12px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f9f9f9; border: 1.5px solid #ddd; border-radius: 8px; color: #aaa; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+      Select an option...
+    </div>
+    <div id="thirdDropdownOptions" style="display: none; position: absolute; border: 1.5px solid #ccc; border-radius: 8px; background-color: white; max-height: 180px; overflow-y: auto; width: 100%; z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+        <input type="text" oninput="filterOptions('thirdDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 10px 12px; margin-bottom: 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; outline:none;">
+    </div>
+</div>
 
-    <label for="year" style="margin-bottom: 8px; font-weight: 600; color: #333;">בחר שנה:</label>
-    <select id="year" disabled style="width: 300px; padding: 10px; font-size: 16px; margin-bottom: 20px; border: 1.5px solid #ddd; border-radius: 8px; background-color: #f9f9f9; color: #aaa; cursor: not-allowed;">
-        <option selected>Select an option...</option>
-    </select>
+<!-- Dropdown 4: Year -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <label for="fourthDropdown" style="margin-bottom: 8px; display: block; font-weight: 600; color: #333;">בחר שנה:</label>
+    <div id="fourthDropdownBox" class="disabled" onclick="toggleDropdown('fourthDropdown')" disabled style="width: 100%; padding: 10px 12px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f9f9f9; border: 1.5px solid #ddd; border-radius: 8px; color: #aaa; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+      Select an option...
+    </div>
+    <div id="fourthDropdownOptions" style="display: none; position: absolute; border: 1.5px solid #ccc; border-radius: 8px; background-color: white; max-height: 180px; overflow-y: auto; width: 100%; z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+        <input type="text" oninput="filterOptions('fourthDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 10px 12px; margin-bottom: 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; outline:none;">
+    </div>
+</div>
 
-    <label for="semester" style="margin-bottom: 8px; font-weight: 600; color: #333;">בחר סמסטר:</label>
-    <select id="semester" disabled style="width: 300px; padding: 10px; font-size: 16px; margin-bottom: 20px; border: 1.5px solid #ddd; border-radius: 8px; background-color: #f9f9f9; color: #aaa; cursor: not-allowed;">
-        <option selected>Select an option...</option>
-    </select>
+<!-- Dropdown 5: Semester -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <label for="fifthDropdown" style="margin-bottom: 8px; display: block; font-weight: 600; color: #333;">בחר סמסטר:</label>
+    <div id="fifthDropdownBox" class="disabled" onclick="toggleDropdown('fifthDropdown')" style="width: 100%; padding: 10px 12px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f9f9f9; border: 1.5px solid #ddd; border-radius: 8px; color: #aaa; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+      Select an option...
+    </div>
+    <div id="fifthDropdownOptions" class="options-container" style="display: none; position: absolute; border: 1.5px solid #ccc; border-radius: 8px; background-color: white; max-height: 180px; overflow-y: auto; width: 100%; z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+        <input type="text" oninput="filterOptions('fifthDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 10px 12px; margin-bottom: 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; outline:none;">
+    </div>
+</div>
 
-    <label for="term" style="margin-bottom: 8px; font-weight: 600; color: #333;">בחר מועד:</label>
-    <select id="term" disabled style="width: 300px; padding: 10px; font-size: 16px; margin-bottom: 20px; border: 1.5px solid #ddd; border-radius: 8px; background-color: #f9f9f9; color: #aaa; cursor: not-allowed;">
-        <option selected>Select an option...</option>
-    </select>
+<!-- Dropdown 6: Term -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <label for="sixthDropdown" style="margin-bottom: 8px; display: block; font-weight: 600; color: #333;">בחר מועד:</label>
+    <div id="sixthDropdownBox" class="disabled" onclick="toggleDropdown('sixthDropdown')" disabled style="width: 100%; padding: 10px 12px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f9f9f9; border: 1.5px solid #ddd; border-radius: 8px; color: #aaa; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+      Select an option...
+    </div>
+    <div id="sixthDropdownOptions" style="display: none; position: absolute; border: 1.5px solid #ccc; border-radius: 8px; background-color: white; max-height: 180px; overflow-y: auto; width: 100%; z-index: 10; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+        <input type="text" oninput="filterOptions('sixthDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 10px 12px; margin-bottom: 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; outline:none;">
+    </div>
+</div>
 
-    <button type="button" style="width: 300px; padding: 12px 0; font-size: 17px; font-weight: 600; border: none; border-radius: 10px; background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(53, 122, 189, 0.4);">
-        התחל מבחן
+<!-- Submit Button -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <button id="submitButton" style="width: 100%; padding: 12px 0; font-size: 17px; font-weight: 600; border: none; border-radius: 10px; background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(53, 122, 189, 0.6); transition: background 0.3s ease;">
+      התחל מבחן
     </button>
+</div>
 
 </section>
