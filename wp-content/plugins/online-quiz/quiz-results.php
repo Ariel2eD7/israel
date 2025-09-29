@@ -23,78 +23,91 @@ function display_quiz_results() {
           };
         </script>
 
-        <script>
-          // Wait for Firebase to be ready
-          async function waitForFirebase() {
-            return new Promise(resolve => {
-              const check = () => {
-                if (window.fapFirebase && window.fapFirebase.db) {
-                  resolve(window.fapFirebase.db);
-                } else {
-                  setTimeout(check, 100);
-                }
-              };
-              check();
-            });
-          }
+<script>
+  console.log("Starting quiz results rendering...");
+  console.log("quizResultsData:", quizResultsData);
 
-          document.addEventListener('DOMContentLoaded', async () => {
-            const container = document.getElementById('quiz-results-container');
-            if (!container) return;
+  async function waitForFirebase() {
+    return new Promise(resolve => {
+      const check = () => {
+        console.log("Checking Firebase availability...");
+        if (window.fapFirebase && window.fapFirebase.db) {
+          console.log("Firebase DB is ready");
+          resolve(window.fapFirebase.db);
+        } else {
+          setTimeout(check, 100);
+        }
+      };
+      check();
+    });
+  }
 
-            const { quizId, userAnswersJson, score, timeSpent } = quizResultsData;
+  document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('quiz-results-container');
+    if (!container) {
+      console.error("Container #quiz-results-container not found");
+      return;
+    }
 
-            if (!quizId || !userAnswersJson) {
-              container.textContent = 'Missing quiz data.';
-              return;
-            }
+    const { quizId, userAnswersJson, score, timeSpent } = quizResultsData;
+    console.log("Params:", quizId, userAnswersJson, score, timeSpent);
 
-            let userAnswers;
-            try {
-              userAnswers = JSON.parse(decodeURIComponent(userAnswersJson));
-            } catch {
-              container.textContent = 'Invalid user answers format.';
-              return;
-            }
+    if (!quizId || !userAnswersJson) {
+      container.textContent = 'Missing quiz data.';
+      return;
+    }
 
-            try {
-              const db = await waitForFirebase();
-              const doc = await db.collection('exams').doc(quizId).get();
+    let userAnswers;
+    try {
+      userAnswers = JSON.parse(decodeURIComponent(userAnswersJson));
+      console.log("Parsed userAnswers:", userAnswers);
+    } catch (e) {
+      console.error("Failed to parse userAnswers:", e);
+      container.textContent = 'Invalid user answers format.';
+      return;
+    }
 
-              if (!doc.exists) {
-                container.textContent = 'Quiz not found.';
-                return;
-              }
+    try {
+      const db = await waitForFirebase();
+      console.log("Got Firestore db:", db);
 
-              const quiz = doc.data();
-              const questions = quiz.questions || [];
+      const doc = await db.collection('exams').doc(quizId).get();
+      console.log("Got quiz doc:", doc.exists, doc.data());
 
-              let html = `<h2>${quiz.title || 'Quiz Results'}</h2>`;
+      if (!doc.exists) {
+        container.textContent = 'Quiz not found.';
+        return;
+      }
 
-              questions.forEach((q, i) => {
-                const userAnswer = userAnswers[i] || '(No answer)';
-                const correctAnswerObj = (q.answers || []).find(a => a.correct);
-                const correctAnswer = correctAnswerObj ? correctAnswerObj.text : 'N/A';
-                const isCorrect = userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
+      const quiz = doc.data();
+      const questions = quiz.questions || [];
 
-                html += `<p style="background-color: ${isCorrect ? '#90EE90' : '#FFC0CB'};">
-                  <strong>${i + 1}. ${q.text}</strong></p>`;
-                html += `<p>${isCorrect ? '✅' : '❌'} Your answer: <strong style="color: ${isCorrect ? 'green' : 'red'};">${userAnswer}</strong></p>`;
-                if (!isCorrect) {
-                  html += `<p>Correct answer: <strong>${correctAnswer}</strong></p>`;
-                }
-              });
+      let html = `<h2>${quiz.title || 'Quiz Results'}</h2>`;
 
-              html += `<h3>Your Score: ${score}/${questions.length}</h3>`;
-              html += `<h4>Time Spent: ${new Date(timeSpent * 1000).toISOString().substr(11, 8)}</h4>`;
+      questions.forEach((q, i) => {
+        const userAnswer = userAnswers[i] || '(No answer)';
+        const correctAnswerObj = (q.answers || []).find(a => a.correct);
+        const correctAnswer = correctAnswerObj ? correctAnswerObj.text : 'N/A';
+        const isCorrect = userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
 
-              container.innerHTML = html;
-            } catch (error) {
-              console.error(error);
-              container.textContent = 'Error loading quiz results.';
-            }
-          });
-        </script>
+        html += `<p style="background-color: ${isCorrect ? '#90EE90' : '#FFC0CB'};">
+          <strong>${i + 1}. ${q.text}</strong></p>`;
+        html += `<p>${isCorrect ? '✅' : '❌'} Your answer: <strong style="color: ${isCorrect ? 'green' : 'red'};">${userAnswer}</strong></p>`;
+        if (!isCorrect) {
+          html += `<p>Correct answer: <strong>${correctAnswer}</strong></p>`;
+        }
+      });
+
+      html += `<h3>Your Score: ${score}/${questions.length}</h3>`;
+      html += `<h4>Time Spent: ${new Date(timeSpent * 1000).toISOString().substr(11, 8)}</h4>`;
+
+      container.innerHTML = html;
+    } catch (error) {
+      console.error("Error loading quiz results:", error);
+      container.textContent = 'Error loading quiz results.';
+    }
+  });
+</script>
         <?php
         return ob_get_clean();
     }
