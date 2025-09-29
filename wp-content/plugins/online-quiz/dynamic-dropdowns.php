@@ -223,7 +223,7 @@ function clearSubsequentDropdowns(id) {
 
             // If a matching quiz is found, redirect with the quiz ID
             if (selectedQuiz) {
-                window.location.href = 'https://israel.ussl.co/exam/?quiz_id=' + (selectedQuiz.id - 1);
+                window.location.href = 'https://israel.ussl.co//exam/?quiz_id=' + (selectedQuiz.id - 1);
             } else {
                 alert('No matching quiz found!');
             }
