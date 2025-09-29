@@ -59,7 +59,17 @@ function display_quiz_results() {
 
     let userAnswers;
     try {
-      userAnswers = JSON.parse(decodeURIComponent(userAnswersJson));
+
+          function decodeHtmlEntities(str) {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+  }
+  
+
+  
+const decodedStr = decodeHtmlEntities(decodeURIComponent(userAnswersJson));
+userAnswers = JSON.parse(decodedStr);
       console.log("Parsed userAnswers:", userAnswers);
     } catch (e) {
       console.error("Failed to parse userAnswers:", e);
