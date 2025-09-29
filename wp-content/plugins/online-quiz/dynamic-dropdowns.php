@@ -70,7 +70,7 @@ function searchable_dropdowns()
         </div>
     </div>
 
-    <Button id="submitButton">התחל מבחן</Button>
+    <Button id="submitButton" style="top: 57px !important;">התחל מבחן</Button>
     
 
 
