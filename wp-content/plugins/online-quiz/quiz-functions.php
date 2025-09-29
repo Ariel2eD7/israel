@@ -136,7 +136,7 @@ function display_online_quiz() {
         // ✅ Wait for Firebase to exist
   const { db } = await waitForFirebase();
   console.log('Firebase ready, loading quiz…');
-  
+
 
       // Wait until Firebase is ready (if you’re injecting it in fap_enqueue_scripts)
       if (!window.fapFirebase || !window.fapFirebase.db) {
@@ -144,7 +144,6 @@ function display_online_quiz() {
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
         return;
       }
-      const { db } = window.fapFirebase;
 
       try {
         const docRef = db.collection('exams').doc(quizId);
