@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
     }
 });
-JS;
+JS; 
 
     // Inject JS into placeholder
     $html = str_replace('{{quiz_script}}', $script, $html);

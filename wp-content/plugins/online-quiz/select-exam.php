@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
       jsonData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
     }).catch(console.error);
-  }
+  } 
 
   function populateDropdown(id, items) {
     const container = document.getElementById(id + "Options");

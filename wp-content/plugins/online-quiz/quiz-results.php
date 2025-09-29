@@ -2,54 +2,101 @@
 // quiz-results.php
 
 function display_quiz_results() {
-    if (isset($_GET['quiz_id'], $_GET['answers'], $_GET['score'])) {
-        $quiz_id = intval($_GET['quiz_id']);
-        $user_answers = json_decode(urldecode(stripslashes($_GET['answers'])));
+    if (isset($_GET['quiz_id'], $_GET['answers'], $_GET['score'], $_GET['time_spent'])) {
+        // Sanitize inputs for safe output in JS
+        $quiz_id = esc_js(sanitize_text_field($_GET['quiz_id']));
+        $answers = esc_js(sanitize_text_field($_GET['answers']));
         $score = intval($_GET['score']);
         $time_spent = intval($_GET['time_spent']);
-        
-        $quiz_data = load_quiz_data();
 
-        if (!$quiz_data || !isset($quiz_data['quizzes'][$quiz_id])) {
-            return "<p>Invalid quiz selected.</p>";
-        }
+        ob_start();
+        ?>
+        <div id="quiz-results-container">Loading quiz results...</div>
 
-        $selected_quiz = $quiz_data['quizzes'][$quiz_id];
+        <script>
+          // Pass PHP data safely to JS
+          const quizResultsData = {
+            quizId: '<?php echo $quiz_id; ?>',
+            userAnswersJson: '<?php echo $answers; ?>',
+            score: <?php echo $score; ?>,
+            timeSpent: <?php echo $time_spent; ?>
+          };
+        </script>
 
-        // Prepare question results HTML
-        $questions_html = "";
-        foreach ($selected_quiz['questions'] as $index => $question) {
-            $user_answer = $user_answers[$index] ?? null;
-            $is_correct = strtolower(trim($user_answer)) === strtolower(trim($question['answer']));
+        <script>
+          // Wait for Firebase to be ready
+          async function waitForFirebase() {
+            return new Promise(resolve => {
+              const check = () => {
+                if (window.fapFirebase && window.fapFirebase.db) {
+                  resolve(window.fapFirebase.db);
+                } else {
+                  setTimeout(check, 100);
+                }
+              };
+              check();
+            });
+          }
 
-            $questions_html .= "<p style='background-color: " . ($is_correct ? "#90EE90" : "") . ";'><strong>" . ($index + 1) . ". {$question['question']}</strong></p>";
-            $questions_html .= "<p>" . ($is_correct ? "✅" : "❌") . " Your answer: <strong style='color: " . ($is_correct ? "green" : "red") . ";'>$user_answer</strong></p>";
-            if (!$is_correct) {
-                $questions_html .= "<p>Correct answer: <strong>{$question['answer']}</strong></p>";
+          document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('quiz-results-container');
+            if (!container) return;
+
+            const { quizId, userAnswersJson, score, timeSpent } = quizResultsData;
+
+            if (!quizId || !userAnswersJson) {
+              container.textContent = 'Missing quiz data.';
+              return;
             }
-        }
 
-        // Load HTML template
-        $html_path = plugin_dir_path(__FILE__) . 'quiz-results.html';
-        if (!file_exists($html_path)) {
-            return "<p>Error: Results template not found.</p>";
-        }
-        $html_template = file_get_contents($html_path);
+            let userAnswers;
+            try {
+              userAnswers = JSON.parse(decodeURIComponent(userAnswersJson));
+            } catch {
+              container.textContent = 'Invalid user answers format.';
+              return;
+            }
 
-        // Replace placeholders in the template
-        $html_output = str_replace(
-            ['{{quiz_title}}', '{{questions}}', '{{score}}', '{{total_questions}}', '{{time_spent}}'],
-            [
-                htmlspecialchars($selected_quiz['quiz_title']),
-                $questions_html,
-                $score,
-                count($selected_quiz['questions']),
-                gmdate("H:i:s", $time_spent)
-            ],
-            $html_template
-        );
+            try {
+              const db = await waitForFirebase();
+              const doc = await db.collection('exams').doc(quizId).get();
 
-        return $html_output;
+              if (!doc.exists) {
+                container.textContent = 'Quiz not found.';
+                return;
+              }
+
+              const quiz = doc.data();
+              const questions = quiz.questions || [];
+
+              let html = `<h2>${quiz.title || 'Quiz Results'}</h2>`;
+
+              questions.forEach((q, i) => {
+                const userAnswer = userAnswers[i] || '(No answer)';
+                const correctAnswerObj = (q.answers || []).find(a => a.correct);
+                const correctAnswer = correctAnswerObj ? correctAnswerObj.text : 'N/A';
+                const isCorrect = userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
+
+                html += `<p style="background-color: ${isCorrect ? '#90EE90' : '#FFC0CB'};">
+                  <strong>${i + 1}. ${q.text}</strong></p>`;
+                html += `<p>${isCorrect ? '✅' : '❌'} Your answer: <strong style="color: ${isCorrect ? 'green' : 'red'};">${userAnswer}</strong></p>`;
+                if (!isCorrect) {
+                  html += `<p>Correct answer: <strong>${correctAnswer}</strong></p>`;
+                }
+              });
+
+              html += `<h3>Your Score: ${score}/${questions.length}</h3>`;
+              html += `<h4>Time Spent: ${new Date(timeSpent * 1000).toISOString().substr(11, 8)}</h4>`;
+
+              container.innerHTML = html;
+            } catch (error) {
+              console.error(error);
+              container.textContent = 'Error loading quiz results.';
+            }
+          });
+        </script>
+        <?php
+        return ob_get_clean();
     }
 
     return "<p>No quiz results to display.</p>";
