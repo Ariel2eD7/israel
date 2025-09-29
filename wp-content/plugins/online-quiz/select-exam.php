@@ -20,6 +20,24 @@ function select_exam_screen() {
     $html_content .= '
     <script>
     document.addEventListener("DOMContentLoaded", function() {
+
+
+    window.toggleDropdown = function(id) {
+    const optionsDiv = document.getElementById(id + "Options");
+    if (!optionsDiv) return;
+
+    // Close any other open dropdowns except this one
+
+    document.querySelectorAll("[id$=\"Options\"]").forEach(c => c.style.display = "none");
+
+    
+    // Toggle current dropdown visibility
+    optionsDiv.style.display = optionsDiv.style.display === "block" ? "none" : "block";
+};
+
+
+
+    
         let jsonData = [];
         fetch("' . plugin_dir_url(__FILE__) . 'quiz-data3.json")
             .then(res => res.json())
