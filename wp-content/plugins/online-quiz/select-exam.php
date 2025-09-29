@@ -30,7 +30,7 @@ function select_exam_screen() {
 
     document.querySelectorAll("[id$=\"Options\"]").forEach(c => c.style.display = "none");
 
-    
+
     // Toggle current dropdown visibility
     optionsDiv.style.display = optionsDiv.style.display === "block" ? "none" : "block";
 };
@@ -51,7 +51,8 @@ function select_exam_screen() {
             container.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${id}\', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">` +
                 items.map(item => {
                     const escapedItem = item.replace(/\'/g, "&#39;");
-                    return `<div class="option" data-option="${escapedItem}" onclick="selectOption(\'${id}\', \'${escapedItem}\')" style="padding: 8px; cursor: pointer;">${item}</div>`;
+                   return `<div class="option" data-option="${escapedItem}" onclick="selectOption('${id}', ${JSON.stringify(escapedItem)})" style="padding: 8px; cursor: pointer;">${item}</div>`;
+
                 }).join("");
         }
 
