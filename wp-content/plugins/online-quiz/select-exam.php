@@ -17,45 +17,42 @@ function select_exam_screen() {
     $html_content = file_get_contents($html_path);
 
     // Add the JavaScript, wrapped in DOMContentLoaded
-    $html_content .= '
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
+$html_content .= '
+<script>
+document.addEventListener("DOMContentLoaded", function() {
 
-
-    window.toggleDropdown = function(id) {
+  window.toggleDropdown = function(id) {
     const optionsDiv = document.getElementById(id + "Options");
     if (!optionsDiv) return;
-
-    // Close any other open dropdowns except this one
-
-    document.querySelectorAll("[id$=\"Options\"]").forEach(c => c.style.display = "none");
-
-    
-    // Toggle current dropdown visibility
+    document.querySelectorAll("[id$=\'Options\']").forEach(c => c.style.display = "none");
     optionsDiv.style.display = optionsDiv.style.display === "block" ? "none" : "block";
-};
+  };
+
+  let jsonData = [];
+
+  // ✅ reuse the Firestore instance from your other plugin
+  if (window.fapFirebase && window.fapFirebase.db) {
+    window.fapFirebase.db.collection("exams").get().then(snapshot => {
+      jsonData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
+    }).catch(console.error);
+  } else {
+    console.error("Firebase not loaded yet.");
+  }
+
+  function populateDropdown(id, items) {
+    const container = document.getElementById(id + "Options");
+    container.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${id}\', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">` +
+      items.map(item => {
+        const escapedItem = item.replace(/\'/g, "&#39;");
+        return `<div class="option" data-option="${escapedItem}" onclick="selectOption(\'${id}\', \'${escapedItem}\')" style="padding: 8px; cursor: pointer;">${item}</div>`;
+      }).join("");
+  }
 
 
 
-    
-        let jsonData = [];
-        fetch("' . plugin_dir_url(__FILE__) . 'quiz-data3.json")
-            .then(res => res.json())
-            .then(data => {
-                jsonData = data.quizzes;
-                populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
-            }).catch(console.error);
 
-
-        function populateDropdown(id, items) {
-            const container = document.getElementById(id + "Options");
-            container.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${id}\', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">` +
-                items.map(item => {
-                    const escapedItem = item.replace(/\'/g, "&#39;");
-                    return `<div class="option" data-option="${escapedItem}" onclick="selectOption(\'${id}\', \'${escapedItem}\')" style="padding: 8px; cursor: pointer;">${item}</div>`;
-                }).join("");
-        }
-
+  
 
 
         window.filterOptions = function(id, value) {
