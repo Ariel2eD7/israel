@@ -9,7 +9,7 @@ License: GPL2
 
 function searchable_dropdowns() 
 { ?>
-    <style>
+    <style top: 57px !important;>
         .dropdown-container { width: 300px; margin-bottom: 20px; position: relative; }
         .button { width: 300px; margin-bottom: 20px; position: relative; }
         .dropdown-label { margin-bottom: 8px; display: block; }
