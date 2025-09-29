@@ -138,7 +138,7 @@ console.log('✅ Firebase DB ready', db);
 
 try {
   console.log('🔎 Fetching quiz', quizId);
-  const docRef = db.collection('quizzes').doc(quizId);
+const docRef = db.collection('exams').doc(quizId);
   const doc = await docRef.get();
   console.log('📄 doc snapshot', doc.exists, doc.data());
 
