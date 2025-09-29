@@ -39,8 +39,8 @@
 <!-- Dropdown 5: Semester -->
 <div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
     <label for="fifthDropdown" style="margin-bottom: 8px; display: block;">בחר סמסטר:</label>
-    <div id="fifthDropdownBox" class="disabled" onclick="toggleDropdown('fifthDropdown')" disabled style="width: 100%; padding: 8px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc;">Select an option...</div>
-    <div id="fifthDropdownOptions" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
+    <div id="fifthDropdownBox" class="disabled" onclick="toggleDropdown('fifthDropdown')" style="width: 100%; padding: 8px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc;">Select an option...</div>
+    <div id="fifthDropdownOptions" class="options-container" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
         <input type="text" oninput="filterOptions('fifthDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">
     </div>
 </div>
