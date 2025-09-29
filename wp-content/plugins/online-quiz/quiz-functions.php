@@ -97,7 +97,7 @@ function display_quiz_selection() {
             );
 
             if (selectedQuiz) {
-                window.location.href = 'http://indexing-co-il-temp.s977.upress.link/1595-2/?quiz_id=' + (selectedQuiz.id - 1);
+                window.location.href = 'https://israel.ussl.co//exam/?quiz_id=' + (selectedQuiz.id - 1);
             } else {
                 alert('לא נמצאה בחינה עבור הבחירה שלך.');
             }
@@ -173,7 +173,7 @@ $output .= '<script type="text/javascript">
 
             const timeSpentInSeconds = 90 * 60 - timeRemaining;
 
-            window.location.href = "https://indexing.co.il/quiz-results?quiz_id=" 
+            window.location.href = "https://israel.ussl.co/quiz_results?quiz_id=" 
                 + quizId 
                 + "&answers=" + encodeURIComponent(JSON.stringify(userAnswers)) 
                 + "&score=" + result 
