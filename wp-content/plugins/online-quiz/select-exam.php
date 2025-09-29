@@ -30,14 +30,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
   let jsonData = [];
 
-  // ✅ reuse the Firestore instance from your other plugin
-  if (window.fapFirebase && window.fapFirebase.db) {
-    window.fapFirebase.db.collection("exams").get().then(snapshot => {
+
+
+
+
+  // ✅ wait for Firebase to load from the Auth plugin
+  function waitForFirebase() {
+    if (window.fapFirebase && window.fapFirebase.db) {
+      loadExams(window.fapFirebase.db);
+    } else {
+      setTimeout(waitForFirebase, 100); // retry every 100ms
+    }
+  }
+
+  waitForFirebase();
+
+  function loadExams(db) {
+    db.collection("exams").get().then(snapshot => {
       jsonData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
     }).catch(console.error);
-  } else {
-    console.error("Firebase not loaded yet.");
   }
 
   function populateDropdown(id, items) {
