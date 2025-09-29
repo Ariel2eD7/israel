@@ -140,67 +140,7 @@ function display_online_quiz() {
 
     $output .= "<div style='text-align: center;'>
     <input type='submit' value='הגש מבחן' style='padding: 12px 25px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s ease;'>
-</div></form><div id='quiz-result'></div><script type='text/javascript'>
-    document.addEventListener('DOMContentLoaded', function() {
-        const correctAnswers = <?php echo json_encode(array_column($questions, 'answer')); ?>;
-        const questionsText = <?php echo json_encode(array_column($questions, 'question')); ?>;
-
-        document.getElementById('quiz-form').addEventListener('submit', function(e) {
-            e.preventDefault(); 
-
-            const quizId = new URLSearchParams(window.location.search).get('quiz_id');
-            if (!quizId) {
-                alert('Quiz ID is missing!');
-                return;
-            }
-
-            const formData = new FormData(this);
-            let result = 0;
-            const userAnswers = [];
-
-            for (const [name, selectedAnswer] of formData.entries()) {
-                userAnswers.push(selectedAnswer);
-            }
-
-            let feedback = '';
-            for (let i = 0; i < userAnswers.length; i++) {
-                const isCorrect = userAnswers[i] === correctAnswers[i];
-                feedback += `<p><strong>${i + 1}. ${questionsText[i]}</strong><br>Your Answer: ${userAnswers[i]}${isCorrect ? ' (Correct)' : ' (Incorrect)'}<br>Correct Answer: ${correctAnswers[i]}</p>`;
-                if (isCorrect) result++;
-            }
-
-            const timeSpentInSeconds = 90 * 60 - timeRemaining;
-
-            // Redirect to results page
-            window.location.href = 'https://indexing.co.il/quiz-results?quiz_id=' 
-                + quizId 
-                + '&answers=' + encodeURIComponent(JSON.stringify(userAnswers)) 
-                + '&score=' + result 
-                + '&time_spent=' + timeSpentInSeconds;
-        });
-
-        let timerDisplay = document.getElementById('timer');
-        let timeRemaining = 90 * 60;
-
-        function updateTimer() {
-            const h = Math.floor(timeRemaining / 3600);
-            const m = Math.floor((timeRemaining % 3600) / 60);
-            const s = timeRemaining % 60;
-
-            timerDisplay.textContent = [h, m, s].map(t => String(t).padStart(2, '0')).join(':');
-
-            if (timeRemaining <= 0) {
-                clearInterval(timerInterval);
-                alert('Time is up!');
-                document.getElementById('quiz-form').submit();
-            } else {
-                timeRemaining--;
-            }
-        }
-
-        const timerInterval = setInterval(updateTimer, 1000);
-    });
-</script>
+</div></form><div id='quiz-result'></div><script type='text/javascript'> document.getElementById('quiz-form').addEventListener('submit', function(e) { e.preventDefault(); var quizId = new URLSearchParams(window.location.search).get('quiz_id'); if (!quizId) { alert('Quiz ID is missing!'); return; } var formData = new FormData(this), result = 0, correctAnswers = " . json_encode(array_column($questions, 'answer')) . ", userAnswers = []; for (var [name, selectedAnswer] of formData.entries()) { userAnswers.push(selectedAnswer); } var feedback = ''; for (var i = 0; i < userAnswers.length; i++) { var isCorrect = userAnswers[i] === correctAnswers[i]; feedback += <p><strong>${i + 1}. ${json_encode(array_column($questions, 'question'))[i]}</strong><br>Your Answer: ${userAnswers[i]}${isCorrect ? ' (Correct)' : ' (Incorrect)'}<br>Correct Answer: ${correctAnswers[i]}</p>; if (isCorrect) result++; } var timeSpentInSeconds = 90 * 60 - timeRemaining; window.location.href = 'https://indexing.co.il/quiz-results?quiz_id=' + quizId + '&answers=' + encodeURIComponent(JSON.stringify(userAnswers)) + '&score=' + result + '&time_spent=' + timeSpentInSeconds; }); let timerDisplay = document.getElementById('timer'), timeRemaining = 90 * 60; function updateTimer() { let h = Math.floor(timeRemaining / 3600), m = Math.floor((timeRemaining % 3600) / 60), s = timeRemaining % 60; timerDisplay.textContent = [h, m, s].map(t => String(t).padStart(2, '0')).join(':'); if (timeRemaining <= 0) { clearInterval(timerInterval); alert('Time is up!'); document.getElementById('quiz-form').submit(); } else timeRemaining--; } var timerInterval = setInterval(updateTimer, 1000); </script>
 ";
 
     return $output;
