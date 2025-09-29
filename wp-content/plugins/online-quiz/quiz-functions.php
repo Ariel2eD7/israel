@@ -113,12 +113,30 @@ function display_online_quiz() {
     ?>
     <div id="quiz-container">Loading quiz…</div>
     <script>
+      async function waitForFirebase() {
+  return new Promise(resolve => {
+    const check = () => {
+      if (window.fapFirebase && window.fapFirebase.db) {
+        resolve(window.fapFirebase);
+      } else {
+        setTimeout(check, 100); // check again in 100ms
+      }
+    };
+    check();
+  });
+}
+
     document.addEventListener('DOMContentLoaded', async () => {
       const quizId = new URLSearchParams(window.location.search).get('quiz_id');
       if (!quizId) {
         document.getElementById('quiz-container').textContent = 'No quiz selected.';
         return;
       }
+
+        // ✅ Wait for Firebase to exist
+  const { db } = await waitForFirebase();
+  console.log('Firebase ready, loading quiz…');
+  
 
       // Wait until Firebase is ready (if you’re injecting it in fap_enqueue_scripts)
       if (!window.fapFirebase || !window.fapFirebase.db) {
