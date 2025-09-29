@@ -38,5 +38,6 @@ add_shortcode('trivia_game', 'trivia_game_shortcode');
 
 require_once plugin_dir_path(__FILE__) . 'select-exam.php';
 require_once plugin_dir_path(__FILE__) . 'exam-screen.php';
+include(plugin_dir_path(__FILE__) . 'quiz-results.php');
 
 ?>
