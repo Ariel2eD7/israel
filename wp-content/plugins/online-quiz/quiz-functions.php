@@ -133,18 +133,22 @@ function display_online_quiz() {
         });
       }
 
-      const db = await waitForFirebase();
+const db = await waitForFirebase();
+console.log('✅ Firebase DB ready', db);
 
-      try {
-        const docRef = db.collection('quizzes').doc(quizId);
-        const doc = await docRef.get();
+try {
+  console.log('🔎 Fetching quiz', quizId);
+  const docRef = db.collection('quizzes').doc(quizId);
+  const doc = await docRef.get();
+  console.log('📄 doc snapshot', doc.exists, doc.data());
 
-        if (!doc.exists) {
-          document.getElementById('quiz-container').textContent = 'Quiz not found.';
-          return;
-        }
+  if (!doc.exists) {
+    document.getElementById('quiz-container').textContent = 'Quiz not found.';
+    return;
+  }
 
-        const quiz = doc.data();
+  const quiz = doc.data();
+  console.log('🎯 quiz data', quiz);
 
         // Build quiz HTML
         let html = `<h2>${quiz.title}</h2>
