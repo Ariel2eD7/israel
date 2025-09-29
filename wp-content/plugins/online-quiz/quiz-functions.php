@@ -120,43 +120,31 @@ function display_online_quiz() {
         return;
       }
 
-      // Wait until Firebase is available
-      function waitForFirebase() {
-        return new Promise(resolve => {
-          if (window.fapFirebase && window.fapFirebase.db) return resolve(window.fapFirebase.db);
-          const iv = setInterval(() => {
-            if (window.fapFirebase && window.fapFirebase.db) {
-              clearInterval(iv);
-              resolve(window.fapFirebase.db);
-            }
-          }, 100);
-        });
+      // Wait until Firebase is ready (if you’re injecting it in fap_enqueue_scripts)
+      if (!window.fapFirebase || !window.fapFirebase.db) {
+        console.error('Firebase not ready');
+        document.getElementById('quiz-container').textContent = 'Error loading quiz.';
+        return;
       }
+      const { db } = window.fapFirebase;
 
-const db = await waitForFirebase();
-console.log('✅ Firebase DB ready', db);
+      try {
+        const docRef = db.collection('exams').doc(quizId);
+        const doc = await docRef.get();
 
-try {
-  console.log('🔎 Fetching quiz', quizId);
-const docRef = db.collection('exams').doc(quizId);
-  const doc = await docRef.get();
-  console.log('📄 doc snapshot', doc.exists, doc.data());
+        if (!doc.exists) {
+          document.getElementById('quiz-container').textContent = 'Quiz not found.';
+          return;
+        }
 
-  if (!doc.exists) {
-    document.getElementById('quiz-container').textContent = 'Quiz not found.';
-    return;
-  }
-
-  const quiz = doc.data();
-  console.log('🎯 quiz data', quiz);
+        const quiz = doc.data();
 
         // Build quiz HTML
         let html = `<h2>${quiz.title}</h2>
           <style>#timer{font-size:50px;font-weight:bold;text-align:center;}
           .answer-row{cursor:pointer;padding:5px;margin-bottom:5px;}
           .answer-row:hover{background-color:#f0f0f0;}</style>
-          <div id="timer">${quiz.duration ? '00:' + quiz.duration + ':00' : '01:30:00'}</div>
-          <form id="quiz-form">`;
+          <div id="timer">01:30:00</div><form id="quiz-form">`;
 
         quiz.questions.forEach((q, i) => {
           html += `<p><strong>${i + 1}. ${q.text}</strong></p>`;
@@ -172,14 +160,15 @@ const docRef = db.collection('exams').doc(quizId);
 
         document.getElementById('quiz-container').innerHTML = html;
 
-        // Build correct answers array from 'answers.correct'
+        // Prepare correct answers array
         const correctAnswers = quiz.questions.map(q => {
           const correct = q.answers.find(a => a.correct);
           return correct ? correct.text : null;
         });
         const questionsText = quiz.questions.map(q => q.text);
+        const durationSeconds = parseInt(quiz.duration, 10) * 60 || 90 * 60;
 
-        let timeRemaining = (quiz.duration ? parseInt(quiz.duration) : 90) * 60;
+        let timeRemaining = durationSeconds;
         const timerDisplay = document.getElementById('timer');
 
         function updateTimer() {
@@ -203,26 +192,29 @@ const docRef = db.collection('exams').doc(quizId);
           const userAnswers = [];
           for (const [name, val] of formData.entries()) userAnswers.push(val);
 
-          let score = 0;
+          let score = 0, feedback = '';
           userAnswers.forEach((ans, i) => {
-            if (ans === correctAnswers[i]) score++;
+            const isCorrect = ans === correctAnswers[i];
+            if (isCorrect) score++;
+            feedback += `<p><strong>${i+1}. ${questionsText[i]}</strong><br>
+              Your Answer: ${ans}${isCorrect?' (Correct)':' (Incorrect)'}<br>
+              Correct Answer: ${correctAnswers[i]}</p>`;
           });
 
           window.location.href = `/quiz_results?quiz_id=${quizId}`
             + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
             + `&score=${score}`
-            + `&time_spent=${(quiz.duration ? parseInt(quiz.duration) : 90)*60 - timeRemaining}`;
+            + `&time_spent=${durationSeconds - timeRemaining}`;
         });
 
       } catch (err) {
-        console.error(err);
+        console.error('🔥 Error loading quiz', err);
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
       }
     });
     </script>
     <?php
 }
-
 
 
 
