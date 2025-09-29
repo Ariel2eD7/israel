@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     quiz.term === selectedTerm
                 );
                 if (selectedQuiz) {
-                    window.location.href = "https://israel.ussl.co/exam/?quiz_id=" + (selectedQuiz.id - 1);
+window.location.href = "https://israel.ussl.co/exam/?quiz_id=" + selectedQuiz.id;
                 } else {
                     alert("No matching quiz found!");
                 }
