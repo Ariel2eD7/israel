@@ -35,4 +35,7 @@ require_once plugin_dir_path(__FILE__) . 'trivia-game.php';
 add_shortcode('trivia_game', 'trivia_game_shortcode');
 
 
+
+require_once plugin_dir_path(__FILE__) . 'select-exam.php';
+
 ?>
