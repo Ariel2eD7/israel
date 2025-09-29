@@ -1,42 +1,61 @@
 <section style="padding-top: 57px; display: flex; flex-direction: column; align-items: center;">
 
-    <!-- University -->
+<!-- Dropdown 1: University -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
     <label for="firstDropdown" style="margin-bottom: 8px; display: block;">בחר מוסד:</label>
-    <select id="firstDropdown" style="width: 300px; margin-bottom: 20px; padding: 8px; font-size: 16px;">
-        <option disabled selected>בחר מוסד...</option>
-    </select>
+    <div id="firstDropdownBox" onclick="toggleDropdown('firstDropdown')" style="width: 100%; padding: 8px; font-size: 16px; cursor: pointer; border: 1px solid #ccc;">Select an option...</div>
+    <div id="firstDropdownOptions" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
+        <input type="text" oninput="filterOptions('firstDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">
+    </div>
+</div>
 
-    <!-- School -->
+<!-- Dropdown 2: School -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
     <label for="secondDropdown" style="margin-bottom: 8px; display: block;">בחר פקולטה:</label>
-    <select id="secondDropdown" disabled style="width: 300px; margin-bottom: 20px; padding: 8px; font-size: 16px; background-color: #f0f0f0; cursor: not-allowed;">
-        <option disabled selected>בחר פקולטה...</option>
-    </select>
+    <div id="secondDropdownBox" class="disabled" onclick="toggleDropdown('secondDropdown')" disabled style="width: 100%; padding: 8px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc;">Select an option...</div>
+    <div id="secondDropdownOptions" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
+        <input type="text" oninput="filterOptions('secondDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">
+    </div>
+</div>
 
-    <!-- Course -->
+<!-- Dropdown 3: Course -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
     <label for="thirdDropdown" style="margin-bottom: 8px; display: block;">בחר קורס:</label>
-    <select id="thirdDropdown" disabled style="width: 300px; margin-bottom: 20px; padding: 8px; font-size: 16px; background-color: #f0f0f0; cursor: not-allowed;">
-        <option disabled selected>בחר קורס...</option>
-    </select>
+    <div id="thirdDropdownBox" class="disabled" onclick="toggleDropdown('thirdDropdown')" disabled style="width: 100%; padding: 8px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc;">Select an option...</div>
+    <div id="thirdDropdownOptions" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
+        <input type="text" oninput="filterOptions('thirdDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">
+    </div>
+</div>
 
-    <!-- Year -->
+<!-- Dropdown 4: Year -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
     <label for="fourthDropdown" style="margin-bottom: 8px; display: block;">בחר שנה:</label>
-    <select id="fourthDropdown" disabled style="width: 300px; margin-bottom: 20px; padding: 8px; font-size: 16px; background-color: #f0f0f0; cursor: not-allowed;">
-        <option disabled selected>בחר שנה...</option>
-    </select>
+    <div id="fourthDropdownBox" class="disabled" onclick="toggleDropdown('fourthDropdown')" disabled style="width: 100%; padding: 8px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc;">Select an option...</div>
+    <div id="fourthDropdownOptions" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
+        <input type="text" oninput="filterOptions('fourthDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">
+    </div>
+</div>
 
-    <!-- Semester -->
+<!-- Dropdown 5: Semester -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
     <label for="fifthDropdown" style="margin-bottom: 8px; display: block;">בחר סמסטר:</label>
-    <select id="fifthDropdown" disabled style="width: 300px; margin-bottom: 20px; padding: 8px; font-size: 16px; background-color: #f0f0f0; cursor: not-allowed;">
-        <option disabled selected>בחר סמסטר...</option>
-    </select>
+    <div id="fifthDropdownBox" class="disabled" onclick="toggleDropdown('fifthDropdown')" style="width: 100%; padding: 8px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc;">Select an option...</div>
+    <div id="fifthDropdownOptions" class="options-container" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
+        <input type="text" oninput="filterOptions('fifthDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">
+    </div>
+</div>
 
-    <!-- Term -->
+<!-- Dropdown 6: Term -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
     <label for="sixthDropdown" style="margin-bottom: 8px; display: block;">בחר מועד:</label>
-    <select id="sixthDropdown" disabled style="width: 300px; margin-bottom: 20px; padding: 8px; font-size: 16px; background-color: #f0f0f0; cursor: not-allowed;">
-        <option disabled selected>בחר מועד...</option>
-    </select>
+    <div id="sixthDropdownBox" class="disabled" onclick="toggleDropdown('sixthDropdown')" disabled style="width: 100%; padding: 8px; font-size: 16px; cursor: not-allowed; pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc;">Select an option...</div>
+    <div id="sixthDropdownOptions" style="display: none; position: absolute; border: 1px solid #ccc; background-color: white; max-height: 150px; overflow-y: auto; width: 100%; z-index: 10;">
+        <input type="text" oninput="filterOptions('sixthDropdown', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">
+    </div>
+</div>
 
-    <!-- Submit Button -->
-    <button id="submitButton" style="width: 300px; padding: 10px; font-size: 16px;">התחל מבחן</button>
-
+<!-- Submit Button -->
+<div class="dropdown-container" style="width: 300px; margin-bottom: 20px; position: relative;">
+    <button id="submitButton" style="width: 100%; padding: 10px; font-size: 16px;">התחל מבחן</button>
+</div>
 </section>
