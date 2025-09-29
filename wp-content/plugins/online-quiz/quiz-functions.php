@@ -29,13 +29,126 @@ function display_quiz_selection() {
     
     $output .= "<div style='text-align: center;'><button type='submit' id='play-button' disabled>התחל מבחן</button></div></form>";
 
+    $output .= "<script type='text/javascript'>
+    document.addEventListener('DOMContentLoaded', function() {
+        var quizData = " . json_encode($quiz_data) . ";
+        var [universitySelect, schoolSelect, courseSelect, yearSelect, semesterSelect, termSelect, playButton] = ['university', 'school', 'course', 'year', 'semester', 'term', 'play-button'].map(id => document.getElementById(id));
+
+
+        
+        function populateSelect(selectElement, options, placeholder) {
+            selectElement.innerHTML = '<option value=\"\">' + placeholder + '</option>';
+            options.forEach(function(option) {
+                selectElement.innerHTML += '<option value=\"' + option + '\">' + option + '</option>';
+            });
+        }
+
+        var universities = [...new Set(quizData.quizzes.map(quiz => quiz.university))];
+        populateSelect(universitySelect, universities, 'בחר מוסד');
+
+        universitySelect.addEventListener('change', () => {
+            const schools = [...new Set(quizData.quizzes.filter(quiz => quiz.university === universitySelect.value).map(quiz => quiz.school))];
+            populateSelect(schoolSelect, schools, 'בחר בית ספר');
+            schoolSelect.disabled = false;
+            [courseSelect, yearSelect, semesterSelect, termSelect].forEach(el => el.disabled = true);
+            playButton.disabled = true;
+        });
+
+        schoolSelect.addEventListener('change', () => {
+            const courses = [...new Set(quizData.quizzes.filter(q => q.university === universitySelect.value && q.school === schoolSelect.value).map(q => q.course))];
+            populateSelect(courseSelect, courses, 'בחר קורס');
+            courseSelect.disabled = false;
+            [yearSelect, semesterSelect, termSelect].forEach(el => el.disabled = true);
+            playButton.disabled = true;
+        });
+
+        courseSelect.addEventListener('change', () => {
+            const years = [...new Set(quizData.quizzes.filter(q => q.university === universitySelect.value && q.school === schoolSelect.value && q.course === courseSelect.value).map(q => q.year))];
+            populateSelect(yearSelect, years, 'בחר שנה'); 
+            yearSelect.disabled = false;
+            [semesterSelect, termSelect].forEach(el => el.disabled = true);
+            playButton.disabled = true;
+        });
+
+        yearSelect.addEventListener('change', () => {
+            const semesters = [...new Set(quizData.quizzes.filter(q => q.university === universitySelect.value && q.school === schoolSelect.value && q.course === courseSelect.value && q.year === yearSelect.value).map(q => q.semester))];
+            populateSelect(semesterSelect, semesters, 'בחר סמסטר');
+            semesterSelect.disabled = false;
+            termSelect.disabled = true;
+            playButton.disabled = true;
+        });
+
+        semesterSelect.addEventListener('change', () => {
+            const terms = [...new Set(quizData.quizzes.filter(q => q.university === universitySelect.value && q.school === schoolSelect.value && q.course === courseSelect.value && q.year === yearSelect.value && q.semester === semesterSelect.value).map(q => q.term))];
+            populateSelect(termSelect, terms, 'בחר מועד');
+            termSelect.disabled = false;
+            playButton.disabled = false;
+        });
+
+        playButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            var selectedQuiz = quizData.quizzes.find(quiz => 
+                quiz.university === universitySelect.value && 
+                quiz.school === schoolSelect.value && 
+                quiz.course === courseSelect.value && 
+                quiz.year === yearSelect.value && 
+                quiz.semester === semesterSelect.value && 
+                quiz.term === termSelect.value
+            );
+
+            if (selectedQuiz) {
+                window.location.href = 'http://indexing-co-il-temp.s977.upress.link/1595-2/?quiz_id=' + (selectedQuiz.id - 1);
+            } else {
+                alert('לא נמצאה בחינה עבור הבחירה שלך.');
+            }
+        });
+    });
+    </script>";
+
+    return $output;
+}
+
+
+function display_online_quiz() {
+    if (isset($_GET['quiz_id'])) {
+        $quiz_id = intval($_GET['quiz_id']);
+    } else {
+        return "No quiz selected.";
+    }
+
+    $quiz_data = load_quiz_data();
+    if (!$quiz_data || !isset($quiz_data['quizzes'][$quiz_id])) {
+        return "Invalid quiz selected.";
+    }
+
+    $selected_quiz = $quiz_data['quizzes'][$quiz_id];
+    $quiz_title = $selected_quiz['quiz_title'];
+    $questions = $selected_quiz['questions'];
+
+    if (empty($questions)) {
+        return "No questions available for this quiz.";
+    } 
+
+    $output = "<h2>$quiz_title</h2><style>#timer{font-size:50px;font-weight:bold;color:#000;text-align:center;}.answer-row{cursor:pointer;padding:5px;margin-bottom:5px;}.answer-row:hover{background-color:#f0f0f0;}</style><div id='timer'>01:30:00</div><form id='quiz-form'>";
+
+    foreach ($questions as $index => $question) {
+        $output .= "<p><strong>" . ($index + 1) . ". " . $question['question'] . "</strong></p>";
+        foreach ($question['options'] as $optionIndex => $option) {
+            $output .= "<div class='answer-row'><label for='q$index-$optionIndex'><input type='radio' id='q$index-$optionIndex' name='q$index' value='$option'> $option</label></div>";
+        }
+    }
+
+  $output .= "<div style='text-align: center;'>
+    <input type='submit' value='הגש מבחן' style='padding: 12px 25px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s ease;'>
+</div></form><div id='quiz-result'></div>";
+
 $output .= '<script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function() {
         const correctAnswers = ' . json_encode(array_column($questions, 'answer')) . ';
         const questionsText = ' . json_encode(array_column($questions, 'question')) . ';
 
         document.getElementById("quiz-form").addEventListener("submit", function(e) {
-            e.preventDefault(); 
+            e.preventDefault();
 
             const quizId = new URLSearchParams(window.location.search).get("quiz_id");
             if (!quizId) {
@@ -90,104 +203,6 @@ $output .= '<script type="text/javascript">
     });
 </script>';
 
-
-    return $output;
-}
-
-
-function display_online_quiz() {
-    if (isset($_GET['quiz_id'])) {
-        $quiz_id = intval($_GET['quiz_id']);
-    } else {
-        return "No quiz selected.";
-    }
-
-    $quiz_data = load_quiz_data();
-    if (!$quiz_data || !isset($quiz_data['quizzes'][$quiz_id])) {
-        return "Invalid quiz selected.";
-    }
-
-    $selected_quiz = $quiz_data['quizzes'][$quiz_id];
-    $quiz_title = $selected_quiz['quiz_title'];
-    $questions = $selected_quiz['questions'];
-
-    if (empty($questions)) {
-        return "No questions available for this quiz.";
-    } 
-
-    $output = "<h2>$quiz_title</h2><style>#timer{font-size:50px;font-weight:bold;color:#000;text-align:center;}.answer-row{cursor:pointer;padding:5px;margin-bottom:5px;}.answer-row:hover{background-color:#f0f0f0;}</style><div id='timer'>01:30:00</div><form id='quiz-form'>";
-
-    foreach ($questions as $index => $question) {
-        $output .= "<p><strong>" . ($index + 1) . ". " . $question['question'] . "</strong></p>";
-        foreach ($question['options'] as $optionIndex => $option) {
-            $output .= "<div class='answer-row'><label for='q$index-$optionIndex'><input type='radio' id='q$index-$optionIndex' name='q$index' value='$option'> $option</label></div>";
-        }
-    }
-
-    $output .= "<div style='text-align: center;'>
-    <input type='submit' value='הגש מבחן' style='padding: 12px 25px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s ease;'>
-</div></form><div id='quiz-result'></div><script type='text/javascript'>
-    document.addEventListener('DOMContentLoaded', function() {
-        const correctAnswers = <?php echo json_encode(array_column($questions, 'answer')); ?>;
-        const questionsText = <?php echo json_encode(array_column($questions, 'question')); ?>;
-
-        document.getElementById('quiz-form').addEventListener('submit', function(e) {
-            e.preventDefault(); 
-
-            const quizId = new URLSearchParams(window.location.search).get('quiz_id');
-            if (!quizId) {
-                alert('Quiz ID is missing!');
-                return;
-            }
-
-            const formData = new FormData(this);
-            let result = 0;
-            const userAnswers = [];
-
-            for (const [name, selectedAnswer] of formData.entries()) {
-                userAnswers.push(selectedAnswer);
-            }
-
-            let feedback = '';
-            for (let i = 0; i < userAnswers.length; i++) {
-                const isCorrect = userAnswers[i] === correctAnswers[i];
-                feedback += `<p><strong>${i + 1}. ${questionsText[i]}</strong><br>Your Answer: ${userAnswers[i]}${isCorrect ? ' (Correct)' : ' (Incorrect)'}<br>Correct Answer: ${correctAnswers[i]}</p>`;
-                if (isCorrect) result++;
-            }
-
-            const timeSpentInSeconds = 90 * 60 - timeRemaining;
-
-            // Redirect to results page
-            window.location.href = 'https://indexing.co.il/quiz-results?quiz_id=' 
-                + quizId 
-                + '&answers=' + encodeURIComponent(JSON.stringify(userAnswers)) 
-                + '&score=' + result 
-                + '&time_spent=' + timeSpentInSeconds;
-        });
-
-        let timerDisplay = document.getElementById('timer');
-        let timeRemaining = 90 * 60;
-
-        function updateTimer() {
-            const h = Math.floor(timeRemaining / 3600);
-            const m = Math.floor((timeRemaining % 3600) / 60);
-            const s = timeRemaining % 60;
-
-            timerDisplay.textContent = [h, m, s].map(t => String(t).padStart(2, '0')).join(':');
-
-            if (timeRemaining <= 0) {
-                clearInterval(timerInterval);
-                alert('Time is up!');
-                document.getElementById('quiz-form').submit();
-            } else {
-                timeRemaining--;
-            }
-        }
-
-        const timerInterval = setInterval(updateTimer, 1000);
-    });
-</script>
-";
 
     return $output;
 }
