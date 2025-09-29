@@ -110,101 +110,102 @@ function display_quiz_selection() {
 
 
 function display_online_quiz() {
-    if (isset($_GET['quiz_id'])) {
-        $quiz_id = intval($_GET['quiz_id']);
-    } else {
-        return "No quiz selected.";
-    }
+    ?>
+    <div id="quiz-container">Loading quiz…</div>
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const quizId = new URLSearchParams(window.location.search).get('quiz_id');
+      if (!quizId) {
+        document.getElementById('quiz-container').textContent = 'No quiz selected.';
+        return;
+      }
 
-    $quiz_data = load_quiz_data();
-    if (!$quiz_data || !isset($quiz_data['quizzes'][$quiz_id])) {
-        return "Invalid quiz selected.";
-    }
+      // Use the same Firebase instance you already init in fap_enqueue_scripts
+      const { db } = window.fapFirebase;
 
-    $selected_quiz = $quiz_data['quizzes'][$quiz_id];
-    $quiz_title = $selected_quiz['quiz_title'];
-    $questions = $selected_quiz['questions'];
+      try {
+        // Adjust path to match your Firestore structure:
+        const docRef = db.collection('quizzes').doc(quizId);
+        const doc = await docRef.get();
 
-    if (empty($questions)) {
-        return "No questions available for this quiz.";
-    } 
-
-    $output = "<h2>$quiz_title</h2><style>#timer{font-size:50px;font-weight:bold;color:#000;text-align:center;}.answer-row{cursor:pointer;padding:5px;margin-bottom:5px;}.answer-row:hover{background-color:#f0f0f0;}</style><div id='timer'>01:30:00</div><form id='quiz-form'>";
-
-    foreach ($questions as $index => $question) {
-        $output .= "<p><strong>" . ($index + 1) . ". " . $question['question'] . "</strong></p>";
-        foreach ($question['options'] as $optionIndex => $option) {
-            $output .= "<div class='answer-row'><label for='q$index-$optionIndex'><input type='radio' id='q$index-$optionIndex' name='q$index' value='$option'> $option</label></div>";
+        if (!doc.exists) {
+          document.getElementById('quiz-container').textContent = 'Quiz not found.';
+          return;
         }
-    }
 
-  $output .= "<div style='text-align: center;'>
-    <input type='submit' value='הגש מבחן' style='padding: 12px 25px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: background-color 0.3s ease;'>
-</div></form><div id='quiz-result'></div>";
+        const quiz = doc.data();
 
-$output .= '<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-        const correctAnswers = ' . json_encode(array_column($questions, 'answer')) . ';
-        const questionsText = ' . json_encode(array_column($questions, 'question')) . ';
+        // Build quiz HTML
+        let html = `<h2>${quiz.quiz_title}</h2>
+          <style>#timer{font-size:50px;font-weight:bold;text-align:center;}
+          .answer-row{cursor:pointer;padding:5px;margin-bottom:5px;}
+          .answer-row:hover{background-color:#f0f0f0;}</style>
+          <div id="timer">01:30:00</div><form id="quiz-form">`;
 
-        document.getElementById("quiz-form").addEventListener("submit", function(e) {
-            e.preventDefault();
-
-            const quizId = new URLSearchParams(window.location.search).get("quiz_id");
-            if (!quizId) {
-                alert("Quiz ID is missing!");
-                return;
-            }
-
-            const formData = new FormData(this);
-            let result = 0;
-            const userAnswers = [];
-
-            for (const [name, selectedAnswer] of formData.entries()) {
-                userAnswers.push(selectedAnswer);
-            }
-
-            let feedback = "";
-            for (let i = 0; i < userAnswers.length; i++) {
-                const isCorrect = userAnswers[i] === correctAnswers[i];
-                feedback += `<p><strong>${i + 1}. ${questionsText[i]}</strong><br>Your Answer: ${userAnswers[i]}${isCorrect ? " (Correct)" : " (Incorrect)"}<br>Correct Answer: ${correctAnswers[i]}</p>`;
-                if (isCorrect) result++;
-            }
-
-            const timeSpentInSeconds = 90 * 60 - timeRemaining;
-
-            window.location.href = "https://israel.ussl.co/quiz_results?quiz_id=" 
-                + quizId 
-                + "&answers=" + encodeURIComponent(JSON.stringify(userAnswers)) 
-                + "&score=" + result 
-                + "&time_spent=" + timeSpentInSeconds;
+        quiz.questions.forEach((q, i) => {
+          html += `<p><strong>${i + 1}. ${q.question}</strong></p>`;
+          q.options.forEach((opt, j) => {
+            html += `<div class="answer-row">
+              <label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label></div>`;
+          });
         });
 
-        let timerDisplay = document.getElementById("timer");
+        html += `<div style="text-align:center">
+          <input type="submit" value="הגש מבחן" style="padding:12px 25px;background:#4CAF50;color:#fff;border:none;border-radius:5px;font-size:18px;cursor:pointer">
+        </div></form><div id="quiz-result"></div>`;
+
+        document.getElementById('quiz-container').innerHTML = html;
+
+        // Handle submit / timer just like your old JS:
+        const correctAnswers = quiz.questions.map(q => q.answer);
+        const questionsText = quiz.questions.map(q => q.question);
         let timeRemaining = 90 * 60;
+        const timerDisplay = document.getElementById('timer');
 
         function updateTimer() {
-            const h = Math.floor(timeRemaining / 3600);
-            const m = Math.floor((timeRemaining % 3600) / 60);
-            const s = timeRemaining % 60;
-
-            timerDisplay.textContent = [h, m, s].map(t => String(t).padStart(2, "0")).join(":");
-
-            if (timeRemaining <= 0) {
-                clearInterval(timerInterval);
-                alert("Time is up!");
-                document.getElementById("quiz-form").submit();
-            } else {
-                timeRemaining--;
-            }
+          const h = Math.floor(timeRemaining / 3600);
+          const m = Math.floor((timeRemaining % 3600) / 60);
+          const s = timeRemaining % 60;
+          timerDisplay.textContent = [h,m,s].map(t=>String(t).padStart(2,'0')).join(':');
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert('Time is up!');
+            document.getElementById('quiz-form').submit();
+          } else {
+            timeRemaining--;
+          }
         }
+        const timerInterval = setInterval(updateTimer,1000);
 
-        const timerInterval = setInterval(updateTimer, 1000);
+        document.getElementById('quiz-form').addEventListener('submit', e => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const userAnswers = [];
+          for (const [name, val] of formData.entries()) userAnswers.push(val);
+
+          let score = 0, feedback = '';
+          userAnswers.forEach((ans, i) => {
+            const isCorrect = ans === correctAnswers[i];
+            if (isCorrect) score++;
+            feedback += `<p><strong>${i+1}. ${questionsText[i]}</strong><br>
+              Your Answer: ${ans}${isCorrect?' (Correct)':' (Incorrect)'}<br>
+              Correct Answer: ${correctAnswers[i]}</p>`;
+          });
+
+          // redirect or display feedback as you wish
+          window.location.href = `/quiz_results?quiz_id=${quizId}`
+            + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
+            + `&score=${score}`
+            + `&time_spent=${90*60 - timeRemaining}`;
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('quiz-container').textContent = 'Error loading quiz.';
+      }
     });
-</script>';
-
-
-    return $output;
+    </script>
+    <?php
 }
 
 
