@@ -15,8 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-// Include the function that handles the quiz
-include( plugin_dir_path( __FILE__ ) . 'quiz-functions.php' );
 
 // Hook to add a shortcode for displaying quiz selection
 add_shortcode( 'quiz_selection', 'display_quiz_selection' );
