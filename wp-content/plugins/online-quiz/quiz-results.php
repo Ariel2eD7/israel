@@ -97,31 +97,44 @@ function display_quiz_results() {
               quizTitleElem.textContent += ' — ' + (quiz.title || 'Untitled');
 
               // Build the questions HTML with inline styles
+             
               let html = '';
 
-              questions.forEach((q, i) => {
-                const userAnswer = (userAnswers[i] || '(No answer)').trim();
-                const correctAnswerObj = (q.answers || []).find(a => a.correct);
-                const correctAnswer = correctAnswerObj ? correctAnswerObj.text.trim() : 'N/A';
-                const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+questions.forEach((q, i) => {
+  const userAnswer = (userAnswers[i] || '(No answer)').trim();
+  const correctAnswerObj = (q.answers || []).find(a => a.correct);
+  const correctAnswer = correctAnswerObj ? correctAnswerObj.text.trim() : 'N/A';
+  const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
 
-                // Background color for correct/incorrect question container
-                const bgColor = isCorrect ? '#90EE90' : '#FFC0CB'; // LightGreen or Pink
+  const borderColor = isCorrect ? '#46d160' : '#ff5c5c'; // green or red
+  const textColor = isCorrect ? '#2f9e44' : '#d7263d';
+  const icon = isCorrect ? '✅' : '❌';
 
-                html += `<p style="padding: 8px; margin-bottom: 10px; border-radius: 4px; background-color: ${bgColor}; font-family: Arial, sans-serif;">
-                  <strong>${i + 1}. ${q.text}</strong>
-                </p>`;
+  html += `
+    <article style="
+      background: #f8f9fa;
+      border: 1px solid #edeff1;
+      border-left: 6px solid ${borderColor};
+      padding: 16px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    ">
+      <p style="margin: 0 0 10px 0; font-weight: 600;">
+        ${i + 1}. ${q.text}
+      </p>
+      <p style="margin: 0 0 8px 0;">
+        ${icon} Your answer: <strong style="color: ${textColor};">${userAnswer}</strong>
+      </p>
+      ${!isCorrect ? `
+        <p style="margin: 0;">
+          Correct answer: <strong>${correctAnswer}</strong>
+        </p>
+      ` : ''}
+    </article>
+  `;
+});
 
-                html += `<p style="font-family: Arial, sans-serif; margin-top: -10px; margin-bottom: 10px;">
-                  ${isCorrect ? '✅' : '❌'} Your answer: <strong style="color: ${isCorrect ? 'green' : 'red'};">${userAnswer}</strong>
-                </p>`;
 
-                if (!isCorrect) {
-                  html += `<p style="font-family: Arial, sans-serif; margin-top: -10px; margin-bottom: 15px;">
-                    Correct answer: <strong>${correctAnswer}</strong>
-                  </p>`;
-                }
-              });
 
               container.innerHTML = html;
 
