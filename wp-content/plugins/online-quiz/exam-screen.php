@@ -34,6 +34,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const { db } = await waitForFirebase();
 
+
+        // ✅ Add your PDF toggle logic *inside* the same DOMContentLoaded handler
+    const pdfToggle = document.getElementById("pdf-toggle");
+    if (pdfToggle) {
+        pdfToggle.addEventListener("click", () => {
+            const panel = document.getElementById("pdf-panel");
+            const frame = document.getElementById("pdf-frame");
+
+            if (window.currentExam && window.currentExam.pdfUrl) {
+                frame.src = window.currentExam.pdfUrl;
+            } else {
+                frame.src = "about:blank";
+            }
+
+            panel.classList.add("open");
+        });
+    }
+    
     if (!window.fapFirebase || !window.fapFirebase.db) {
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
         return;
