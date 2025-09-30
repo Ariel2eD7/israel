@@ -60,28 +60,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
         let questionsHtml = '';
-       quiz.questions.forEach((q, i) => {
-    questionsHtml += `<p><strong>${i + 1}. ${q.text}</strong></p>`;
-    q.answers.forEach((ans) => {
-        questionsHtml += `
-            <div style="
-                cursor: pointer; 
-                padding: 8px 12px; 
-                margin-bottom: 10px; 
-                background: #f9f9f9; 
-                border-radius: 5px; 
-                transition: background-color 0.3s;
-            " 
-            onmouseover="this.style.background='#e0e0e0';" 
-            onmouseout="this.style.background='#f9f9f9';"
-            >
-                <label>
-                    <input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}
-                </label>
-            </div>`;
-    });
-});
-
+        quiz.questions.forEach((q, i) => {
+            questionsHtml += `<p><strong>${i + 1}. ${q.text}</strong></p>`;
+            q.answers.forEach((ans) => {
+                questionsHtml += `
+                    <div class="answer-row">
+                        <label><input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}</label>
+                    </div>`;
+            });
+        });
 
         document.getElementById('quiz-questions').innerHTML = questionsHtml;
 
