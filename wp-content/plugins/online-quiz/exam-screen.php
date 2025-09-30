@@ -52,32 +52,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const quiz = doc.data();
 
+        // Defensive check
+        if (!quiz.questions || !Array.isArray(quiz.questions)) {
+            document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
+            return;
+        }
+
         // Inject title
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
-        // Inject questions into placeholder
+        // Inject questions
         let questionsHtml = '';
         quiz.questions.forEach((q, i) => {
-            questionsHtml += `<p><strong>\${i + 1}. \${q.text}</strong></p>`;
-            q.answers.forEach((ans) => {
-            questionsHtml += `
-    <div class="answer-row">
-        <label><input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}</label>
-    </div>`;
-
+            questionsHtml += `<p><strong>${i + 1}. ${q.text}</strong></p>`;
+            q.answers.forEach(ans => {
+                questionsHtml += `
+                    <div class="answer-row">
+                        <label><input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}</label>
+                    </div>`;
             });
         });
 
         document.getElementById('quiz-questions').innerHTML = questionsHtml;
 
-        // Prepare correct answers and timer
+        // Correct answers and timer
         const correctAnswers = quiz.questions.map(q => {
             const correct = q.answers.find(a => a.correct);
             return correct ? correct.text : null;
         });
-        const questionsText = quiz.questions.map(q => q.text);
-        const durationSeconds = parseInt(quiz.duration, 10) * 60 || 90 * 60;
 
+        const durationSeconds = parseInt(quiz.duration, 10) * 60 || 5400;
         let timeRemaining = durationSeconds;
         const timerDisplay = document.getElementById('timer');
 
@@ -86,6 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const m = Math.floor((timeRemaining % 3600) / 60);
             const s = timeRemaining % 60;
             timerDisplay.textContent = [h, m, s].map(t => String(t).padStart(2, '0')).join(':');
+
             if (timeRemaining <= 0) {
                 clearInterval(timerInterval);
                 alert('Time is up!');
@@ -97,22 +102,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const timerInterval = setInterval(updateTimer, 1000);
 
+        // Form submission
         document.getElementById('quiz-form').addEventListener('submit', e => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const userAnswers = [];
-            for (const [name, val] of formData.entries()) userAnswers.push(val);
+
+            for (const [name, val] of formData.entries()) {
+                userAnswers.push(val);
+            }
 
             let score = 0;
             userAnswers.forEach((ans, i) => {
                 if (ans === correctAnswers[i]) score++;
             });
 
-            // Redirect to results page
-            window.location.href = `/quiz_results?quiz_id=\${quizId}`
-                + `&answers=\${encodeURIComponent(JSON.stringify(userAnswers))}`
-                + `&score=\${score}`
-                + `&time_spent=\${durationSeconds - timeRemaining}`;
+            // Redirect to results
+            window.location.href = `/quiz_results?quiz_id=${quizId}`
+                + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
+                + `&score=${score}`
+                + `&time_spent=${durationSeconds - timeRemaining}`;
         });
 
     } catch (err) {
@@ -122,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 JS;
 
-    // Inject JS into the {{quiz_script}} placeholder
+    // Inject JS into the {{quiz_script}} placeholder in the HTML
     $html = str_replace('{{quiz_script}}', $script, $html);
 
     echo $html;
