@@ -10,8 +10,8 @@ function display_exam_screen() {
 
     $html = file_get_contents($html_file);
 
-    // JS logic (dynamically injects title + questions)
-    $script = <<<JS
+    // Use nowdoc to prevent PHP from interpreting JS template literals
+    $script = <<<'JS'
 async function waitForFirebase() {
     return new Promise(resolve => {
         const check = () => {
@@ -52,20 +52,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const quiz = doc.data();
 
-        // Defensive check
         if (!quiz.questions || !Array.isArray(quiz.questions)) {
             document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
             return;
         }
 
-        // Inject title
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
-        // Inject questions
         let questionsHtml = '';
         quiz.questions.forEach((q, i) => {
             questionsHtml += `<p><strong>${i + 1}. ${q.text}</strong></p>`;
-            q.answers.forEach(ans => {
+            q.answers.forEach((ans) => {
                 questionsHtml += `
                     <div class="answer-row">
                         <label><input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}</label>
@@ -75,7 +72,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('quiz-questions').innerHTML = questionsHtml;
 
-        // Correct answers and timer
         const correctAnswers = quiz.questions.map(q => {
             const correct = q.answers.find(a => a.correct);
             return correct ? correct.text : null;
@@ -102,7 +98,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const timerInterval = setInterval(updateTimer, 1000);
 
-        // Form submission
         document.getElementById('quiz-form').addEventListener('submit', e => {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -117,7 +112,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (ans === correctAnswers[i]) score++;
             });
 
-            // Redirect to results
             window.location.href = `/quiz_results?quiz_id=${quizId}`
                 + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
                 + `&score=${score}`
@@ -131,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 JS;
 
-    // Inject JS into the {{quiz_script}} placeholder in the HTML
+    // Replace the placeholder in HTML with the JS
     $html = str_replace('{{quiz_script}}', $script, $html);
 
     echo $html;
