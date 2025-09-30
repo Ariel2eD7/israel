@@ -10,7 +10,7 @@ function display_exam_screen() {
 
     $html = file_get_contents($html_file);
 
-    // Use nowdoc syntax so PHP won't parse the JS template literals
+    // Use nowdoc for JS (avoiding PHP interpretation)
     $script = <<<'JS'
 async function waitForFirebase() {
     return new Promise(resolve => {
@@ -33,10 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const { db } = await waitForFirebase();
-    console.log('Firebase ready, loading quiz…');
 
     if (!window.fapFirebase || !window.fapFirebase.db) {
-        console.error('Firebase not ready');
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
         return;
     }
@@ -57,67 +55,66 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        // Set quiz title
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
-
-       
-        
+        // Build question blocks with Reddit-style inline styles
         let questionsHtml = '';
-quiz.questions.forEach((q, i) => {
-    questionsHtml += `
-    <fieldset style="
-      margin-bottom: 24px; 
-      padding: 16px 20px; 
-      border-radius: 8px; 
-      border: 1px solid #ddd; 
-      background: #fafafa;
-      box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.05);
-    ">
-      <legend style="
-        font-weight: 700; 
-        font-size: 1.125rem; 
-        margin-bottom: 12px;
-        padding: 0 6px;
-        color: #222;
-      ">${i + 1}. ${q.text}</legend>`;
+        quiz.questions.forEach((q, i) => {
+            questionsHtml += `
+            <fieldset style="
+                margin-bottom: 24px; 
+                padding: 16px 20px; 
+                border-radius: 8px; 
+                border: 1px solid #ddd; 
+                background: #fafafa;
+                box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.05);
+            ">
+                <legend style="
+                    font-weight: 700; 
+                    font-size: 1.125rem; 
+                    margin-bottom: 12px;
+                    padding: 0 6px;
+                    color: #222;
+                ">${i + 1}. ${q.text}</legend>`;
 
-    q.answers.forEach((ans) => {
-        questionsHtml += `
-      <label style="
-        display: block;
-        cursor: pointer;
-        padding: 10px 14px;
-        margin-bottom: 12px;
-        border-radius: 6px;
-        background: #fff;
-        border: 1px solid #ddd;
-        transition: background-color 0.2s ease, border-color 0.2s ease;
-        user-select: none;
-        font-weight: 500;
-        color: #111;
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
-      "
-      onmouseover="this.style.background='#ffebd8'; this.style.borderColor='#ff7a00';"
-      onmouseout="this.style.background='#fff'; this.style.borderColor='#ddd';"
-      >
-        <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">
-        ${ans.text}
-      </label>`;
-    });
+            q.answers.forEach((ans) => {
+                questionsHtml += `
+                <label style="
+                    display: block;
+                    cursor: pointer;
+                    padding: 10px 14px;
+                    margin-bottom: 12px;
+                    border-radius: 6px;
+                    background: #fff;
+                    border: 1px solid #ddd;
+                    transition: background-color 0.2s ease, border-color 0.2s ease;
+                    user-select: none;
+                    font-weight: 500;
+                    color: #111;
+                    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+                "
+                onmouseover="this.style.background='#ffebd8'; this.style.borderColor='#ff7a00';"
+                onmouseout="this.style.background='#fff'; this.style.borderColor='#ddd';"
+                >
+                    <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">
+                    ${ans.text}
+                </label>`;
+            });
 
-    questionsHtml += `</fieldset>`;
-});
+            questionsHtml += `</fieldset>`;
+        });
 
-
-
-
+        // Inject questions HTML
         document.getElementById('quiz-questions').innerHTML = questionsHtml;
 
+        // Prepare correct answers array for scoring
         const correctAnswers = quiz.questions.map(q => {
             const correct = q.answers.find(a => a.correct);
             return correct ? correct.text : null;
         });
 
+        // Setup timer
         const durationSeconds = parseInt(quiz.duration, 10) * 60 || 5400;
         let timeRemaining = durationSeconds;
         const timerDisplay = document.getElementById('timer');
@@ -137,8 +134,10 @@ quiz.questions.forEach((q, i) => {
             }
         }
 
+        updateTimer(); // Initial display
         const timerInterval = setInterval(updateTimer, 1000);
 
+        // Handle form submit and scoring
         document.getElementById('quiz-form').addEventListener('submit', e => {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -166,7 +165,7 @@ quiz.questions.forEach((q, i) => {
 });
 JS;
 
-    // Replace the placeholder {{quiz_script}} with the JS code
+    // Inject the JS script in place of {{quiz_script}} in your HTML
     $html = str_replace('{{quiz_script}}', $script, $html);
 
     echo $html;
