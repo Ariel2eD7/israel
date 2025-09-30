@@ -1,16 +1,15 @@
-<h2>{{quiz_title}}</h2>
+<h2 id="quiz-title" style="font-family: Arial, sans-serif; margin-top: 10px; margin-bottom: 10px;">
+  Quiz Results
+</h2>
 
-<div id="quiz-results-container">
-  {{questions}}
+<div id="quiz-results-container" style="margin-bottom: 20px;">
+  <!-- Questions will be injected here -->
 </div>
 
-<h3>Your Score: {{score}} / {{total_questions}}</h3>
-<h4>Time Spent: {{time_spent}}</h4>
+<h3 id="score-text" style="font-family: Arial, sans-serif; margin-top: 10px; margin-bottom: 10px;">
+  Your Score: 0 / 0
+</h3>
 
-<style> 
-  #quiz-results-container p {
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-  }
-</style>
+<h4 id="time-text" style="font-family: Arial, sans-serif; margin-top: 10px; margin-bottom: 10px;">
+  Time Spent: 00:00:00
+</h4>
