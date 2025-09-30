@@ -51,7 +51,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             panel.classList.add("open");
         });
     }
-    
+
+
+    const pdfClose = document.getElementById("pdf-close");
+if (pdfClose) {
+    pdfClose.addEventListener("click", () => {
+        const panel = document.getElementById("pdf-panel");
+        panel.classList.remove("open");
+    });
+}
+
+
     if (!window.fapFirebase || !window.fapFirebase.db) {
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
         return;
