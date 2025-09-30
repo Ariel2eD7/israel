@@ -93,7 +93,8 @@ function display_quiz_results() {
               const questions = quiz.questions || [];
 
               // Set the quiz title
-              quizTitleElem.textContent = quiz.title || 'Quiz Results';
+
+              quizTitleElem.textContent += ' — ' + (quiz.title || 'Untitled');
 
               // Build the questions HTML with inline styles
               let html = '';
