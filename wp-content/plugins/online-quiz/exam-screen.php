@@ -50,6 +50,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const quiz = doc.data();
 
+
+        // ✅ Expose the quiz globally so PDF toggle can read pdfUrl
+window.currentExam = quiz;
+
         if (!quiz.questions || !Array.isArray(quiz.questions)) {
             document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
             return;
