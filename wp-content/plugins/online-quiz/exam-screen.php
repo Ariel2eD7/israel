@@ -36,27 +36,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // ✅ Add your PDF toggle logic *inside* the same DOMContentLoaded handler
+    const pdfToggle = document.getElementById("pdf-toggle");
+    if (pdfToggle) {
+        pdfToggle.addEventListener("click", () => {
+            const panel = document.getElementById("pdf-panel");
+            const frame = document.getElementById("pdf-frame");
 
-        const pdfToggle = document.getElementById("pdf-toggle");
-const pdfPanel = document.getElementById("pdf-panel");
-const pdfCloseBtn = document.getElementById("pdf-close");
-const pdfFrame = document.getElementById("pdf-frame");
+            if (window.currentExam && window.currentExam.pdfUrl) {
+                frame.src = window.currentExam.pdfUrl;
+            } else {
+                frame.src = "about:blank";
+            }
 
-pdfToggle.addEventListener("click", () => {
-  if (window.currentExam && window.currentExam.pdfUrl) {
-    pdfFrame.src = window.currentExam.pdfUrl;
-  } else {
-    pdfFrame.src = "about:blank";
-  }
-  pdfPanel.classList.add("open");
-});
-
-pdfCloseBtn.addEventListener("click", () => {
-  pdfPanel.classList.remove("open");
-  pdfFrame.src = "about:blank"; // unload PDF to free memory
-});
+            panel.classList.add("open");
+        });
+    }
 
 
+    const pdfClose = document.getElementById("pdf-close");
+if (pdfClose) {
+    pdfClose.addEventListener("click", () => {
+        const panel = document.getElementById("pdf-panel");
+        panel.classList.remove("open");
+    });
+}
 
 
     if (!window.fapFirebase || !window.fapFirebase.db) {
