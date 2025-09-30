@@ -10,7 +10,7 @@ function display_exam_screen() {
 
     $html = file_get_contents($html_file);
 
-    // JS logic copied from display_online_quiz()
+    // JS logic (dynamically injects title + questions)
     $script = <<<JS
 async function waitForFirebase() {
     return new Promise(resolve => {
@@ -52,25 +52,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const quiz = doc.data();
 
-        // Build quiz HTML
-        let html = `<h2>\${quiz.title}</h2>
-        <div id="timer">01:30:00</div>
-        <form id="quiz-form">`;
+        // Inject title
+        document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
+        // Inject questions into placeholder
+        let questionsHtml = '';
         quiz.questions.forEach((q, i) => {
-            html += `<p><strong>\${i + 1}. \${q.text}</strong></p>`;
-            q.answers.forEach((ans, j) => {
-                html += `<div class="answer-row">
-                    <label><input type="radio" name="q\${i}" value="\${ans.text}"> \${ans.text}</label></div>`;
+            questionsHtml += `<p><strong>\${i + 1}. \${q.text}</strong></p>`;
+            q.answers.forEach((ans) => {
+                questionsHtml += \`
+                    <div class="answer-row">
+                        <label><input type="radio" name="q\${i}" value="\${ans.text}"> \${ans.text}</label>
+                    </div>\`;
             });
         });
 
-        html += `<div style="text-align:center">
-            <input type="submit" value="הגש מבחן" style="padding:12px 25px;background:#4CAF50;color:#fff;border:none;border-radius:5px;font-size:18px;cursor:pointer">
-        </div></form><div id="quiz-result"></div>`;
+        document.getElementById('quiz-questions').innerHTML = questionsHtml;
 
-        document.getElementById('quiz-container').innerHTML = html;
-
+        // Prepare correct answers and timer
         const correctAnswers = quiz.questions.map(q => {
             const correct = q.answers.find(a => a.correct);
             return correct ? correct.text : null;
@@ -103,15 +102,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const userAnswers = [];
             for (const [name, val] of formData.entries()) userAnswers.push(val);
 
-            let score = 0, feedback = '';
+            let score = 0;
             userAnswers.forEach((ans, i) => {
-                const isCorrect = ans === correctAnswers[i];
-                if (isCorrect) score++;
-                feedback += `<p><strong>\${i+1}. \${questionsText[i]}</strong><br>
-                Your Answer: \${ans}\${isCorrect ? ' (Correct)' : ' (Incorrect)'}<br>
-                Correct Answer: \${correctAnswers[i]}</p>`;
+                if (ans === correctAnswers[i]) score++;
             });
 
+            // Redirect to results page
             window.location.href = `/quiz_results?quiz_id=\${quizId}`
                 + `&answers=\${encodeURIComponent(JSON.stringify(userAnswers))}`
                 + `&score=\${score}`
@@ -123,9 +119,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
     }
 });
-JS; 
+JS;
 
-    // Inject JS into placeholder
+    // Inject JS into the {{quiz_script}} placeholder
     $html = str_replace('{{quiz_script}}', $script, $html);
 
     echo $html;
