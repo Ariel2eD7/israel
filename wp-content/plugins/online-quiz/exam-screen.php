@@ -60,10 +60,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         quiz.questions.forEach((q, i) => {
             questionsHtml += `<p><strong>\${i + 1}. \${q.text}</strong></p>`;
             q.answers.forEach((ans) => {
-                questionsHtml += \`
-                    <div class="answer-row">
-                        <label><input type="radio" name="q\${i}" value="\${ans.text}"> \${ans.text}</label>
-                    </div>\`;
+            questionsHtml += `
+    <div class="answer-row">
+        <label><input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}</label>
+    </div>`;
+
             });
         });
 
