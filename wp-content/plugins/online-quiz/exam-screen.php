@@ -59,28 +59,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
+
+        
         let questionsHtml = '';
-        quiz.questions.forEach((q, i) => {
-            questionsHtml += `<p style="margin: 10px 0;"><strong>${i + 1}. ${q.text}</strong></p>`;
-            q.answers.forEach((ans) => {
-                questionsHtml += `
-                    <div style="
-                        cursor: pointer; 
-                        padding: 8px 12px; 
-                        margin-bottom: 10px; 
-                        background: #f9f9f9; 
-                        border-radius: 5px; 
-                        transition: background-color 0.3s;
-                    "
-                    onmouseover="this.style.background='#e0e0e0';" 
-                    onmouseout="this.style.background='#f9f9f9';"
-                    >
-                        <label>
-                            <input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}
-                        </label>
-                    </div>`;
-            });
-        });
+quiz.questions.forEach((q, i) => {
+    questionsHtml += `<fieldset style="margin-bottom: 20px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <legend style="font-weight: bold; margin-bottom: 10px;">${i + 1}. ${q.text}</legend>`;
+    q.answers.forEach((ans) => {
+        questionsHtml += `
+            <label style="
+                display: block;
+                cursor: pointer;
+                padding: 8px 12px;
+                margin-bottom: 10px;
+                background: #f9f9f9;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            "
+            onmouseover="this.style.background='#e0e0e0';"
+            onmouseout="this.style.background='#f9f9f9';"
+            >
+                <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 8px;"> ${ans.text}
+            </label>`;
+    });
+    questionsHtml += `</fieldset>`;
+});
+
+
 
         document.getElementById('quiz-questions').innerHTML = questionsHtml;
 

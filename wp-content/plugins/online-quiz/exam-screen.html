@@ -1,15 +1,15 @@
-<div id="quiz-container" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 30px;">
+<section id="quiz-container" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 30px;">
 
   <h2 id="quiz-title" style="margin: 0;">Loading...</h2>
 
-  <div id="timer" style="font-size: 50px; font-weight: bold; text-align: center; margin: 20px 0;">01:30:00</div>
+  <output id="timer" style="font-size: 50px; font-weight: bold; text-align: center; margin: 20px 0;" for="quiz-form">01:30:00</output>
 
   <form id="quiz-form">
-    <div id="quiz-questions">
+    <section id="quiz-questions">
       {{quiz_questions}}
-    </div>
+    </section>
 
-    <div style="text-align:center; margin-top: 20px;">
+    <footer style="text-align:center; margin-top: 20px;">
       <input 
         type="submit" 
         value="הגש מבחן" 
@@ -18,12 +18,12 @@
         onmouseover="this.style.background='#45a049';"
         onmouseout="this.style.background='#4CAF50';"
       >
-    </div>
+    </footer>
   </form>
 
-  <div id="quiz-result"></div>
+  <output id="quiz-result"></output>
 
-</div>
+</section>
 
 <script>
 {{quiz_script}}
