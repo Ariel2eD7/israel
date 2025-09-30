@@ -10,7 +10,7 @@ function display_exam_screen() {
 
     $html = file_get_contents($html_file);
 
-    // Use nowdoc to prevent PHP from interpreting JS template literals
+    // Use nowdoc syntax so PHP won't parse the JS template literals
     $script = <<<'JS'
 async function waitForFirebase() {
     return new Promise(resolve => {
@@ -61,11 +61,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let questionsHtml = '';
         quiz.questions.forEach((q, i) => {
-            questionsHtml += `<p><strong>${i + 1}. ${q.text}</strong></p>`;
+            questionsHtml += `<p style="margin: 10px 0;"><strong>${i + 1}. ${q.text}</strong></p>`;
             q.answers.forEach((ans) => {
                 questionsHtml += `
-                    <div class="answer-row">
-                        <label><input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}</label>
+                    <div style="
+                        cursor: pointer; 
+                        padding: 8px 12px; 
+                        margin-bottom: 10px; 
+                        background: #f9f9f9; 
+                        border-radius: 5px; 
+                        transition: background-color 0.3s;
+                    "
+                    onmouseover="this.style.background='#e0e0e0';" 
+                    onmouseout="this.style.background='#f9f9f9';"
+                    >
+                        <label>
+                            <input type="radio" name="q${i}" value="${ans.text}"> ${ans.text}
+                        </label>
                     </div>`;
             });
         });
@@ -125,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 JS;
 
-    // Replace the placeholder in HTML with the JS
+    // Replace the placeholder {{quiz_script}} with the JS code
     $html = str_replace('{{quiz_script}}', $script, $html);
 
     echo $html;
