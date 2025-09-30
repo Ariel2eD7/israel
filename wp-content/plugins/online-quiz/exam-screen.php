@@ -60,30 +60,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
 
+       
         
         let questionsHtml = '';
 quiz.questions.forEach((q, i) => {
-    questionsHtml += `<fieldset style="margin-bottom: 20px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-        <legend style="font-weight: bold; margin-bottom: 10px;">${i + 1}. ${q.text}</legend>`;
+    questionsHtml += `
+    <fieldset style="
+      margin-bottom: 24px; 
+      padding: 16px 20px; 
+      border-radius: 8px; 
+      border: 1px solid #ddd; 
+      background: #fafafa;
+      box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.05);
+    ">
+      <legend style="
+        font-weight: 700; 
+        font-size: 1.125rem; 
+        margin-bottom: 12px;
+        padding: 0 6px;
+        color: #222;
+      ">${i + 1}. ${q.text}</legend>`;
+
     q.answers.forEach((ans) => {
         questionsHtml += `
-            <label style="
-                display: block;
-                cursor: pointer;
-                padding: 8px 12px;
-                margin-bottom: 10px;
-                background: #f9f9f9;
-                border-radius: 5px;
-                transition: background-color 0.3s;
-            "
-            onmouseover="this.style.background='#e0e0e0';"
-            onmouseout="this.style.background='#f9f9f9';"
-            >
-                <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 8px;"> ${ans.text}
-            </label>`;
+      <label style="
+        display: block;
+        cursor: pointer;
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        border-radius: 6px;
+        background: #fff;
+        border: 1px solid #ddd;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+        user-select: none;
+        font-weight: 500;
+        color: #111;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+      "
+      onmouseover="this.style.background='#ffebd8'; this.style.borderColor='#ff7a00';"
+      onmouseout="this.style.background='#fff'; this.style.borderColor='#ddd';"
+      >
+        <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">
+        ${ans.text}
+      </label>`;
     });
+
     questionsHtml += `</fieldset>`;
 });
+
 
 
 
