@@ -1,52 +1,23 @@
 <?php
 
 function oq_enqueue_pdfjs_cdn() {
-    // Load PDF.js from CDN
+    // Load PDF.js from CDN in footer
     wp_enqueue_script(
         'pdfjs-lib-cdn',
         'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.100/pdf.min.js',
         [],
         null,
-        true // load in footer
+        true
     );
 
-    // Set the worker
+    // Set the worker after library loads
     wp_add_inline_script(
         'pdfjs-lib-cdn',
         "pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.100/pdf.worker.min.js';"
     );
-
-    // Add your PDF toggle JS after PDF.js
-    wp_add_inline_script(
-        'pdfjs-lib-cdn',
-        "document.addEventListener('DOMContentLoaded', function() {
-            const pdfToggle = document.getElementById('pdf-toggle');
-            if (!pdfToggle) return;
-            const canvas = document.getElementById('pdf-canvas');
-            const ctx = canvas.getContext('2d');
-
-            pdfToggle.addEventListener('click', async () => {
-                if (!window.currentExam || !window.currentExam.pdfUrl) return;
-                const url = window.currentExam.pdfUrl;
-                const pdf = await pdfjsLib.getDocument(url).promise;
-                const page = await pdf.getPage(1);
-                const viewport = page.getViewport({ scale: 1.2 });
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                page.render({ canvasContext: ctx, viewport });
-                document.getElementById('pdf-panel').classList.add('open');
-            });
-
-            const pdfClose = document.getElementById('pdf-close');
-            if (pdfClose) {
-                pdfClose.addEventListener('click', () => {
-                    document.getElementById('pdf-panel').classList.remove('open');
-                });
-            }
-        });"
-    );
 }
 add_action('wp_enqueue_scripts', 'oq_enqueue_pdfjs_cdn');
+
 
 
 
@@ -89,46 +60,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // ✅ Add your PDF toggle logic *inside* the same DOMContentLoaded handler
+window.addEventListener('load', () => {
+    const pdfToggle = document.getElementById("pdf-toggle");
+    if (!pdfToggle) return;
 
-        const pdfToggle = document.getElementById("pdf-toggle");
-if (pdfToggle) {
-  pdfToggle.addEventListener("click", () => {
-    const panel = document.getElementById("pdf-panel");
     const canvas = document.getElementById("pdf-canvas");
     const ctx = canvas.getContext('2d');
 
-    if (window.currentExam && window.currentExam.pdfUrl) {
-      const url = window.currentExam.pdfUrl;
+    pdfToggle.addEventListener("click", () => {
+        if (!window.currentExam || !window.currentExam.pdfUrl) return;
+        const url = window.currentExam.pdfUrl;
 
-      pdfjsLib.getDocument(url).promise.then(pdf => {
-        // Load first page
-        return pdf.getPage(1).then(page => {
-          const viewport = page.getViewport({ scale: 1.2 });
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
+        pdfjsLib.getDocument(url).promise.then(pdf => {
+            return pdf.getPage(1).then(page => {
+                const viewport = page.getViewport({ scale: 1.2 });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
 
-          const renderContext = {
-            canvasContext: ctx,
-            viewport: viewport
-          };
-          page.render(renderContext);
+                page.render({ canvasContext: ctx, viewport });
+            });
         });
-      });
-    }
 
-    panel.classList.add("open");
-  });
-}
-
-
+        document.getElementById("pdf-panel").classList.add("open");
+    });
 
     const pdfClose = document.getElementById("pdf-close");
-if (pdfClose) {
-    pdfClose.addEventListener("click", () => {
-        const panel = document.getElementById("pdf-panel");
-        panel.classList.remove("open");
-    });
-}
+    if (pdfClose) {
+        pdfClose.addEventListener("click", () => {
+            document.getElementById("pdf-panel").classList.remove("open");
+        });
+    }
+});
 
 
     if (!window.fapFirebase || !window.fapFirebase.db) {
