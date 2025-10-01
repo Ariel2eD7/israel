@@ -1,14 +1,19 @@
 <?php
+function fap_render_auth_modal() {
   $modal_path = plugin_dir_path(__FILE__) . 'auth.html';
-  if (file_exists($modal_path)) 
-  {
-    echo file_get_contents($modal_path);
-  } 
-  else 
-  {
-    echo '<p style="color:red;">auth.html not found.</p>';
+  if (file_exists($modal_path)) {
+    return file_get_contents($modal_path);
+  } else {
+    return '<p style="color:red;">auth.html not found.</p>';
   }
+}
+
+// Hook it into wp_footer so it loads at the end of the page
+add_action('wp_footer', function () {
+  echo fap_render_auth_modal();
+});
 ?>
+
 
 <!-- Modal JS Logic -->
 <script>
