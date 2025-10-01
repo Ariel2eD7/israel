@@ -59,38 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { db } = await waitForFirebase();
 
 
-        // ✅ Add your PDF toggle logic *inside* the same DOMContentLoaded handler
-window.addEventListener('load', () => {
-    const pdfToggle = document.getElementById("pdf-toggle");
-    if (!pdfToggle) return;
-
-    const canvas = document.getElementById("pdf-canvas");
-    const ctx = canvas.getContext('2d');
-
-    pdfToggle.addEventListener("click", () => {
-        if (!window.currentExam || !window.currentExam.pdfUrl) return;
-        const url = window.currentExam.pdfUrl;
-
-        pdfjsLib.getDocument(url).promise.then(pdf => {
-            return pdf.getPage(1).then(page => {
-                const viewport = page.getViewport({ scale: 1.2 });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                page.render({ canvasContext: ctx, viewport });
-            });
-        });
-
-        document.getElementById("pdf-panel").classList.add("open");
-    });
-
-    const pdfClose = document.getElementById("pdf-close");
-    if (pdfClose) {
-        pdfClose.addEventListener("click", () => {
-            document.getElementById("pdf-panel").classList.remove("open");
-        });
-    }
-});
 
 
     if (!window.fapFirebase || !window.fapFirebase.db) {
@@ -112,6 +80,39 @@ window.addEventListener('load', () => {
 
         // ✅ Expose the quiz globally so PDF toggle can read pdfUrl
 window.currentExam = quiz;
+
+    // PDF toggle
+    const pdfToggle = document.getElementById("pdf-toggle");
+    if (pdfToggle) {
+        const canvas = document.getElementById("pdf-canvas");
+        const ctx = canvas.getContext('2d');
+
+        pdfToggle.addEventListener("click", () => {
+            if (!window.currentExam || !window.currentExam.pdfUrl) return;
+            const url = window.currentExam.pdfUrl;
+
+            // ✅ pdfjsLib is guaranteed loaded here because wp_add_inline_script is after pdf.js
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                return pdf.getPage(1).then(page => {
+                    const viewport = page.getViewport({ scale: 1.2 });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    page.render({ canvasContext: ctx, viewport });
+                });
+            });
+
+            document.getElementById("pdf-panel").classList.add("open");
+        });
+    }
+
+    const pdfClose = document.getElementById("pdf-close");
+    if (pdfClose) {
+        pdfClose.addEventListener("click", () => {
+            document.getElementById("pdf-panel").classList.remove("open");
+        });
+    }
+
 
         if (!quiz.questions || !Array.isArray(quiz.questions)) {
             document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
