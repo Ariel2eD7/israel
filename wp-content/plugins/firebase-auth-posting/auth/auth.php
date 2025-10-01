@@ -12,8 +12,9 @@ function fap_render_auth_modal() {
 add_action('wp_footer', function () {
   echo fap_render_auth_modal();
 });
-?>
-
+// Hook modal JS
+function fap_auth_scripts() {
+  ?>
 
 <!-- Modal JS Logic -->
 <script>
@@ -467,3 +468,7 @@ loginForm.style.display = "flex"; // ✅ RIGHT
   }); // end waitForFirebaseAuth
 });
 </script>
+
+  <?php
+}
+add_action('wp_footer', 'fap_auth_scripts', 20);
