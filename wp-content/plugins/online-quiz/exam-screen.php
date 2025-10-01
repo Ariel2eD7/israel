@@ -7,7 +7,7 @@ function oq_enqueue_pdfjs_cdn() {
         'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.100/pdf.min.js',
         [],
         null,
-        true
+        true // load in footer
     );
 
     // Set the worker
@@ -47,6 +47,7 @@ function oq_enqueue_pdfjs_cdn() {
     );
 }
 add_action('wp_enqueue_scripts', 'oq_enqueue_pdfjs_cdn');
+
 
 
 
