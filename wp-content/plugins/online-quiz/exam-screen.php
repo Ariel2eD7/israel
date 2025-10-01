@@ -18,111 +18,84 @@ function oq_enqueue_pdfjs_cdn() {
 }
 add_action('wp_enqueue_scripts', 'oq_enqueue_pdfjs_cdn');
 
-
-
-
-
 function display_exam_screen() {
     ob_start();
 
     $html_file = plugin_dir_path(__FILE__) . 'exam-screen.html';
-
     if (!file_exists($html_file)) {
         return '<p>Error: exam-screen.html not found.</p>';
     }
 
     $html = file_get_contents($html_file);
 
-    // Use nowdoc for JS (avoiding PHP interpretation)
+    // Inline JS, now waits for pdfjsLib to exist
     $script = <<<'JS'
 async function waitForFirebase() { 
     return new Promise(resolve => {
         const check = () => {
-            if (window.fapFirebase && window.fapFirebase.db) {
-                resolve(window.fapFirebase);
-            } else { 
-                setTimeout(check, 100);
-            }
+            if (window.fapFirebase && window.fapFirebase.db) resolve(window.fapFirebase);
+            else setTimeout(check, 100);
         };
         check();
     });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
-    if (!quizId) {
-        document.getElementById('quiz-container').textContent = 'No quiz selected.';
-        return;
-    }
+    if (!quizId) return document.getElementById('quiz-container').textContent = 'No quiz selected.';
 
     const { db } = await waitForFirebase();
 
-
-
-
-    if (!window.fapFirebase || !window.fapFirebase.db) {
-        document.getElementById('quiz-container').textContent = 'Error loading quiz.';
-        return;
-    }
-
     try {
-        const docRef = db.collection('exams').doc(quizId);
-        const doc = await docRef.get();
-
-        if (!doc.exists) {
-            document.getElementById('quiz-container').textContent = 'Quiz not found.';
-            return;
-        }
-
+        const doc = await db.collection('exams').doc(quizId).get();
+        if (!doc.exists) return document.getElementById('quiz-container').textContent = 'Quiz not found.';
         const quiz = doc.data();
+        window.currentExam = quiz;
 
+        // --- PDF toggle, waits for pdfjsLib ---
+        function setupPDF() {
+            if (typeof pdfjsLib === 'undefined') {
+                setTimeout(setupPDF, 50);
+                return;
+            }
 
-        // ✅ Expose the quiz globally so PDF toggle can read pdfUrl
-window.currentExam = quiz;
+            const pdfToggle = document.getElementById("pdf-toggle");
+            if (!pdfToggle) return;
 
-    // PDF toggle
-    const pdfToggle = document.getElementById("pdf-toggle");
-    if (pdfToggle) {
-        const canvas = document.getElementById("pdf-canvas");
-        const ctx = canvas.getContext('2d');
+            const canvas = document.getElementById("pdf-canvas");
+            const ctx = canvas.getContext('2d');
 
-        pdfToggle.addEventListener("click", () => {
-            if (!window.currentExam || !window.currentExam.pdfUrl) return;
-            const url = window.currentExam.pdfUrl;
+            pdfToggle.addEventListener("click", () => {
+                if (!window.currentExam.pdfUrl) return;
 
-            // ✅ pdfjsLib is guaranteed loaded here because wp_add_inline_script is after pdf.js
-            pdfjsLib.getDocument(url).promise.then(pdf => {
-                return pdf.getPage(1).then(page => {
-                    const viewport = page.getViewport({ scale: 1.2 });
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    page.render({ canvasContext: ctx, viewport });
+                pdfjsLib.getDocument(window.currentExam.pdfUrl).promise.then(pdf => {
+                    pdf.getPage(1).then(page => {
+                        const viewport = page.getViewport({ scale: 1.2 });
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        page.render({ canvasContext: ctx, viewport });
+                    });
                 });
+
+                document.getElementById("pdf-panel").classList.add("open");
             });
 
-            document.getElementById("pdf-panel").classList.add("open");
-        });
-    }
+            const pdfClose = document.getElementById("pdf-close");
+            if (pdfClose) {
+                pdfClose.addEventListener("click", () => {
+                    document.getElementById("pdf-panel").classList.remove("open");
+                });
+            }
+        }
+        setupPDF();
 
-    const pdfClose = document.getElementById("pdf-close");
-    if (pdfClose) {
-        pdfClose.addEventListener("click", () => {
-            document.getElementById("pdf-panel").classList.remove("open");
-        });
-    }
-
-
+        // --- Quiz Rendering ---
         if (!quiz.questions || !Array.isArray(quiz.questions)) {
-            document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
-            return;
+            return document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
         }
 
-        // Set quiz title
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
-        // Build question blocks with Reddit-style inline styles
         let questionsHtml = '';
         quiz.questions.forEach((q, i) => {
             questionsHtml += `
@@ -142,7 +115,7 @@ window.currentExam = quiz;
                     color: #222;
                 ">${i + 1}. ${q.text}</legend>`;
 
-            q.answers.forEach((ans) => {
+            q.answers.forEach(ans => {
                 questionsHtml += `
                 <label style="
                     display: block;
@@ -169,16 +142,13 @@ window.currentExam = quiz;
             questionsHtml += `</fieldset>`;
         });
 
-        // Inject questions HTML
         document.getElementById('quiz-questions').innerHTML = questionsHtml;
 
-        // Prepare correct answers array for scoring
         const correctAnswers = quiz.questions.map(q => {
             const correct = q.answers.find(a => a.correct);
             return correct ? correct.text : null;
         });
 
-        // Setup timer
         const durationSeconds = parseInt(quiz.duration, 10) * 60 || 5400;
         let timeRemaining = durationSeconds;
         const timerDisplay = document.getElementById('timer');
@@ -198,18 +168,14 @@ window.currentExam = quiz;
             }
         }
 
-        updateTimer(); // Initial display
+        updateTimer();
         const timerInterval = setInterval(updateTimer, 1000);
 
-        // Handle form submit and scoring
         document.getElementById('quiz-form').addEventListener('submit', e => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const userAnswers = [];
-
-            for (const [name, val] of formData.entries()) {
-                userAnswers.push(val);
-            }
+            for (const [name, val] of formData.entries()) userAnswers.push(val);
 
             let score = 0;
             userAnswers.forEach((ans, i) => {
@@ -223,15 +189,13 @@ window.currentExam = quiz;
         });
 
     } catch (err) {
-        console.error('🔥 Error loading quiz', err);
+        console.error('Error loading quiz', err);
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
     }
 });
 JS;
 
-    // Inject the JS script in place of {{quiz_script}} in your HTML
     $html = str_replace('{{quiz_script}}', $script, $html);
-
     echo $html;
     return ob_get_clean();
 }
