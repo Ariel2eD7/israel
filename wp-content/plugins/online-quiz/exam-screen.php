@@ -1,4 +1,29 @@
 <?php
+
+function oq_enqueue_pdfjs() {
+    $plugin_url = plugin_dir_url(__FILE__);
+
+    // Load pdf.js
+    wp_enqueue_script(
+        'pdfjs-lib',
+        $plugin_url . 'pdfjs/build/pdf.js',
+        [],
+        null,
+        true
+    );
+
+    // Optional: worker (needed for rendering)
+    wp_enqueue_script(
+        'pdfjs-worker',
+        $plugin_url . 'pdfjs/build/pdf.worker.js',
+        ['pdfjs-lib'],
+        null,
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'oq_enqueue_pdfjs');
+
+
 function display_exam_screen() {
     ob_start();
 
@@ -26,6 +51,11 @@ async function waitForFirebase() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+
+    if (window['pdfjsLib']) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/wp-content/plugins/online-quiz/pdfjs/build/pdf.worker.js';
+}
+
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
     if (!quizId) {
         document.getElementById('quiz-container').textContent = 'No quiz selected.';
