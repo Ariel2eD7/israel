@@ -36,21 +36,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // ✅ Add your PDF toggle logic *inside* the same DOMContentLoaded handler
-    const pdfToggle = document.getElementById("pdf-toggle");
-    if (pdfToggle) {
-        pdfToggle.addEventListener("click", () => {
-            const panel = document.getElementById("pdf-panel");
-            const frame = document.getElementById("pdf-frame");
 
-            if (window.currentExam && window.currentExam.pdfUrl) {
-                frame.src = window.currentExam.pdfUrl;
-            } else {
-                frame.src = "about:blank";
-            }
+        const pdfToggle = document.getElementById("pdf-toggle");
+if (pdfToggle) {
+  pdfToggle.addEventListener("click", () => {
+    const panel = document.getElementById("pdf-panel");
+    const canvas = document.getElementById("pdf-canvas");
+    const ctx = canvas.getContext('2d');
 
-            panel.classList.add("open");
+    if (window.currentExam && window.currentExam.pdfUrl) {
+      const url = window.currentExam.pdfUrl;
+
+      pdfjsLib.getDocument(url).promise.then(pdf => {
+        // Load first page
+        return pdf.getPage(1).then(page => {
+          const viewport = page.getViewport({ scale: 1.2 });
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport
+          };
+          page.render(renderContext);
         });
+      });
     }
+
+    panel.classList.add("open");
+  });
+}
+
 
 
     const pdfClose = document.getElementById("pdf-close");

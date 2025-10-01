@@ -44,14 +44,17 @@
 </button>
 
 
-  <!-- Slide-out Panel -->
-  <div id="pdf-panel">
-    <div id="pdf-header">
-      <span>Original Exam PDF</span>
-      <button id="pdf-close" aria-label="Close PDF panel"> חזור למבחן❌</button>
-    </div>
-    <iframe id="pdf-frame" src=""></iframe>
+<!-- Slide-out Panel -->
+<div id="pdf-panel">
+  <div id="pdf-header">
+    <span>Original Exam PDF</span>
+    <button id="pdf-close">❌</button>
   </div>
+  <!-- PDF.js render container -->
+  <div id="pdf-viewer" style="flex:1; overflow:auto; background:#eee; padding:10px;">
+    <canvas id="pdf-canvas"></canvas>
+  </div>
+</div>
 
   <style>
     #pdf-panel {
@@ -112,6 +115,8 @@
   <output id="quiz-result" style="margin-top: 24px; display: block; color: #666;"></output>
 </section>
 
-<script>
+<script src="/wp-content/plugins/online-quiz/pdfjs/build/pdf.js"></script>
+
+<script >
   {{quiz_script}}
 </script>
