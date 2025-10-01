@@ -28,7 +28,7 @@ function display_exam_screen() {
 
     $html = file_get_contents($html_file);
 
-    // Inline JS, now waits for pdfjsLib to exist
+    // Inline JS
     $script = <<<'JS'
 async function waitForFirebase() { 
     return new Promise(resolve => {
@@ -40,25 +40,32 @@ async function waitForFirebase() {
     });
 }
 
+function waitForPdfJs(callback) {
+    if (typeof pdfjsLib !== 'undefined') callback();
+    else setTimeout(() => waitForPdfJs(callback), 50);
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
-    if (!quizId) return document.getElementById('quiz-container').textContent = 'No quiz selected.';
+    if (!quizId) {
+        document.getElementById('quiz-container').textContent = 'No quiz selected.';
+        return;
+    }
 
     const { db } = await waitForFirebase();
 
     try {
         const doc = await db.collection('exams').doc(quizId).get();
-        if (!doc.exists) return document.getElementById('quiz-container').textContent = 'Quiz not found.';
+        if (!doc.exists) {
+            document.getElementById('quiz-container').textContent = 'Quiz not found.';
+            return;
+        }
+
         const quiz = doc.data();
         window.currentExam = quiz;
 
-        // --- PDF toggle, waits for pdfjsLib ---
-        function setupPDF() {
-            if (typeof pdfjsLib === 'undefined') {
-                setTimeout(setupPDF, 50);
-                return;
-            }
-
+        // Wait for PDF.js before setting up PDF button
+        waitForPdfJs(() => {
             const pdfToggle = document.getElementById("pdf-toggle");
             if (!pdfToggle) return;
 
@@ -86,16 +93,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById("pdf-panel").classList.remove("open");
                 });
             }
-        }
-        setupPDF();
+        });
 
-        // --- Quiz Rendering ---
-        if (!quiz.questions || !Array.isArray(quiz.questions)) {
-            return document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
-        }
-
+        // Quiz title
         document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
+        // Build questions
         let questionsHtml = '';
         quiz.questions.forEach((q, i) => {
             questionsHtml += `
