@@ -1,27 +1,22 @@
 <?php
 
-function oq_enqueue_pdfjs() {
-    $plugin_url = plugin_dir_url(__FILE__);
-
-    // Load pdf.js
+function oq_enqueue_pdfjs_cdn() {
+    // PDF.js library from CDN
     wp_enqueue_script(
-        'pdfjs-lib',
-        $plugin_url . 'pdfjs/build/pdf.js',
+        'pdfjs-lib-cdn',
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.100/pdf.min.js',
         [],
         null,
         true
     );
 
-    // Optional: worker (needed for rendering)
-    wp_enqueue_script(
-        'pdfjs-worker',
-        $plugin_url . 'pdfjs/build/pdf.worker.js',
-        ['pdfjs-lib'],
-        null,
-        true
+    // Worker must be set after PDF.js loads
+    wp_add_inline_script(
+        'pdfjs-lib-cdn',
+        "pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.100/pdf.worker.min.js';"
     );
 }
-add_action('wp_enqueue_scripts', 'oq_enqueue_pdfjs');
+add_action('wp_enqueue_scripts', 'oq_enqueue_pdfjs_cdn');
 
 
 function display_exam_screen() {
