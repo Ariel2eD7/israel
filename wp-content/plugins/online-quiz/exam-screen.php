@@ -64,12 +64,12 @@ function display_exam_screen() {
 
     // Use nowdoc for JS (avoiding PHP interpretation)
     $script = <<<'JS'
-async function waitForFirebase() {
+async function waitForFirebase() { 
     return new Promise(resolve => {
         const check = () => {
             if (window.fapFirebase && window.fapFirebase.db) {
                 resolve(window.fapFirebase);
-            } else {
+            } else { 
                 setTimeout(check, 100);
             }
         };
@@ -78,10 +78,6 @@ async function waitForFirebase() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-
-    if (window['pdfjsLib']) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/wp-content/plugins/online-quiz/pdfjs/build/pdf.worker.js';
-}
 
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
     if (!quizId) {
