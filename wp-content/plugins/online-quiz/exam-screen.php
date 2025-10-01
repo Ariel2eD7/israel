@@ -1,7 +1,7 @@
 <?php
 
 function oq_enqueue_pdfjs_cdn() {
-    // PDF.js library from CDN
+    // Load PDF.js from CDN
     wp_enqueue_script(
         'pdfjs-lib-cdn',
         'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.100/pdf.min.js',
@@ -10,13 +10,44 @@ function oq_enqueue_pdfjs_cdn() {
         true
     );
 
-    // Worker must be set after PDF.js loads
+    // Set the worker
     wp_add_inline_script(
         'pdfjs-lib-cdn',
         "pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.100/pdf.worker.min.js';"
     );
+
+    // Add your PDF toggle JS after PDF.js
+    wp_add_inline_script(
+        'pdfjs-lib-cdn',
+        "document.addEventListener('DOMContentLoaded', function() {
+            const pdfToggle = document.getElementById('pdf-toggle');
+            if (!pdfToggle) return;
+            const canvas = document.getElementById('pdf-canvas');
+            const ctx = canvas.getContext('2d');
+
+            pdfToggle.addEventListener('click', async () => {
+                if (!window.currentExam || !window.currentExam.pdfUrl) return;
+                const url = window.currentExam.pdfUrl;
+                const pdf = await pdfjsLib.getDocument(url).promise;
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 1.2 });
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                page.render({ canvasContext: ctx, viewport });
+                document.getElementById('pdf-panel').classList.add('open');
+            });
+
+            const pdfClose = document.getElementById('pdf-close');
+            if (pdfClose) {
+                pdfClose.addEventListener('click', () => {
+                    document.getElementById('pdf-panel').classList.remove('open');
+                });
+            }
+        });"
+    );
 }
 add_action('wp_enqueue_scripts', 'oq_enqueue_pdfjs_cdn');
+
 
 
 function display_exam_screen() {
