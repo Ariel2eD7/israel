@@ -123,11 +123,11 @@ questions.forEach((q, i) => {
         ${i + 1}. ${q.text}
       </p>
       <p style="margin: 0 0 8px 0;">
-        ${icon} Your answer: <strong style="color: ${textColor};">${userAnswer}</strong>
+        ${icon} התשובה שלך: <strong style="color: ${textColor};">${userAnswer}</strong>
       </p>
       ${!isCorrect ? `
         <p style="margin: 0;">
-          Correct answer: <strong>${correctAnswer}</strong>
+          התשובה הנכונה: <strong>${correctAnswer}</strong>
         </p>
       ` : ''}
     </article>
