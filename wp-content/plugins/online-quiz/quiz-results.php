@@ -139,7 +139,7 @@ questions.forEach((q, i) => {
               container.innerHTML = html;
 
               // Set score and time spent
-              scoreTextElem.textContent = `Your Score: ${score} / ${questions.length}`;
+              scoreTextElem.textContent = `הציון שלך: ${score} / ${questions.length}`;
 
               // Format timeSpent (seconds) as HH:MM:SS
               function formatTime(seconds) {
