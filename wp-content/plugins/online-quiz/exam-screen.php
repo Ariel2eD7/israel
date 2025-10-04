@@ -48,18 +48,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 frame.src = "about:blank";
             }
 
-            panel.classList.add("open");
+            panel.style.left = "0";
+
         });
     }
 
 
-    const pdfClose = document.getElementById("pdf-close");
-if (pdfClose) {
-    pdfClose.addEventListener("click", () => {
-        const panel = document.getElementById("pdf-panel");
-        panel.classList.remove("open");
-    });
-}
+const pdfClose = document.getElementById("pdf-close");
+pdfClose.addEventListener("click", () => {
+  const panel = document.getElementById("pdf-panel");
+  const frame = document.getElementById("pdf-frame");
+
+  panel.style.left = "-100%"; // move panel off-screen again
+  frame.src = "about:blank"; // clear PDF src if you want
+});
 
 
     if (!window.fapFirebase || !window.fapFirebase.db) {
