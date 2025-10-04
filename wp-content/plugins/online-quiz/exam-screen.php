@@ -114,7 +114,7 @@ window.currentExam = quiz;
 
             q.answers.forEach((ans) => {
                 questionsHtml += `
-                <label style="
+                <label style=" 
                     display: block;
                     cursor: pointer;
                     padding: 10px 14px;
@@ -128,7 +128,7 @@ window.currentExam = quiz;
                     color: #111;
                     box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
                 "
-                onmouseover="this.style.background='#a1bed4ff'; this.style.borderColor='#0878ceff';" 
+                onmouseover="this.style.background='#c6d3ddff'; this.style.borderColor='#0878ceff';" 
                 onmouseout="this.style.background='#fff'; this.style.borderColor='#ddd';"
                 >
                     <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">
