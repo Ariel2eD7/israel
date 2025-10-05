@@ -32,6 +32,17 @@ async function waitForFirebase() {
 
 document.addEventListener('DOMContentLoaded', async () => {
 
+    // Warn user before leaving the page (refresh, close, back)
+function beforeUnloadHandler(e) {
+  const confirmationMessage = 'האם אתה בטוח שברצונך לצאת מהמבחן? ייתכן שהתשובות שלך לא יישמרו.';
+  e.preventDefault(); // For older browsers
+  e.returnValue = confirmationMessage; // For modern browsers
+  return confirmationMessage;
+}
+
+window.addEventListener('beforeunload', beforeUnloadHandler);
+
+
                 // Pre-quiz countdown
 const preQuizScreen = document.getElementById('pre-quiz-screen');
 const preQuizTimer = document.getElementById('pre-quiz-timer');
@@ -234,6 +245,10 @@ checkAllAnswered();
     // Ask user for confirmation
     const sure = confirm('Are you sure you want to submit the exam? Make sure you answered all questions.');
     if (!sure) return; // User clicked cancel
+
+    // ✅ Remove exit warning after submission
+window.removeEventListener('beforeunload', beforeUnloadHandler);
+
 
     const formData = new FormData(e.target);
     const userAnswers = [];
