@@ -16,19 +16,8 @@ function display_exam_screen() {
     $script = <<<'JS'
 async function waitForFirebase() {
     return new Promise(resolve => {
-        const check = () => {
-            if (window.fapFirebase && window.fapFirebase.db) {
-                resolve(window.fapFirebase);
-            } else {
-                setTimeout(check, 100);
-            }
-        };
-        check();
-    });
-}
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Pre-quiz countdown
+            // Pre-quiz countdown
 const preQuizScreen = document.getElementById('pre-quiz-screen');
 const preQuizTimer = document.getElementById('pre-quiz-timer');
 const quizContainer = document.getElementById('quiz-container');
@@ -47,6 +36,19 @@ const preQuizInterval = setInterval(() => {
         startQuiz(); // function that initializes your quiz questions, timer, etc.
     }
 }, 1000);
+
+        const check = () => {
+            if (window.fapFirebase && window.fapFirebase.db) {
+                resolve(window.fapFirebase);
+            } else {
+                setTimeout(check, 100);
+            }
+        };
+        check();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
 
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
     if (!quizId) {
