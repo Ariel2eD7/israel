@@ -154,7 +154,7 @@ function checkAllAnswered() {
 
     // Update button style
     if (submitBtn.disabled) {
-        submitBtn.style.backgroundColor = '#ccc';
+        submitBtn.style.backgroundColor = '#89bafaff';
         submitBtn.style.cursor = 'not-allowed';
     } else {
         submitBtn.style.backgroundColor = '#0079d3';
