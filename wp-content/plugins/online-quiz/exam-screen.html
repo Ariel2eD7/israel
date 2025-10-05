@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 99999;
+    z-index: 99995;
     position: fixed; 
     top: 0;
     left: 0;
@@ -22,7 +22,7 @@
     ">1</div>
 </div>
 
- <header id="fap-header" style="z-index: 99994 !important; top: 0; background-color: var(--bg-color) !important; justify-content: space-between; position: fixed !important; padding: 0 12px; height: 57px; display: flex; align-items: center; border-bottom: 1px solid var(--divider-borderbottom); transition: background-color 0.3s ease, border-bottom 0.3s ease;">
+ <header id="fap-header" style="z-index: 99993; top: 0; background-color: var(--bg-color) !important; justify-content: space-between; position: fixed !important; padding: 0 12px; height: 57px; display: flex; align-items: center; border-bottom: 1px solid var(--divider-borderbottom); transition: background-color 0.3s ease, border-bottom 0.3s ease;">
     <section style="display: flex; align-items: center;">
       <!-- Hamburger -->
 <!-- Back / Close (X) Button -->
@@ -44,14 +44,14 @@
   });
 </script>
   <!-- Timer -->
-  <output id="timer" for="quiz-form" style=" position: fixed;  top: 12px; left: 50%; transform: translateX(-50%); z-index: 10000; padding: 4px 4px; font-size: 18px; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: white; background-color: #0079d3; border-radius: 999px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); letter-spacing: 1px; width: fit-content; transition: background-color 0.3s ease;">
+  <output id="timer" for="quiz-form" style=" position: fixed;  top: 12px; left: 50%; transform: translateX(-50%); z-index: 99993; padding: 4px 4px; font-size: 18px; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: white; background-color: #0079d3; border-radius: 999px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); letter-spacing: 1px; width: fit-content; transition: background-color 0.3s ease;">
     01:30:00
   </output>
   <button id="pdf-toggle" aria-label="View PDF" title="View PDF" style="
   position: fixed;
   top: 2px;
   left: 0;
-  z-index: 999;
+  z-index: 99993;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +90,7 @@
 
   <!-- Slide-out Panel -->
   <section id="pdf-panel" style="position: fixed; top: 0; left: -100%; width: 100%; height: 100%; background: #fff; box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3); transition: left 0.3s ease; z-index: 99999; display: flex; flex-direction: column;">
-    <header id="pdf-header" style="z-index: 99999; background: #f5f5f5; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+    <header id="pdf-header" style="z-index: 99994; background: #f5f5f5; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
       <span>Original Exam PDF</span>
       <button id="pdf-close" aria-label="Close PDF panel" style="cursor: pointer;">חזור למבחן❌</button>
     </header>
