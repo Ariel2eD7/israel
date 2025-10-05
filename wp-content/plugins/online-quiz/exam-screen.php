@@ -142,6 +142,33 @@ window.currentExam = quiz;
         // Inject questions HTML
         document.getElementById('quiz-questions').innerHTML = questionsHtml;
 
+
+        const submitBtn = document.getElementById('submit-btn');
+const radios = document.querySelectorAll('#quiz-questions input[type="radio"]');
+
+function checkAllAnswered() {
+    const totalQuestions = document.querySelectorAll('#quiz-questions fieldset').length;
+    const answeredCount = new Set([...radios].filter(r => r.checked).map(r => r.name)).size;
+
+    submitBtn.disabled = answeredCount !== totalQuestions;
+
+    // Update button style
+    if (submitBtn.disabled) {
+        submitBtn.style.backgroundColor = '#ccc';
+        submitBtn.style.cursor = 'not-allowed';
+    } else {
+        submitBtn.style.backgroundColor = '#0079d3';
+        submitBtn.style.cursor = 'pointer';
+    }
+}
+
+// Add change listener to all radio buttons
+radios.forEach(r => r.addEventListener('change', checkAllAnswered));
+
+// Run once to initialize
+checkAllAnswered();
+
+
         // Prepare correct answers array for scoring
         const correctAnswers = quiz.questions.map(q => {
             const correct = q.answers.find(a => a.correct);
