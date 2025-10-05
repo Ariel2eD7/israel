@@ -37,7 +37,7 @@ const preQuizScreen = document.getElementById('pre-quiz-screen');
 const preQuizTimer = document.getElementById('pre-quiz-timer');
 const quizContainer = document.getElementById('quiz-container');
 
-let countdown = 5; // seconds
+let countdown = 1; // seconds
 preQuizTimer.textContent = countdown;
 
 const preQuizInterval = setInterval(() => {
@@ -51,7 +51,7 @@ const preQuizInterval = setInterval(() => {
         startQuiz(); // function that initializes your quiz questions, timer, etc.
     }
 }, 1000);
-await new Promise(resolve => setTimeout(resolve, 5000));
+await new Promise(resolve => setTimeout(resolve, 1000));
 
 
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
