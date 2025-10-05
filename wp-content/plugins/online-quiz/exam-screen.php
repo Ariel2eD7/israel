@@ -274,10 +274,7 @@ window.removeEventListener('beforeunload', beforeUnloadHandler);
         document.getElementById('quiz-container').textContent = 'Error loading quiz.';
     }
 
-    setTimeout(() => {
-  document.body.dispatchEvent(new Event('click'));
-}, 1000); // Let the page settle
-
+    
 });
 JS;
 
