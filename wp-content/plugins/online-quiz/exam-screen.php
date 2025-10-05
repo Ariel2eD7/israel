@@ -35,7 +35,8 @@ const preQuizInterval = setInterval(() => {
         quizContainer.style.display = 'block';
         startQuiz(); // function that initializes your quiz questions, timer, etc.
     }
-}, 5000);
+}, 1000);
+setTimeout(check, 5000);
 
         const check = () => {
             if (window.fapFirebase && window.fapFirebase.db) {
