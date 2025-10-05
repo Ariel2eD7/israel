@@ -308,24 +308,46 @@
       </li> 
 
 <li style="padding-left: 10px; padding-top: 10px; padding-bottom: 10px;">
-  <a href="/exams-dropdowns" style="text-decoration: none; color: var(--text-color); display: flex; align-items: center; gap: 8px; font-family: 'Segoe Script', 'Comic Sans MS', cursive, sans-serif;">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;">
-      <!-- Hand-drawn paper shape -->
-      <path d="M3 3 L17 5 L15 19 L1 17 Z" fill="none" />
-      <!-- Pencil body -->
-      <path d="M14 14 L19 9" />
-      <polygon points="19,9 18.5,8 17.5,8.5 18,9" fill="currentColor" />
-      <!-- Handwritten "Exam" text path approximation -->
-      <text x="4" y="10" font-family="'Segoe Script', cursive" font-size="6" fill="currentColor" style="user-select:none;">Exam</text>
-      <!-- Small clock -->
-      <circle cx="18" cy="5" r="2" />
-      <line x1="18" y1="5" x2="18" y2="4" />
-      <line x1="18" y1="5" x2="19" y2="5" />
-    </svg>
+  <a href="/exams-dropdowns" style="text-decoration: none; color: var(--text-color); display: flex; align-items: center; gap: 8px;">
+
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" fill="white"/>
+
+  <!-- Document -->
+  <rect x="8" y="4" width="40" height="56" rx="3" ry="3" stroke="currentColor" stroke-width="2" fill="white"/>
+
+  <!-- “Exam” text -->
+  <text x="14" y="18" font-family="Arial, sans-serif" font-size="6" fill="currentColor">Exam</text>
+
+  <!-- Clock -->
+  <circle cx="50" cy="12" r="5" fill="white" stroke="currentColor" stroke-width="2"/>
+  <line x1="50" y1="12" x2="50" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="50" y1="12" x2="52" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Hand holding pen (Haze-inspired style) -->
+  <path d="
+    M30,44 
+    C30,40 32,38 34,38 
+    C35,38 36,39 36,40 
+    L36,42 
+    L42,36 
+    C43,35 44,35 45,36 
+    C46,37 46,38 45,39 
+    L38,45 
+    C37,46 36,46 35,45 
+    L30,44
+    Z" 
+    fill="currentColor"/>
+
+  <path d="M34,40 L46,28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="46,28 48,30 46,32 44,30" fill="currentColor"/>
+
+</svg>
+
     Exam
   </a>
 </li>
-
 
     
     </ul>
