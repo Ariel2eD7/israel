@@ -199,25 +199,32 @@ checkAllAnswered();
         const timerInterval = setInterval(updateTimer, 1000);
 
         // Handle form submit and scoring
+
         document.getElementById('quiz-form').addEventListener('submit', e => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const userAnswers = [];
+    e.preventDefault();
 
-            for (const [name, val] of formData.entries()) {
-                userAnswers.push(val);
-            }
+    // Ask user for confirmation
+    const sure = confirm('Are you sure you want to submit the exam? Make sure you answered all questions.');
+    if (!sure) return; // User clicked cancel
 
-            let score = 0;
-            userAnswers.forEach((ans, i) => {
-                if (ans === correctAnswers[i]) score++;
-            });
+    const formData = new FormData(e.target);
+    const userAnswers = [];
 
-            window.location.href = `/quiz_results?quiz_id=${quizId}`
-                + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
-                + `&score=${score}`
-                + `&time_spent=${durationSeconds - timeRemaining}`;
-        });
+    for (const [name, val] of formData.entries()) {
+        userAnswers.push(val);
+    }
+
+    let score = 0;
+    userAnswers.forEach((ans, i) => {
+        if (ans === correctAnswers[i]) score++;
+    });
+
+    window.location.href = `/quiz_results?quiz_id=${quizId}`
+        + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
+        + `&score=${score}`
+        + `&time_spent=${durationSeconds - timeRemaining}`;
+});
+
 
     } catch (err) {
         console.error('🔥 Error loading quiz', err);
