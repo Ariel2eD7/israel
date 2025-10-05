@@ -8,6 +8,8 @@ function display_exam_screen() {
         return '<p>Error: exam-screen.html not found.</p>';
     }
 
+    
+
     $html = file_get_contents($html_file);
 
     // Use nowdoc for JS (avoiding PHP interpretation)
@@ -26,6 +28,26 @@ async function waitForFirebase() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Pre-quiz countdown
+const preQuizScreen = document.getElementById('pre-quiz-screen');
+const preQuizTimer = document.getElementById('pre-quiz-timer');
+const quizContainer = document.getElementById('quiz-container');
+
+let countdown = 5; // seconds
+preQuizTimer.textContent = countdown;
+
+const preQuizInterval = setInterval(() => {
+    countdown--;
+    preQuizTimer.textContent = countdown;
+
+    if (countdown <= 0) {
+        clearInterval(preQuizInterval);
+        preQuizScreen.style.display = 'none';
+        quizContainer.style.display = 'block';
+        startQuiz(); // function that initializes your quiz questions, timer, etc.
+    }
+}, 1000);
+
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
     if (!quizId) {
         document.getElementById('quiz-container').textContent = 'No quiz selected.';
