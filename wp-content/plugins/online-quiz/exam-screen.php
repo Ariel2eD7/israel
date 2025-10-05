@@ -48,18 +48,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 frame.src = "about:blank";
             }
 
-            panel.classList.add("open");
+            panel.style.left = "0";
+
         });
     }
 
 
-    const pdfClose = document.getElementById("pdf-close");
-if (pdfClose) {
-    pdfClose.addEventListener("click", () => {
-        const panel = document.getElementById("pdf-panel");
-        panel.classList.remove("open");
-    });
-}
+const pdfClose = document.getElementById("pdf-close");
+pdfClose.addEventListener("click", () => {
+  const panel = document.getElementById("pdf-panel");
+  const frame = document.getElementById("pdf-frame");
+
+  panel.style.left = "-100%"; // move panel off-screen again
+  frame.src = "about:blank"; // clear PDF src if you want
+});
 
 
     if (!window.fapFirebase || !window.fapFirebase.db) {
@@ -80,7 +82,7 @@ if (pdfClose) {
 
 
         // ✅ Expose the quiz globally so PDF toggle can read pdfUrl
-window.currentExam = quiz;
+window.currentExam = quiz; 
 
         if (!quiz.questions || !Array.isArray(quiz.questions)) {
             document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
@@ -112,7 +114,7 @@ window.currentExam = quiz;
 
             q.answers.forEach((ans) => {
                 questionsHtml += `
-                <label style="
+                <label style=" 
                     display: block;
                     cursor: pointer;
                     padding: 10px 14px;
@@ -126,7 +128,7 @@ window.currentExam = quiz;
                     color: #111;
                     box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
                 "
-                onmouseover="this.style.background='#ffebd8'; this.style.borderColor='#ff7a00';"
+                onmouseover="this.style.background='#c6d3ddff'; this.style.borderColor='#0878ceff';" 
                 onmouseout="this.style.background='#fff'; this.style.borderColor='#ddd';"
                 >
                     <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">

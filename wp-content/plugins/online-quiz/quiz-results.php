@@ -123,11 +123,11 @@ questions.forEach((q, i) => {
         ${i + 1}. ${q.text}
       </p>
       <p style="margin: 0 0 8px 0;">
-        ${icon} Your answer: <strong style="color: ${textColor};">${userAnswer}</strong>
+        ${icon} התשובה שלך: <strong style="color: ${textColor};">${userAnswer}</strong>
       </p>
       ${!isCorrect ? `
         <p style="margin: 0;">
-          Correct answer: <strong>${correctAnswer}</strong>
+          התשובה הנכונה: <strong>${correctAnswer}</strong>
         </p>
       ` : ''}
     </article>
@@ -139,7 +139,7 @@ questions.forEach((q, i) => {
               container.innerHTML = html;
 
               // Set score and time spent
-              scoreTextElem.textContent = `Your Score: ${score} / ${questions.length}`;
+              scoreTextElem.textContent = `הציון שלך: ${questions.length} / ${score}`;
 
               // Format timeSpent (seconds) as HH:MM:SS
               function formatTime(seconds) {
