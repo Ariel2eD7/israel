@@ -51,7 +51,8 @@ const preQuizInterval = setInterval(() => {
         startQuiz(); // function that initializes your quiz questions, timer, etc.
     }
 }, 1000);
-setTimeout(check, 5000);
+await new Promise(resolve => setTimeout(resolve, 5000));
+
 
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
     if (!quizId) {
