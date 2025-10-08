@@ -169,8 +169,8 @@ window.currentExam = quiz;
                      background-color: var(--button-bg-color) !important;
                     box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
                 "
-                onmouseover="this.style.background='#0079d3'; this.style.borderColor='#ffffffff';" 
-                onmouseout="this.style.background=var(--button-bg-color) !important; this.style.borderColor='#ffffffff';"
+                onmouseover="this.style.background='#c6d3ddff'; this.style.borderColor='#ce3d08ff';" 
+                onmouseout="this.style.background='#3c3636ff'; this.style.borderColor='#ddd';"
                 >
                     <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">
                     ${ans.text}
