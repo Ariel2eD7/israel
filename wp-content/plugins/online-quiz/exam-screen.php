@@ -161,12 +161,12 @@ window.currentExam = quiz;
                     padding: 10px 14px;
                     margin-bottom: 12px;
                     border-radius: 6px;
-                    background: #fff;
                     border: 1px solid #ddd;
                     transition: background-color 0.2s ease, border-color 0.2s ease;
                     user-select: none;
                     font-weight: 500;
-                    color: #111;
+                    color: var(--text-color) !important;
+                     background-color: var(--button-bg-color) !important;
                     box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
                 "
                 onmouseover="this.style.background='#c6d3ddff'; this.style.borderColor='#0878ceff';" 
