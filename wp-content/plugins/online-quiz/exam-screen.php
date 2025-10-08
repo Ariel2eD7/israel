@@ -170,7 +170,7 @@ window.currentExam = quiz;
                     box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
                 "
                 onmouseover="this.style.background='#1a9af5ff'; this.style.borderColor='#ffffffff';" 
-                onmouseout="this.style.background='#1a9af5ff'; this.style.borderColor='#000dffff';"
+                onmouseout="this.style.background='#1a9af5ff'; this.style.borderColor='#ffffffff';"
                 >
                     <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">
                     ${ans.text}
