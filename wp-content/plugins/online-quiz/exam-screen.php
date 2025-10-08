@@ -140,15 +140,17 @@ window.currentExam = quiz;
                 padding: 16px 20px; 
                 border-radius: 8px; 
                 border: 1px solid #ddd; 
-                background: #fafafa;
+                color: var(--text-color) !important;
+                 background-color: var(--button-bg-color) !important;
                 box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.05);
             ">
-                <legend style="
+                <legend style=" 
                     font-weight: 700; 
                     font-size: 1.125rem; 
                     margin-bottom: 12px;
                     padding: 0 6px;
-                    color: #222;
+                    color: var(--text-color) !important;
+                     background-color: var(--button-bg-color) !important;
                 ">${i + 1}. ${q.text}</legend>`;
 
             q.answers.forEach((ans) => {
