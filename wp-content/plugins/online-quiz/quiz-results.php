@@ -112,7 +112,8 @@ questions.forEach((q, i) => {
 
   html += `
     <article style="
-      background: #f8f9fa;
+      color: var(--text-color) !important;
+      background-color: var(--bg-color) !important;
       border: 1px solid #edeff1;
       border-left: 6px solid ${borderColor};
       padding: 16px;
