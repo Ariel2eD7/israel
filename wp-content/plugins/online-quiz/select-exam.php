@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function populateDropdown(id, items) {
     const container = document.getElementById(id + "Options");
-    container.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${id}\', this.value)" placeholder="Search..." style="color: var(--text-color); background-color: var(--button-bg-color) !important; width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">` +
+    container.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${id}\', this.value)" placeholder="Search..." style="color: var(--text-color) !important; background-color: var(--button-bg-color) !important; width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">` +
       items.map(item => {
         const escapedItem = item.replace(/\'/g, "&#39;");
         return `<div class="option" data-option="${escapedItem}" onclick="selectOption(\'${id}\', \'${escapedItem}\')" style="padding: 8px; cursor: pointer;">${item}</div>`;
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     box.classList.add("disabled");
                     box.style.pointerEvents = "none";
                     box.style.backgroundColor = "var(--button-bg-color)";
-                    options.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${ids[i]}\', this.value)" placeholder="Search..." style="color: var(--text-color); background-color: var(--button-bg-color) !important; width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">`;
+                    options.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${ids[i]}\', this.value)" placeholder="Search..." style="color: var(--text-color) !important; background-color: var(--button-bg-color) !important; width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">`;
                 }
             }
         }
