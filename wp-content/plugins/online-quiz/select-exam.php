@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
             box.disabled = false;
             box.classList.remove("disabled");
             box.style.pointerEvents = "auto";
-            box.style.backgroundColor = "white";
+            box.style.backgroundColor = var(--button-bg-color);
         }
 
         function clearSubsequentDropdowns(id) {
