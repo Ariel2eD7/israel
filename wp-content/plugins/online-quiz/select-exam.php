@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     box.disabled = true;
                     box.classList.add("disabled");
                     box.style.pointerEvents = "none";
-                    box.style.backgroundColor = "#f0f0f0";
+                    box.style.backgroundColor = "var(--button-bg-color)";
                     options.innerHTML = `<input type="text" class="search-input" oninput="filterOptions(\'${ids[i]}\', this.value)" placeholder="Search..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc;">`;
                 }
             }
