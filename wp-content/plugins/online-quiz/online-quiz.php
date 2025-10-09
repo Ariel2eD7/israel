@@ -38,4 +38,7 @@ require_once plugin_dir_path(__FILE__) . 'select-exam.php';
 require_once plugin_dir_path(__FILE__) . 'exam-screen.php';
 include(plugin_dir_path(__FILE__) . 'quiz-results.php');
 
+
+require_once plugin_dir_path(__FILE__) . 'upload-exam.php';
+
 ?>
