@@ -33,14 +33,14 @@ function upload_exam_form() {
             <label>קורס:</label>
             <input type="text" id="course" style="width:100%; padding:8px; margin-bottom:10px;">
 
-            <label>משך זמן (דקות):</label>
+            <label>משך זמן (בדקות):</label>
             <input type="number" id="duration" style="width:100%; padding:8px; margin-bottom:10px;">
-
-            <label>מוסד לימודים:</label>
-            <input type="text" id="school" style="width:100%; padding:8px; margin-bottom:10px;">
 
             <label>אוניברסיטה:</label>
             <input type="text" id="university" style="width:100%; padding:8px; margin-bottom:10px;">
+
+            <label>פקולטה:</label>
+            <input type="text" id="school" style="width:100%; padding:8px; margin-bottom:10px;">      
 
             <label>סמסטר:</label>
             <input type="text" id="semester" style="width:100%; padding:8px; margin-bottom:10px;">
@@ -54,8 +54,11 @@ function upload_exam_form() {
             <label>כותרת המבחן:</label>
             <input type="text" id="title" style="width:100%; padding:8px; margin-bottom:10px;">
 
-            <label>קישור PDF:</label>
+            <label>קישור PDF של המבחן:</label>
             <input type="text" id="pdfUrl" placeholder="https://..." style="width:100%; padding:8px; margin-bottom:10px;">
+
+            <label>קישור PDF של נוסחאות (אופציונלי):</label>
+            <input type="text" id="formulasPdfUrl" placeholder="https://..." style="width:100%; padding:8px; margin-bottom:10px;">
 
             <button id="upload-exam-meta-btn" style="margin-top:15px; padding:10px 20px; width:100%; background:#0073aa; color:#fff; border:none; cursor:pointer;">
                 העלה ל-Firebase
@@ -137,6 +140,7 @@ function upload_exam_form() {
                 year: document.getElementById('year').value,
                 title: document.getElementById('title').value,
                 pdfUrl: document.getElementById('pdfUrl').value,
+                formulasPdfUrl: document.getElementById('formulasPdfUrl').value,
                 questions: []
             };
 
@@ -146,8 +150,12 @@ function upload_exam_form() {
 
                 metaStatus.innerHTML = '<span style="color:green;">✅ פרטי המבחן הועלו בהצלחה!</span>';
 
+                // Clear fields except questions
                 Object.keys(examData).forEach(key => {
-                    if (key !== 'questions') document.getElementById(key).value = '';
+                    if (key !== 'questions') {
+                        const el = document.getElementById(key);
+                        if (el) el.value = '';
+                    }
                 });
 
             } catch (err) {
@@ -155,7 +163,6 @@ function upload_exam_form() {
                 metaStatus.innerHTML = '<span style="color:red;">❌ שגיאה: ' + err.message + '</span>';
             }
         });
-
     });
     </script>
     <?php
