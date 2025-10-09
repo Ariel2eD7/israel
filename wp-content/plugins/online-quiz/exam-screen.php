@@ -74,6 +74,46 @@ await new Promise(resolve => setTimeout(resolve, 5000));
     const { db } = await waitForFirebase();
 
 
+
+
+
+
+
+// Formulas PDF toggle
+const formulasToggle = document.getElementById("formulas-toggle");
+const formulasClose = document.getElementById("formulas-close");
+const formulasPanel = document.getElementById("formulas-panel");
+const formulasFrame = document.getElementById("formulas-frame");
+
+if (formulasToggle) {
+    formulasToggle.addEventListener("click", () => {
+        if (window.currentExam && window.currentExam.formulasUrl) {
+            formulasFrame.src = window.currentExam.formulasUrl;
+        } else {
+            formulasFrame.src = "about:blank";
+            alert("No formulas PDF available for this exam.");
+        }
+        formulasPanel.style.left = "0";
+    });
+}
+
+if (formulasClose) {
+    formulasClose.addEventListener("click", () => {
+        formulasPanel.style.left = "-100%";
+        formulasFrame.src = "about:blank";
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
         // ✅ Add your PDF toggle logic *inside* the same DOMContentLoaded handler
     const pdfToggle = document.getElementById("pdf-toggle");
     if (pdfToggle) {
@@ -101,6 +141,10 @@ pdfClose.addEventListener("click", () => {
   panel.style.left = "-100%"; // move panel off-screen again
   frame.src = "about:blank"; // clear PDF src if you want
 });
+
+
+
+
 
 
     if (!window.fapFirebase || !window.fapFirebase.db) {

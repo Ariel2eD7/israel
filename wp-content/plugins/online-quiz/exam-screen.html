@@ -53,6 +53,59 @@
   </svg>
 </button>
 
+
+
+
+
+
+
+<!-- Slide-out Panel for Formulas PDF -->
+<section id="formulas-panel" style="position: fixed; top: 0; left: -100%; width: 100%; height: 100%; background: #fff; box-shadow: 3px 0 10px rgba(0,0,0,0.3); transition: left 0.3s ease; z-index: 99999; display: flex; flex-direction: column;">
+    <header style="z-index:99999; background:#f5f5f5; padding:10px; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+        <span>Formulas PDF</span>
+        <button id="formulas-close" aria-label="Close formulas panel" style="cursor:pointer;">חזור למבחן❌</button>
+    </header>
+    <iframe id="formulas-frame" src="" style="flex:1; border:none; width:100%;"></iframe>
+</section>
+
+<!-- Formulas Button -->
+<button id="formulas-toggle" aria-label="View Formulas" title="View Formulas" style="
+  position: fixed;
+  top: 60px;
+  left: 0;
+  z-index: 99993;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  height: 50px;
+  padding: 0 4px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+">
+  📐
+  <span style="display:flex; flex-direction:column; line-height:1;">
+    <span>הצג</span>
+    <span>Formulas</span>
+    →
+  </span>
+</button>
+
+
+
+
+
+
 <script>
   // Add confirmation behavior
   document.getElementById('fap-back-btn').addEventListener('click', function () {
@@ -103,7 +156,7 @@
 <section id="quiz-container" style="
   height: 100vh;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden; 
   z-index: 99989;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   max-width: 800px;
