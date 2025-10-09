@@ -6,81 +6,89 @@ function online_quiz_upload_exam_page() {
     if ( ! current_user_can( 'manage_options' ) ) {
         wp_die( 'No permissions.' );
     }
-
     ?>
     <div class="wrap">
         <h1>📥 העלאת מבחנים ל-Firebase</h1>
-        <p>בחר קובץ JSON עם מבני המבחנים שלך כדי להעלות אותם ל-Firebase.</p>
+        <p>בחר קובץ JSON במבנה תואם למבנה המבחן ב-Firebase כדי להעלות את המבחנים ישירות.</p>
         <form id="exam-upload-form" enctype="multipart/form-data">
             <input type="file" id="exam-json-file" accept=".json" required>
             <button type="submit" class="button button-primary">העלה</button>
         </form>
-        <div id="upload-status" style="margin-top:20px;"></div>
+        <div id="upload-status" style="margin-top:20px; white-space: pre-line;"></div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('exam-upload-form');
-      const fileInput = document.getElementById('exam-json-file');
-      const statusDiv = document.getElementById('upload-status');
+        const form = document.getElementById('exam-upload-form');
+        const fileInput = document.getElementById('exam-json-file');
+        const statusDiv = document.getElementById('upload-status');
 
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const file = fileInput.files[0];
-        if (!file) return alert('בחר קובץ JSON');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = fileInput.files[0];
+            if (!file) return alert('בחר קובץ JSON');
 
-        const text = await file.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (err) {
-          alert('JSON לא תקין');
-          return;
-        }
+            const text = await file.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (err) {
+                alert('JSON לא תקין');
+                return;
+            }
 
-        if (!data.quizzes) {
-          alert('לא נמצאו מבחנים בקובץ');
-          return;
-        }
+            if (!data.exams) {
+                alert('לא נמצאו מבחנים בקובץ (צפה לשורש בשם exams)');
+                return;
+            }
 
-        if (!window.fapFirebase || !window.fapFirebase.db) {
-          alert('Firebase לא נטען');
-          return;
-        }
+            if (!window.fapFirebase || !window.fapFirebase.db) {
+                alert('Firebase לא נטען (וודא שהפלאגין Firebase Auth Posting פעיל)');
+                return;
+            }
 
-        const db = window.fapFirebase.db;
-        statusDiv.innerHTML = '📤 מעלה מבחנים...<br>';
+            const db = window.fapFirebase.db;
+            statusDiv.innerHTML = '📤 מעלה מבחנים... \n';
 
-        for (const quiz of data.quizzes) {
-          try {
-            const questions = quiz.questions.map(q => ({
-              text: q.question,
-              answers: q.options.map(opt => ({
-                text: opt,
-                correct: opt === q.answer
-              }))
-            }));
+            for (const exam of data.exams) {
+                try {
+                    // הגנה מינימלית
+                    if (!exam.course || !exam.questions) {
+                        statusDiv.innerHTML += `⚠️ דילוג על מבחן חסר נתונים\n`;
+                        continue;
+                    }
 
-            await db.collection('exams').add({
-              title: quiz.course,
-              course: quiz.course,
-              school: quiz.school,
-              university: quiz.university,
-              semester: quiz.semester,
-              term: quiz.term,
-              year: quiz.year,
-              questions: questions,
-              duration: quiz.duration || '60'
-            });
+                    // מבנה שאלות ותגובות לפי הפורמט של Firebase
+                    const questions = exam.questions.map(q => ({
+                        text: q.text,
+                        answers: q.answers.map(a => ({
+                            text: a.text,
+                            correct: !!a.correct
+                        }))
+                    }));
 
-            statusDiv.innerHTML += `✅ ${quiz.course} הועלה בהצלחה<br>`;
-          } catch (error) {
-            statusDiv.innerHTML += `❌ ${quiz.course} שגיאה: ${error.message}<br>`;
-          }
-        }
+                    const payload = {
+                        course: exam.course || '',
+                        duration: exam.duration || '',
+                        pdfUrl: exam.pdfUrl || '',
+                        questions: questions,
+                        school: exam.school || '',
+                        semester: exam.semester || '',
+                        term: exam.term || '',
+                        title: exam.title || '',
+                        university: exam.university || '',
+                        year: exam.year || ''
+                    };
 
-        statusDiv.innerHTML += `<br><strong>✅ סיום העלאה</strong>`;
-      });
+                    await db.collection('exams').add(payload);
+                    statusDiv.innerHTML += `✅ הועלה: ${exam.course}\n`;
+                } catch (error) {
+                    statusDiv.innerHTML += `❌ שגיאה בהעלאת ${exam.course}: ${error.message}\n`;
+                }
+            }
+
+            statusDiv.innerHTML += `\n✨ סיום העלאה`;
+        });
     });
     </script>
     <?php
