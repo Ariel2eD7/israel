@@ -45,108 +45,136 @@ function display_exam_dashboard() {
         return `${hrs}:${mins}:${secs}`;
     }
 
-    async function loadUserResults() {
-        const firebaseObj = await waitForFirebase();
-        const user = await waitForUser();
-        const container = document.getElementById('dashboard-container');
+async function loadUserResults() {
+    const firebaseObj = await waitForFirebase();
+    const user = await waitForUser();
 
-        if (!user) {
-            container.innerHTML = "<p>Please log in to view your results.</p>";
-            return;
-        }
-
-        try {
-            const resultsSnapshot = await firebaseObj.db
-                .collection("users")
-                .doc(user.uid)
-                .collection("exam_results")
-                .orderBy("createdAt", "desc")
-                .get();
-
-            if (resultsSnapshot.empty) {
-                container.innerHTML = "<p>No exam results yet.</p>";
-                return;
-            }
-
-            // ✅ Group results by course
-            const courseGroups = {};
-            resultsSnapshot.forEach(doc => {
-                const r = doc.data();
-                const courseName = r.courseName || "Other Courses";
-                if (!courseGroups[courseName]) courseGroups[courseName] = [];
-                courseGroups[courseName].push(r);
-            });
-
-            container.innerHTML = "";
-
-            // ✅ Loop through courses and render sections
-            Object.keys(courseGroups).forEach(courseName => {
-                const exams = courseGroups[courseName];
-
-                // Calculate summary
-                const totalExams = exams.length;
-                const avgScore = exams.reduce((sum, e) => sum + (e.score || 0), 0) / totalExams;
-                const avgTime = exams.reduce((sum, e) => sum + (e.timeSpent || 0), 0) / totalExams;
-                const lastExamDate = Math.max(...exams.map(e => e.createdAt));
-
-                // Create course section
-                const courseSection = document.createElement("div");
-                courseSection.style.cssText = `
-                    background: var(--bg-color);
-                    color: var(--text-color);
-                    padding: 16px;
-                    margin-bottom: 24px;
-                    border-radius: 8px;
-                    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-                `;
-
-                courseSection.innerHTML = `
-                    <h2 style="margin-top:0; margin-bottom: 8px;">${courseName}</h2>
-                    <div style="margin-bottom: 16px; font-size: 14px; opacity: 0.8;">
-                        Exams taken: <strong>${totalExams}</strong> |
-                        Avg score: <strong>${avgScore.toFixed(1)}</strong> |
-                        Avg time: <strong>${formatTime(avgTime)}</strong> |
-                        Last exam: <strong>${new Date(lastExamDate).toLocaleString()}</strong>
-                    </div>
-                    <table style="width:100%; border-collapse: collapse; font-size: 14px;">
-                        <thead>
-                            <tr style="background: rgba(0,0,0,0.05); text-align:left;">
-                                <th style="padding: 8px;">Exam</th>
-                                <th style="padding: 8px;">Date</th>
-                                <th style="padding: 8px;">Score</th>
-                                <th style="padding: 8px;">Time</th>
-                                <th style="padding: 8px;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${exams.map(e => `
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 8px;">${e.quizTitle || "Untitled"}</td>
-                                    <td style="padding: 8px;">${new Date(e.createdAt).toLocaleString()}</td>
-                                    <td style="padding: 8px;">${e.score} / ${e.totalQuestions}</td>
-                                    <td style="padding: 8px;">${formatTime(e.timeSpent)}</td>
-                                    <td style="padding: 8px;">
-                                        <button
-                                            style="padding: 4px 10px; background:#0079d3; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;"
-                                            onclick='viewExamDetails("${e.quizId}", ${JSON.stringify(e.answers)}, ${e.score}, ${e.timeSpent})'
-                                        >
-                                            View Details
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
-
-                container.appendChild(courseSection);
-            });
-
-        } catch (err) {
-            console.error("❌ Error fetching dashboard data:", err);
-            container.innerHTML = "<p>Error loading your results.</p>";
-        }
+    const container = document.getElementById('dashboard-container');
+    if (!user) {
+        container.innerHTML = "<p>Please log in to view your results.</p>";
+        return;
     }
+
+    try {
+        const resultsSnapshot = await firebaseObj.db
+            .collection("users")
+            .doc(user.uid)
+            .collection("exam_results")
+            .orderBy("createdAt", "desc")
+            .get();
+
+        // Group by course
+        const grouped = {};
+
+        resultsSnapshot.forEach(doc => {
+            const r = doc.data();
+            const course = r.courseName || "Other Courses";
+            if (!grouped[course]) grouped[course] = [];
+            grouped[course].push({ id: doc.id, ...r });
+        });
+
+        container.innerHTML = "";
+
+        // Helper functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `00:${mins}:${secs}`;
+        }
+
+        function formatDate(ts) {
+            if (!ts) return "-";
+            const date = ts.toDate ? ts.toDate() : new Date(ts);
+            return date.toLocaleString();
+        }
+
+        for (const [courseName, exams] of Object.entries(grouped)) {
+            // Calculate stats
+            const totalExams = exams.length;
+            const avgScore = (exams.reduce((acc, e) => acc + (e.score || 0), 0) / totalExams).toFixed(1);
+            const avgTime = exams.reduce((acc, e) => acc + (e.timeSpent || 0), 0) / totalExams;
+            const lastExamDate = exams[0]?.createdAt ? formatDate(exams[0].createdAt) : "-";
+
+            // Course section container
+            const section = document.createElement("div");
+            section.style.cssText = `
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 16px;
+                background: #fff;
+            `;
+
+            // Course title & summary
+            section.innerHTML = `
+                <h3 style="margin-top: 0; margin-bottom: 8px;">${courseName}</h3>
+                <p style="margin-top: 0; margin-bottom: 16px; font-size: 14px; color: #555;">
+                    Exams taken: ${totalExams} | 
+                    Avg score: ${avgScore} | 
+                    Avg time: ${formatTime(avgTime)} | 
+                    Last exam: ${lastExamDate}
+                </p>
+            `;
+
+            // Table of exams
+            const table = document.createElement("table");
+            table.style.cssText = `
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 8px;
+            `;
+
+            table.innerHTML = `
+                <thead>
+                    <tr style="text-align: left; background: #f7f7f7;">
+                        <th style="padding: 8px;">Exam</th>
+                        <th style="padding: 8px;">Date</th>
+                        <th style="padding: 8px;">Score</th>
+                        <th style="padding: 8px;">Time</th>
+                        <th style="padding: 8px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${exams.map(e => `
+                        <tr>
+                            <td style="padding: 8px;">${e.quizTitle || "Untitled"}</td>
+                            <td style="padding: 8px;">${formatDate(e.createdAt)}</td>
+                            <td style="padding: 8px;">${e.score} / ${e.totalQuestions}</td>
+                            <td style="padding: 8px;">${formatTime(e.timeSpent)}</td>
+                            <td style="padding: 8px;">
+                                <button class="view-details-btn" data-id="${e.quizId}" data-answers='${JSON.stringify(e.answers)}' data-score="${e.score}" data-time="${e.timeSpent}">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            `;
+
+            section.appendChild(table);
+            container.appendChild(section);
+        }
+
+        // Attach event listeners to buttons
+        container.querySelectorAll('.view-details-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const quizId = btn.getAttribute('data-id');
+                const answers = btn.getAttribute('data-answers');
+                const score = btn.getAttribute('data-score');
+                const time = btn.getAttribute('data-time');
+
+                window.location.href =
+                    `/quiz_results?quiz_id=${encodeURIComponent(quizId)}`
+                    + `&answers=${encodeURIComponent(answers)}`
+                    + `&score=${score}`
+                    + `&time_spent=${time}`;
+            });
+        });
+
+    } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        container.innerHTML = "<p>Error loading your results.</p>";
+    }
+}
 
     // ✅ Navigate to existing results page
     function viewExamDetails(quizId, answers, score, timeSpent) {
