@@ -6,20 +6,36 @@ function display_exam_dashboard() {
     
     // Load HTML template
     $html_template_path = plugin_dir_path(__FILE__) . 'exam-dashboard.html';
-    $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<p>Dashboard template missing.</p>';
+    $html_template = file_exists($html_template_path) 
+        ? file_get_contents($html_template_path) 
+        : '<p>Dashboard template missing.</p>';
 
     echo $html_template;
     ?>
 
     <script>
-    async function loadUserResults() {
-        if (!window.fapFirebase) return console.error("Firebase not initialized");
+    // Wait until Firebase is ready
+    async function waitForFirebase() {
+        return new Promise(resolve => {
+            const check = () => {
+                if (window.fapFirebase && window.fapFirebase.db && window.fapFirebase.auth) {
+                    resolve(window.fapFirebase);
+                } else {
+                    setTimeout(check, 100);
+                }
+            };
+            check();
+        });
+    }
 
-        const { auth, db } = window.fapFirebase;
+    async function loadUserResults() {
+        const firebaseObj = await waitForFirebase();
+        const { auth, db } = firebaseObj;
         const user = auth.currentUser;
 
+        const container = document.getElementById('dashboard-container');
         if (!user) {
-            document.getElementById('dashboard-container').innerHTML = "<p>Please log in to view your results.</p>";
+            container.innerHTML = "<p>Please log in to view your results.</p>";
             return;
         }
 
@@ -31,20 +47,19 @@ function display_exam_dashboard() {
                 .orderBy("createdAt", "desc")
                 .get();
 
-            const container = document.getElementById("dashboard-container");
             container.innerHTML = "";
 
             resultsSnapshot.forEach(doc => {
                 const r = doc.data();
+
                 const card = document.createElement("div");
                 card.style.cssText = `
                     padding: 16px; border-radius: 8px; border: 1px solid #ddd;
                     background: var(--bg-color); color: var(--text-color);
                     box-shadow: 0 1px 4px rgba(0,0,0,0.05); display: flex;
-                    justify-content: space-between; align-items: center;
+                    justify-content: space-between; align-items: center; margin-bottom: 12px;
                 `;
 
-                // Format timeSpent as HH:MM:SS
                 function formatTime(seconds) {
                     const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0');
                     const mins = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
@@ -59,8 +74,10 @@ function display_exam_dashboard() {
                         Time: ${formatTime(r.timeSpent)}<br>
                         Taken: ${new Date(r.createdAt).toLocaleString()}
                     </div>
-                    <button style="padding:6px 12px; background:#0079d3; color:white; border:none; border-radius:4px; font-weight:600;"
-                        onclick="viewExamDetails('${doc.id}')">
+                    <button style="
+                        padding:6px 12px; background:#0079d3; color:white; border:none; border-radius:4px; font-weight:600;
+                        cursor:pointer;
+                    " onclick="viewExamDetails('${doc.id}')">
                         View Details
                     </button>
                 `;
@@ -70,6 +87,7 @@ function display_exam_dashboard() {
 
         } catch (err) {
             console.error("Error fetching dashboard data:", err);
+            container.innerHTML = "<p>Error loading your results.</p>";
         }
     }
 
