@@ -94,11 +94,11 @@ async function loadUserResults() {
             exams.forEach(e => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td style="padding:1px;">${courseName}</td>
-                    <td style="padding:1px;">${e.exam || '-'}</td>
-                    <td style="padding:1px;">${formatDate(e.createdAt)}</td>
-                    <td style="padding:1px;">${e.score || 0} / ${e.totalQuestions || '-'}</td>
-                    <td style="padding:1px;">${formatAvgTime(e.timeSpent || 0)}</td>
+                    <td style="padding:1px; text-align:center;">${courseName}</td>
+                    <td style="padding:1px; text-align:center;">${e.exam || '-'}</td>
+                    <td style="padding:1px; text-align:center;">${formatDate(e.createdAt)}</td>
+                    <td style="padding:1px; text-align:center;">${e.score || 0} / ${e.totalQuestions || '-'}</td>
+                    <td style="padding:1px; text-align:center;">${formatAvgTime(e.timeSpent || 0)}</td>
                     <td style="padding:1px; text-align:center;">
                        <button class="view-details-btn"
         data-id="${e.quizId || e.id}"
