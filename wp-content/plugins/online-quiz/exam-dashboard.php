@@ -6,9 +6,7 @@ function display_exam_dashboard() {
     
     // Load HTML template
     $html_template_path = plugin_dir_path(__FILE__) . 'exam-dashboard.html';
-    $html_template = file_exists($html_template_path) 
-        ? file_get_contents($html_template_path) 
-        : '<p>Dashboard template missing.</p>';
+    $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<p>Dashboard template missing.</p>';
 
     echo $html_template;
     ?>
@@ -28,10 +26,20 @@ function display_exam_dashboard() {
         });
     }
 
+    // Wait until Firebase Auth has a current user
+    async function waitForUser() {
+        const { auth } = await waitForFirebase();
+        return new Promise(resolve => {
+            const unsubscribe = auth.onAuthStateChanged(user => {
+                unsubscribe();
+                resolve(user);
+            });
+        });
+    }
+
     async function loadUserResults() {
         const firebaseObj = await waitForFirebase();
-        const { auth, db } = firebaseObj;
-        const user = auth.currentUser;
+        const user = await waitForUser();
 
         const container = document.getElementById('dashboard-container');
         if (!user) {
@@ -40,7 +48,7 @@ function display_exam_dashboard() {
         }
 
         try {
-            const resultsSnapshot = await db
+            const resultsSnapshot = await firebaseObj.db
                 .collection("users")
                 .doc(user.uid)
                 .collection("exam_results")
