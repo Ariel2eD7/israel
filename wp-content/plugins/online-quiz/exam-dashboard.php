@@ -136,7 +136,7 @@ async function loadUserResults() {
                 <tbody>
                     ${exams.map(e => `
                         <tr>
-                            <td style="padding: 8px;">${e.quizTitle || "Untitled"}</td>
+                            <td style="padding: 8px;">${e.course || e.quizTitle || "Untitled"}</td>
                             <td style="padding: 8px;">${formatDate(e.createdAt)}</td>
                             <td style="padding: 8px;">${e.score} / ${e.totalQuestions}</td>
                             <td style="padding: 8px;">${formatTime(e.timeSpent)}</td>
