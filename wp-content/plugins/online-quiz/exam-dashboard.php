@@ -100,24 +100,24 @@ async function loadUserResults() {
                     <td style="padding:8px;">${e.score || 0} / ${e.totalQuestions || '-'}</td>
                     <td style="padding:8px;">${formatAvgTime(e.timeSpent || 0)}</td>
                     <td style="padding:8px; text-align:center;">
-                        <button class="view-details-btn"
-                                data-id="${e.quizId || e.id}"
-                                data-answers='${JSON.stringify(e.answers || [])}'
-                                data-score="${e.score || 0}"
-                                data-time="${e.timeSpent || 0}"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    padding:4px 8px;
-                                    background:#0079d3;
-                                    color:#fff;
-                                    border:none;
-                                    border-radius:4px;
-                                    cursor:pointer;
-                                    font-weight:600;
-                                ">
-                            View Details
-                        </button>
+                       <button class="view-details-btn"
+        data-id="${e.quizId || e.id}"
+        data-answers='${JSON.stringify(e.answers || [])}'
+        data-score="${e.score || 0}"
+        data-time="${e.timeSpent || 0}"
+        style="
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:4px;
+        "
+        title="View Details">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0079d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+</button>
+
                     </td>
                 `;
                 tbody.appendChild(tr);
