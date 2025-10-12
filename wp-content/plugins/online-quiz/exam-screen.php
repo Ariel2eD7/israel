@@ -310,39 +310,44 @@ document.getElementById('quiz-form').addEventListener('submit', async e => {
     const timeSpent = durationSeconds - timeRemaining;
 
     // 🧠 Save result to Firestore for logged-in user
-    async function saveUserResultToFirestore(quizId, score, userAnswers, timeSpent, quizTitle) {
-        try {
-            const { auth, db } = window.fapFirebase;
-            const user = auth.currentUser;
-            if (!user) {
-                console.warn("⚠️ No user logged in — skipping result save.");
-                return;
-            }
-            const resultData = {
-                quizId,
-                quizTitle: quizTitle || "Untitled",
-                score,
-                totalQuestions: userAnswers.length,
-                answers: userAnswers,
-                timeSpent,
-                createdAt: new Date().toISOString(),
-            };
-            const userRef = db.collection("users").doc(user.uid).collection("exam_results");
-            await userRef.add(resultData);
-            console.log("✅ Exam result saved for user:", user.uid);
-        } catch (err) {
-            console.error("❌ Failed to save result:", err);
+async function saveUserResultToFirestore(quizId, score, userAnswers, timeSpent, quizData) {
+    try {
+        const { auth, db } = window.fapFirebase;
+        const user = auth.currentUser;
+        if (!user) {
+            console.warn("⚠️ No user logged in — skipping result save.");
+            return;
         }
-    }
 
-    // Save result
-    await saveUserResultToFirestore(
-        quizId,
-        score,
-        userAnswers,
-        timeSpent,
-        quiz.title
-    );
+        const resultData = {
+            quizId,
+            course: quizData.course || "Unknown Course",   // ✅ Use course
+            score,
+            totalQuestions: userAnswers.length,
+            answers: userAnswers,
+            timeSpent,
+            createdAt: new Date().toISOString(),
+        };
+
+        const userRef = db.collection("users").doc(user.uid).collection("exam_results");
+        await userRef.add(resultData);
+
+        console.log("✅ Exam result saved for user:", user.uid);
+    } catch (err) {
+        console.error("❌ Failed to save result:", err);
+    }
+}
+
+
+// Save result
+await saveUserResultToFirestore(
+    quizId,
+    score,
+    userAnswers,
+    timeSpent,
+    quiz // ✅ passing full quiz object
+);
+
 
     // Redirect to results page
     window.location.href = `/quiz_results?quiz_id=${quizId}`
