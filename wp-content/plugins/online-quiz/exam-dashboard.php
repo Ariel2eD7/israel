@@ -85,10 +85,19 @@ resultsSnapshot.forEach(doc => {
         <button style="
             padding:6px 12px; background:#0079d3; color:white; border:none; border-radius:4px; font-weight:600;
             cursor:pointer;
-        " onclick='viewExamDetails("${r.quizId}", ${JSON.stringify(r.answers)}, ${r.score}, ${r.timeSpent})'>
+        ">
             View Details
         </button>
     `;
+
+    // Attach event listener safely
+    const btn = card.querySelector("button");
+    btn.addEventListener("click", () => {
+        window.location.href = `/quiz_results?quiz_id=${encodeURIComponent(r.quizId)}`
+            + `&answers=${encodeURIComponent(JSON.stringify(r.answers))}`
+            + `&score=${r.score}`
+            + `&time_spent=${r.timeSpent}`;
+    });
 
     container.appendChild(card);
 });
