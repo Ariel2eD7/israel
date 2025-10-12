@@ -144,8 +144,7 @@ function display_exam_dashboard() {
                     <tbody>
                         ${exams.map(e => `
                             <tr>
-                                <td style="padding: 8px;">${e.title?.trim() || e.quizTitle?.trim() || "Untitled"}</td>
-
+                                <td style="padding: 8px;">${e.courseName || e.course || "Other Courses"}</td>
                                 <td style="padding: 8px;">${formatDate(e.createdAt)}</td>
                                 <td style="padding: 8px;">${e.score} / ${e.totalQuestions}</td>
                                 <td style="padding: 8px;">${formatAvgTime(e.timeSpent)}</td>
