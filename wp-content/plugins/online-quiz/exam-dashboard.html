@@ -11,7 +11,7 @@
     background-color: var(--bg-color) !important;
     color: var(--text-color);
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: hidden; /* prevents horizontal scrolling */
   "
 >
 
@@ -29,82 +29,88 @@
     My Exam Dashboard
   </h2>
 
-  <!-- Dashboard Table -->
-  <div style="width: 90%; max-width: 900px; overflow-x: auto;">
-    <table style="
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      table-layout: fixed;
-      min-width: 0;
-    ">
-      <thead style="background-color: rgba(0,0,0,0.05);">
-        <tr>
-          <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Course</th>
-          <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Exam</th>
-          <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Date</th>
-          <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Mathematics -->
-        <tr style="background-color: rgba(0,0,0,0.08);">
-          <td colspan="4" style="font-weight:700; padding:8px 12px;">Mathematics</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">Mathematics</td>
-          <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">Midterm</td>
-          <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">2025-10-15</td>
-          <td style="padding:8px; text-align:center;">
-            <button style="
-              width: 100%;
-              box-sizing: border-box;
-              padding: 4px 10px;
-              background:#0079d3;
-              color:white;
-              border:none;
-              border-radius:4px;
-              font-weight:600;
-              cursor:pointer;
-              transition: background 0.2s ease;
-            " 
-            onmouseover="this.style.background='#005fa3';" 
-            onmouseout="this.style.background='#0079d3';">
-              View Details
-            </button>
-          </td>
-        </tr>
-
-        <!-- Physics -->
-        <tr style="background-color: rgba(0,0,0,0.08);">
-          <td colspan="4" style="font-weight:700; padding:8px 12px;">Physics</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">Physics</td>
-          <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">Final</td>
-          <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">2025-11-05</td>
-          <td style="padding:8px; text-align:center;">
-            <button style="
-              width: 100%;
-              box-sizing: border-box;
-              padding: 4px 10px;
-              background:#0079d3;
-              color:white;
-              border:none;
-              border-radius:4px;
-              font-weight:600;
-              cursor:pointer;
-              transition: background 0.2s ease;
-            " 
-            onmouseover="this.style.background='#005fa3';" 
-            onmouseout="this.style.background='#0079d3';">
-              View Details
-            </button>
-          </td>
-        </tr>
-
-        <!-- Repeat sections dynamically -->
-      </tbody>
-    </table>
+  <!-- Dashboard Summary -->
+  <div 
+    id="dashboard-summary"
+    style="
+      width: 90%;
+      max-width: 1000px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: rgba(0,0,0,0.03);
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      display: none;
+      box-sizing: border-box;
+      overflow-x: hidden; /* prevent inner overflow */
+    "
+  >
+    <!-- JS can inject global statistics here -->
   </div>
+
+  <!-- Dashboard Container -->
+  <section 
+    id="dashboard-container"
+    style="
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+      max-width: 800px;
+      box-sizing: border-box;
+      overflow-x: hidden; /* ensure container does not overflow */
+    "
+  >
+    <!-- Example course table -->
+    <div style="
+      width: 100%; 
+      border-radius: 8px; 
+      border: 1px solid #ddd; 
+      overflow-x: auto; /* allow table scroll only if needed */
+      box-sizing: border-box;
+    ">
+      <table style="
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; 
+        min-width: 0; /* allows shrinking in flex container */
+        box-sizing: border-box;
+      ">
+        <thead style="background-color: rgba(0,0,0,0.05);">
+          <tr>
+            <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Course</th>
+            <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Exam</th>
+            <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Date</th>
+            <th style="text-align:left; font-weight:600; padding:12px 8px; border-bottom:1px solid #ddd; width: 25%;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">Mathematics</td>
+            <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">Midterm</td>
+            <td style="padding:10px 8px; border-bottom:1px solid #ddd; word-break: break-word;">2025-10-15</td>
+            <td style="padding:8px; text-align:center;">
+              <button style="
+                width: 100%;
+                box-sizing: border-box;
+                padding: 4px 10px;
+                background:#0079d3;
+                color:white;
+                border:none;
+                border-radius:4px;
+                font-weight:600;
+                cursor:pointer;
+                transition: background 0.2s ease;
+              " 
+              onmouseover="this.style.background='#005fa3';" 
+              onmouseout="this.style.background='#0079d3';">
+                View Details
+              </button>
+            </td>
+          </tr>
+          <!-- Repeat rows dynamically here -->
+        </tbody>
+      </table>
+    </div>
+  </section>
 </section>
