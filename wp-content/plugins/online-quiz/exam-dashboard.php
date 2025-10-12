@@ -49,8 +49,17 @@ function display_exam_dashboard() {
         const firebaseObj = await waitForFirebase();
         const user = await waitForUser();
 
-        const container = document.getElementById('dashboard-container');
-        if (!user) {
+
+const container = document.getElementById('dashboard-container');
+container.style.cssText = `
+    width: 90%;
+    max-width: 800px;   /* limits width */
+    margin: 0 auto;     /* centers horizontally */
+    box-sizing: border-box;
+`;  
+
+if (!user) {
+
             container.innerHTML = "<p>Please log in to view your results.</p>";
             return;
         }
@@ -103,15 +112,15 @@ function display_exam_dashboard() {
                 const lastExamDate = exams[0]?.createdAt ? formatDate(exams[0].createdAt) : "-";
 
                 // Course section container
-                const section = document.createElement("div");
-                section.style.cssText = `
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                    padding: 16px;
-                    margin-bottom: 20px;
-                    background: #fff;
-                `;
-
+const section = document.createElement("div");
+section.style.cssText = `
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    background: #fff;
+    width: 100%;
+`;
                 // Course title & summary
                 section.innerHTML = `
                     <h3 style="margin-top: 0; margin-bottom: 8px;">${courseName}</h3>
@@ -124,12 +133,15 @@ function display_exam_dashboard() {
                 `;
 
                 // Table of exams
-                const table = document.createElement("table");
-                table.style.cssText = `
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-top: 8px;
-                `;
+const table = document.createElement("table");
+table.style.cssText = `
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+    margin-top: 8px;
+`;
 
                 table.innerHTML = `
                     <thead>
