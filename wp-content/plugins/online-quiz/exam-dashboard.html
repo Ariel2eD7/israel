@@ -1,6 +1,7 @@
 <section 
   style="
     padding-top: 80px;
+    width: 100%;
     max-width: 100vw;
     min-height: 100vh;
     display: flex;
@@ -10,8 +11,10 @@
     background-color: var(--bg-color) !important;
     color: var(--text-color);
     box-sizing: border-box;
+    overflow-x: hidden; /* prevents horizontal scrolling */
   "
 >
+
   <!-- Page Title -->
   <h2 
     style="
@@ -20,6 +23,7 @@
       font-weight: 700;
       font-size: 1.75rem;
       line-height: 1.2;
+      word-break: break-word;
     "
   >
     My Exam Dashboard
@@ -38,6 +42,7 @@
       border-radius: 8px;
       display: none;
       box-sizing: border-box;
+      overflow-x: hidden; /* prevent inner overflow */
     "
   >
     <!-- JS can inject global statistics here -->
@@ -50,19 +55,26 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
-      width: 90%;
-      max-width: 800px; /* limit container width */
+      width: 100%;
+      max-width: 800px;
       box-sizing: border-box;
+      overflow-x: hidden; /* ensure container does not overflow */
     "
   >
     <!-- Example course table -->
-    <div style="width: 100%; border-radius: 8px; border: 1px solid #ddd; overflow-x: auto;">
+    <div style="
+      width: 100%; 
+      border-radius: 8px; 
+      border: 1px solid #ddd; 
+      overflow-x: auto; /* allow table scroll only if needed */
+      box-sizing: border-box;
+    ">
       <table style="
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed; /* ensures columns adjust evenly */
-        font-size: 14px;
-        min-width: 0; /* allows table to shrink in flex container */
+        table-layout: fixed; 
+        min-width: 0; /* allows shrinking in flex container */
+        box-sizing: border-box;
       ">
         <thead style="background-color: rgba(0,0,0,0.05);">
           <tr>
