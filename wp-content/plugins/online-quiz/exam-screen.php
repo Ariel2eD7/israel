@@ -8,11 +8,17 @@ function display_exam_screen() {
         return '<p>Error: exam-screen.html not found.</p>';
     }
 
+    
+
     $html = file_get_contents($html_file);
 
+    // Use nowdoc for JS (avoiding PHP interpretation)
     $script = <<<'JS'
 async function waitForFirebase() {
     return new Promise(resolve => {
+
+
+
         const check = () => {
             if (window.fapFirebase && window.fapFirebase.db) {
                 resolve(window.fapFirebase);
@@ -27,159 +33,338 @@ async function waitForFirebase() {
 document.addEventListener('DOMContentLoaded', async () => {
 
     // Warn user before leaving the page (refresh, close, back)
-    function beforeUnloadHandler(e) {
-        const confirmationMessage = 'האם אתה בטוח שברצונך לצאת מהמבחן? ייתכן שהתשובות שלך לא יישמרו.';
-        e.preventDefault();
-        e.returnValue = confirmationMessage;
-        return confirmationMessage;
-    }
-    window.addEventListener('beforeunload', beforeUnloadHandler);
+function beforeUnloadHandler(e) {
+  const confirmationMessage = 'האם אתה בטוח שברצונך לצאת מהמבחן? ייתכן שהתשובות שלך לא יישמרו.';
+  e.preventDefault(); // For older browsers
+  e.returnValue = confirmationMessage; // For modern browsers
+  return confirmationMessage;
+}
 
-    const preQuizScreen = document.getElementById('pre-quiz-screen');
-    const preQuizTimer = document.getElementById('pre-quiz-timer');
-    const quizContainer = document.getElementById('quiz-container');
+window.addEventListener('beforeunload', beforeUnloadHandler);
 
-    let countdown = 5; // seconds
+
+                // Pre-quiz countdown
+const preQuizScreen = document.getElementById('pre-quiz-screen');
+const preQuizTimer = document.getElementById('pre-quiz-timer');
+const quizContainer = document.getElementById('quiz-container');
+
+let countdown = 5; // seconds
+preQuizTimer.textContent = countdown;
+
+const preQuizInterval = setInterval(() => {
+    countdown--;
     preQuizTimer.textContent = countdown;
 
-    // Wait for Firebase
-    const { db } = await waitForFirebase();
+    if (countdown <= 0) {
+        clearInterval(preQuizInterval);
+        preQuizScreen.style.display = 'none';
+        quizContainer.style.display = 'block';
+        startQuiz(); // function that initializes your quiz questions, timer, etc.
+    }
+}, 1000);
+await new Promise(resolve => setTimeout(resolve, 5000));
+
 
     const quizId = new URLSearchParams(window.location.search).get('quiz_id');
     if (!quizId) {
-        quizContainer.textContent = 'No quiz selected.';
+        document.getElementById('quiz-container').textContent = 'No quiz selected.';
+        return;
+    }
+
+    const { db } = await waitForFirebase();
+
+
+
+
+
+
+
+// Formulas PDF toggle
+const formulasToggle = document.getElementById("formulas-toggle");
+const formulasClose = document.getElementById("formulas-close");
+const formulasPanel = document.getElementById("formulas-panel");
+const formulasFrame = document.getElementById("formulas-frame");
+
+if (formulasToggle) {
+    formulasToggle.addEventListener("click", () => {
+        if (window.currentExam && window.currentExam.formulasUrl) {
+            formulasFrame.src = window.currentExam.formulasUrl;
+        } else {
+            formulasFrame.src = "about:blank";
+            alert("No formulas PDF available for this exam.");
+        }
+        formulasPanel.style.left = "0";
+    });
+}
+
+if (formulasClose) {
+    formulasClose.addEventListener("click", () => {
+        formulasPanel.style.left = "-100%";
+        formulasFrame.src = "about:blank";
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+        // ✅ Add your PDF toggle logic *inside* the same DOMContentLoaded handler
+    const pdfToggle = document.getElementById("pdf-toggle");
+    if (pdfToggle) {
+        pdfToggle.addEventListener("click", () => {
+            const panel = document.getElementById("pdf-panel");
+            const frame = document.getElementById("pdf-frame");
+
+            if (window.currentExam && window.currentExam.pdfUrl) {
+                frame.src = window.currentExam.pdfUrl;
+            } else {
+                frame.src = "about:blank";
+            }
+
+            panel.style.left = "0";
+
+        });
+    }
+
+
+const pdfClose = document.getElementById("pdf-close");
+pdfClose.addEventListener("click", () => {
+  const panel = document.getElementById("pdf-panel");
+  const frame = document.getElementById("pdf-frame");
+
+  panel.style.left = "-100%"; // move panel off-screen again
+  frame.src = "about:blank"; // clear PDF src if you want
+});
+
+
+
+
+
+
+    if (!window.fapFirebase || !window.fapFirebase.db) {
+        document.getElementById('quiz-container').textContent = 'Error loading quiz.';
         return;
     }
 
     try {
         const docRef = db.collection('exams').doc(quizId);
         const doc = await docRef.get();
+
         if (!doc.exists) {
-            quizContainer.textContent = 'Quiz not found.';
+            document.getElementById('quiz-container').textContent = 'Quiz not found.';
             return;
         }
+
         const quiz = doc.data();
-        window.currentExam = quiz; // for PDF toggles
 
-        // Function to show quiz questions
-        function startQuiz() {
-            preQuizScreen.style.display = 'none';
-            quizContainer.style.display = 'block';
-            buildQuestions();
-            startTimer();
+
+        // ✅ Expose the quiz globally so PDF toggle can read pdfUrl
+window.currentExam = quiz; 
+
+        if (!quiz.questions || !Array.isArray(quiz.questions)) {
+            document.getElementById('quiz-container').textContent = 'Invalid quiz format.';
+            return;
         }
 
-        // Pre-quiz countdown
-        const preQuizInterval = setInterval(() => {
-            countdown--;
-            preQuizTimer.textContent = countdown;
-            if (countdown <= 0) {
-                clearInterval(preQuizInterval);
-                startQuiz();
-            }
-        }, 1000);
+        // Set quiz title
+        document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
 
-        // Build questions
-        function buildQuestions() {
-            document.getElementById('quiz-title').textContent = quiz.title || 'Untitled Quiz';
-            const questionsHtml = quiz.questions.map((q, i) => {
-                const answersHtml = q.answers.map(ans => `
-                    <label style="
-                        display:block; cursor:pointer; padding:10px 14px; margin-bottom:12px;
-                        border-radius:6px; border:1px solid #ddd; font-weight:500;
-                        color:var(--text-color)!important; background-color:var(--button-bg-color)!important;
-                        box-shadow:0 1px 2px rgb(0 0 0 / 0.05);"
-                        onmouseover="this.style.background='#c6d3ddff'; this.style.borderColor='#ce3d08ff';"
-                        onmouseout="this.style.background='#c6d3ddff'; this.style.borderColor='#ddd';">
-                        <input type="radio" name="q${i}" value="${ans.text}" style="margin-right:10px; cursor:pointer; vertical-align:middle;">
-                        ${ans.text}
-                    </label>
-                `).join('');
-                return `<fieldset style="margin-bottom:24px; padding:16px 20px; border-radius:8px; border:1px solid #ddd; color:var(--text-color)!important; background-color:var(--bg-color)!important; box-shadow:inset 0 1px 3px rgb(0 0 0 / 0.05);">
-                    <legend style="font-weight:700; font-size:1.125rem; margin-bottom:12px; padding:0 6px; color:var(--text-color)!important; background-color:var(--bg-color)!important;">
-                    ${i+1}. ${q.text}</legend>
-                    ${answersHtml}
-                </fieldset>`;
-            }).join('');
-            document.getElementById('quiz-questions').innerHTML = questionsHtml;
+        // Build question blocks with Reddit-style inline styles
+        let questionsHtml = '';
+        quiz.questions.forEach((q, i) => {
+            questionsHtml += `
+            <fieldset style="
+                margin-bottom: 24px; 
+                padding: 16px 20px; 
+                border-radius: 8px; 
+                border: 1px solid #ddd; 
+                color: var(--text-color) !important;
+                 background-color: var(--bg-color) !important;
+                box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.05);
+            ">
+                <legend style=" 
+                    font-weight: 700; 
+                    font-size: 1.125rem; 
+                    margin-bottom: 12px;
+                    padding: 0 6px;
+                    color: var(--text-color) !important;
+                     background-color: var(--bg-color) !important;
+                ">${i + 1}. ${q.text}</legend>`;
 
-            // Enable submit button only when all questions answered
-            const submitBtn = document.getElementById('submit-btn');
-            const radios = document.querySelectorAll('#quiz-questions input[type="radio"]');
-            function checkAllAnswered() {
-                const totalQuestions = quiz.questions.length;
-                const answeredCount = new Set([...radios].filter(r => r.checked).map(r => r.name)).size;
-                submitBtn.disabled = answeredCount !== totalQuestions;
-                submitBtn.style.backgroundColor = submitBtn.disabled ? '#89bafaff' : '#0079d3';
-                submitBtn.style.cursor = submitBtn.disabled ? 'not-allowed' : 'pointer';
-            }
-            radios.forEach(r => r.addEventListener('change', checkAllAnswered));
-            checkAllAnswered();
-        }
+            q.answers.forEach((ans) => {
+                questionsHtml += `
+                <label style=" 
+                    display: block;
+                    cursor: pointer;
+                    padding: 10px 14px;
+                    margin-bottom: 12px;
+                    border-radius: 6px;
+                    border: 1px solid #ddd;
+                    transition: background-color 0.2s ease, border-color 0.2s ease;
+                    user-select: none;
+                    font-weight: 500;
+                    color: var(--text-color) !important;
+                     background-color: var(--button-bg-color) !important;
+                    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+                "
+                onmouseover="this.style.background='#c6d3ddff'; this.style.borderColor='#ce3d08ff';" 
+                onmouseout="this.style.background='#c6d3ddff'; this.style.borderColor='#ddd';"
+                >
+                    <input type="radio" name="q${i}" value="${ans.text}" style="margin-right: 10px; cursor: pointer; vertical-align: middle;">
+                    ${ans.text}
+                </label>`;
+            });
 
-        // Timer
-        const durationSeconds = parseInt(quiz.duration,10)*60 || 5400;
-        let timeRemaining = durationSeconds;
-        const timerDisplay = document.getElementById('timer');
-        function startTimer() {
-            function updateTimer() {
-                const h = Math.floor(timeRemaining / 3600);
-                const m = Math.floor((timeRemaining % 3600) / 60);
-                const s = timeRemaining % 60;
-                timerDisplay.textContent = [h,m,s].map(t=>String(t).padStart(2,'0')).join(':');
-                if(timeRemaining<=0){ clearInterval(timerInterval); alert('Time is up!'); document.getElementById('quiz-form').submit(); }
-                else timeRemaining--;
-            }
-            updateTimer();
-            var timerInterval = setInterval(updateTimer,1000);
-        }
-
-        const correctAnswers = quiz.questions.map(q => q.answers.find(a => a.correct)?.text || null);
-
-        // Submit handler
-        document.getElementById('quiz-form').addEventListener('submit', async e=>{
-            e.preventDefault();
-            if(!confirm('Are you sure you want to submit the exam? Make sure you answered all questions.')) return;
-            window.removeEventListener('beforeunload', beforeUnloadHandler);
-
-            const formData = new FormData(e.target);
-            const userAnswers = Array.from(formData.values());
-
-            let score = 0;
-            userAnswers.forEach((ans,i)=>{ if(ans===correctAnswers[i]) score++; });
-
-            const timeSpent = durationSeconds - timeRemaining;
-
-            // Save to Firestore
-            try {
-                const { auth, db } = window.fapFirebase;
-                const user = auth.currentUser;
-                if(user){
-                    await db.collection("users").doc(user.uid).collection("exam_results").add({
-                        quizId,
-                        quizTitle: quiz.title || "Untitled",
-                        score,
-                        totalQuestions: userAnswers.length,
-                        answers: userAnswers,
-                        timeSpent,
-                        createdAt: new Date().toISOString()
-                    });
-                    console.log("✅ Exam result saved");
-                } else console.warn("No user logged in");
-            } catch(err){ console.error("Failed to save result:", err); }
-
-            window.location.href = `/quiz_results?quiz_id=${quizId}&answers=${encodeURIComponent(JSON.stringify(userAnswers))}&score=${score}&time_spent=${timeSpent}`;
+            questionsHtml += `</fieldset>`;
         });
 
-    } catch(err){
-        console.error('Error loading quiz', err);
-        quizContainer.textContent = 'Error loading quiz.';
+        // Inject questions HTML
+        document.getElementById('quiz-questions').innerHTML = questionsHtml;
+
+
+        const submitBtn = document.getElementById('submit-btn');
+const radios = document.querySelectorAll('#quiz-questions input[type="radio"]');
+
+function checkAllAnswered() {
+    const totalQuestions = document.querySelectorAll('#quiz-questions fieldset').length;
+    const answeredCount = new Set([...radios].filter(r => r.checked).map(r => r.name)).size;
+
+    submitBtn.disabled = answeredCount !== totalQuestions;
+
+    // Update button style
+    if (submitBtn.disabled) {
+        submitBtn.style.backgroundColor = '#89bafaff';
+        submitBtn.style.cursor = 'not-allowed';
+    } else {
+        submitBtn.style.backgroundColor = '#0079d3';
+        submitBtn.style.cursor = 'pointer';
+    }
+}
+
+// Add change listener to all radio buttons
+radios.forEach(r => r.addEventListener('change', checkAllAnswered));
+
+// Run once to initialize
+checkAllAnswered();
+
+
+        // Prepare correct answers array for scoring
+        const correctAnswers = quiz.questions.map(q => {
+            const correct = q.answers.find(a => a.correct);
+            return correct ? correct.text : null;
+        });
+
+        // Setup timer
+        const durationSeconds = parseInt(quiz.duration, 10) * 60 || 5400;
+        let timeRemaining = durationSeconds;
+        const timerDisplay = document.getElementById('timer');
+
+        function updateTimer() {
+            const h = Math.floor(timeRemaining / 3600);
+            const m = Math.floor((timeRemaining % 3600) / 60);
+            const s = timeRemaining % 60;
+            timerDisplay.textContent = [h, m, s].map(t => String(t).padStart(2, '0')).join(':');
+
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                alert('Time is up!');
+                document.getElementById('quiz-form').submit();
+            } else {
+                timeRemaining--;
+            }
+        }
+
+        updateTimer(); // Initial display
+        const timerInterval = setInterval(updateTimer, 1000);
+// Handle form submit and scoring
+document.getElementById('quiz-form').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    // Ask user for confirmation
+    const sure = confirm('Are you sure you want to submit the exam? Make sure you answered all questions.');
+    if (!sure) return; // User clicked cancel
+
+    // ✅ Remove exit warning after submission
+    window.removeEventListener('beforeunload', beforeUnloadHandler);
+
+    const formData = new FormData(e.target);
+    const userAnswers = [];
+
+    for (const [name, val] of formData.entries()) {
+        userAnswers.push(val);
     }
 
+    // Calculate score
+    let score = 0;
+    userAnswers.forEach((ans, i) => {
+        if (ans === correctAnswers[i]) score++;
+    });
+
+    // Calculate time spent
+    const timeSpent = durationSeconds - timeRemaining;
+
+    // 🧠 Save result to Firestore for logged-in user
+    async function saveUserResultToFirestore(quizId, score, userAnswers, timeSpent, quizTitle) {
+        try {
+            const { auth, db } = window.fapFirebase;
+            const user = auth.currentUser;
+            if (!user) {
+                console.warn("⚠️ No user logged in — skipping result save.");
+                return;
+            }
+            const resultData = {
+                quizId,
+                quizTitle: quizTitle || "Untitled",
+                score,
+                totalQuestions: userAnswers.length,
+                answers: userAnswers,
+                timeSpent,
+                createdAt: new Date().toISOString(),
+            };
+            const userRef = db.collection("users").doc(user.uid).collection("exam_results");
+            await userRef.add(resultData);
+            console.log("✅ Exam result saved for user:", user.uid);
+        } catch (err) {
+            console.error("❌ Failed to save result:", err);
+        }
+    }
+
+    // Save result
+    await saveUserResultToFirestore(
+        quizId,
+        score,
+        userAnswers,
+        timeSpent,
+        quiz.title
+    );
+
+    // Redirect to results page
+    window.location.href = `/quiz_results?quiz_id=${quizId}`
+        + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
+        + `&score=${score}`
+        + `&time_spent=${timeSpent}`;
+});
+
+
+
+    } catch (err) {
+        console.error('🔥 Error loading quiz', err);
+        document.getElementById('quiz-container').textContent = 'Error loading quiz.';
+    }
+
+    
 });
 JS;
 
+    // Inject the JS script in place of {{quiz_script}} in your HTML
     $html = str_replace('{{quiz_script}}', $script, $html);
+
     echo $html;
     return ob_get_clean();
 }
