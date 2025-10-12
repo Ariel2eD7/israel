@@ -98,46 +98,76 @@ function display_quiz_results() {
 
               // Build the questions HTML with inline styles
              
+
+              
               let html = '';
 
 questions.forEach((q, i) => {
   const userAnswer = (userAnswers[i] || '(No answer)').trim();
   const correctAnswerObj = (q.answers || []).find(a => a.correct);
   const correctAnswer = correctAnswerObj ? correctAnswerObj.text.trim() : 'N/A';
-  const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
-
-  const borderColor = isCorrect ? '#46d160' : '#ff5c5c'; // green or red
-  const textColor = isCorrect ? '#2f9e44' : '#d7263d';
-  const icon = isCorrect ? '✅' : '❌';
 
   html += `
-    <article style="
-      color: var(--text-color) !important;
-      background-color: var(--button-bg-color) !important;
-      border: 1px solid #edeff1;
-      border-left: 6px solid ${borderColor};
-      padding: 16px;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    <fieldset style="
+      margin-bottom: 24px; 
+      padding: 16px 20px; 
+      border-radius: 8px; 
+      border: 1px solid #ddd; 
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.05);
     ">
-      <p style="margin: 0 0 10px 0; font-weight: 600;">
+      <legend style="
+        font-weight: 700;
+        font-size: 1.125rem;
+        margin-bottom: 12px;
+        padding: 0 6px;
+      ">
         ${i + 1}. ${q.text}
-      </p>
-      <p style="margin: 0 0 8px 0;">
-        ${icon} התשובה שלך: <strong style="color: ${textColor};">${userAnswer}</strong>
-      </p>
-      ${!isCorrect ? `
-        <p style="margin: 0;">
-          התשובה הנכונה: <strong>${correctAnswer}</strong>
-        </p>
-      ` : ''}
-    </article>
+      </legend>
   `;
+
+  (q.answers || []).forEach((ans) => {
+    const isCorrect = ans.text.trim().toLowerCase() === correctAnswer.toLowerCase();
+    const isUserAnswer = ans.text.trim().toLowerCase() === userAnswer.toLowerCase();
+
+    let bgColor = 'var(--button-bg-color)';
+    let borderColor = '#ddd';
+    let icon = '';
+
+    if (isCorrect) {
+      bgColor = '#e8f9ee'; // light green
+      borderColor = '#28a745';
+      icon = '✅';
+    } else if (isUserAnswer && !isCorrect) {
+      bgColor = '#fde8e8'; // light red
+      borderColor = '#d7263d';
+      icon = '❌';
+    }
+
+    html += `
+      <div style="
+        display: flex;
+        align-items: center;
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        border-radius: 6px;
+        border: 1px solid ${borderColor};
+        background: ${bgColor};
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+      ">
+        ${icon ? `<span style="margin-right: 8px;">${icon}</span>` : `<span style="width: 20px; display:inline-block;"></span>`}
+        <span>${ans.text}</span>
+      </div>
+    `;
+  });
+
+  html += `</fieldset>`;
 });
 
 
 
-              container.innerHTML = html;
+              container.innerHTML = html; 
 
               // Set score and time spent
               scoreTextElem.textContent = `הציון שלך: ${questions.length} / ${score}`;
