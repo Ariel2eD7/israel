@@ -11,7 +11,7 @@
     background-color: var(--bg-color) !important;
     color: var(--text-color);
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: hidden; /* prevent horizontal scroll */
   "
 >
 
@@ -42,19 +42,19 @@
       border-radius: 8px;
       display: none;
       box-sizing: border-box;
-      overflow-x: hidden;
     "
   >
     <!-- JS can inject global statistics here -->
   </div>
 
   <!-- Dashboard Table -->
-  <div style="width: 90%; max-width: 900px; overflow-x:auto;">
+  <div style="width: 90%; max-width: 900px;">
     <table id="exam-table" style="
       width: 100%;
       border-collapse: collapse;
-      table-layout: fixed;
-      min-width: 0;
+      table-layout: auto;  /* allow flexible column widths */
+      word-break: break-word; 
+      overflow-wrap: anywhere;
     ">
       <thead style="background-color: rgba(0,0,0,0.05);">
         <tr>
