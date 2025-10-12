@@ -4,12 +4,6 @@
     Quiz Results
   </h2>
 
-  <header style="position: sticky; top: 0; background: var(--bg-color); padding: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; z-index: 999;">
-  <button onclick="window.location.href='/exams-dropdowns'" style="background: none; border: none; cursor: pointer; font-size: 18px;">❌</button>
-  <h2 id="quiz-title" style="margin: 0; font-weight: 700; font-size: 1.5rem;">Quiz Results</h2>
-  <output id="timer" style="padding: 4px 8px; background: #0079d3; color: white; border-radius: 999px;"></output>
-</header>
-
 
   <!-- Results go here --> 
   <section id="quiz-results-container" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; color: var(--text-color) !important; background-color: var(--bg-color) !important;">
@@ -24,7 +18,7 @@
     Time Spent: 00:00:00
   </h4>
 
-  
+
 <footer style="text-align: center; margin-top: 30px;">
   <button onclick="window.location.href='/exam?quiz_id=' + quizResultsData.quizId" 
     style="padding: 12px 30px; color: white; background-color: #0079d3; border: none; border-radius: 6px; font-weight: 700;">
