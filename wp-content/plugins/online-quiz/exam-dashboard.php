@@ -99,7 +99,7 @@ async function loadUserResults() {
                     <td style="padding:8px;">${formatDate(e.createdAt)}</td>
                     <td style="padding:8px;">${e.score || 0} / ${e.totalQuestions || '-'}</td>
                     <td style="padding:8px;">${formatAvgTime(e.timeSpent || 0)}</td>
-                    <td style="padding:8px; text-align:center;">
+                    <td style="padding:2px; text-align:center;">
                        <button class="view-details-btn"
         data-id="${e.quizId || e.id}"
         data-answers='${JSON.stringify(e.answers || [])}'
@@ -109,7 +109,7 @@ async function loadUserResults() {
             background:none;
             border:none;
             cursor:pointer;
-            padding:4px;
+            padding:2px;
         "
         title="View Details">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0079d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
