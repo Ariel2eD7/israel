@@ -51,31 +51,6 @@ function display_quiz_results() {
             });
           }
 
-          // 🧠 Save result to Firestore for logged-in user
-          async function saveUserResultToFirestore(quizId, score, userAnswers, timeSpent, quizTitle) {
-            try {
-              const { auth, db } = window.fapFirebase;
-              const user = auth.currentUser;
-              if (!user) {
-                console.warn("⚠️ No user logged in — skipping result save.");
-                return;
-              }
-              const resultData = {
-                quizId,
-                quizTitle: quizTitle || "Untitled",
-                score,
-                totalQuestions: userAnswers.length,
-                answers: userAnswers,
-                timeSpent,
-                createdAt: new Date().toISOString(),
-              };
-              const userRef = db.collection("users").doc(user.uid).collection("exam_results");
-              await userRef.add(resultData);
-              console.log("✅ Exam result saved for user:", user.uid);
-            } catch (err) {
-              console.error("❌ Failed to save result:", err);
-            }
-          }
 
           document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('quiz-results-container');
@@ -191,14 +166,6 @@ function display_quiz_results() {
               // Set score and time spent
               scoreTextElem.textContent = `הציון שלך: ${questions.length} / ${score}`;
 
-              // Save result
-              saveUserResultToFirestore(
-                quizId,
-                score,
-                userAnswers,
-                timeSpent,
-                quiz.title
-              );
 
               // Format timeSpent as HH:MM:SS
               function formatTime(seconds) {
