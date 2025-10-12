@@ -41,4 +41,7 @@ include(plugin_dir_path(__FILE__) . 'quiz-results.php');
 
 require_once plugin_dir_path(__FILE__) . 'upload-exam.php';
 
+// ✅ Include new dashboard
+require_once plugin_dir_path(__FILE__) . 'exam-dashboard.php';
+
 ?>
