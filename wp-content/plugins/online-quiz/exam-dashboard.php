@@ -167,19 +167,29 @@ table.innerHTML = `
             <td style="padding:8px;">${formatDate(e.createdAt)}</td>
             <td style="padding:8px;">${e.score} / ${e.totalQuestions}</td>
             <td style="padding:8px;">${formatAvgTime(e.timeSpent)}</td>
+
             <td style="padding:8px; text-align:center;">
-                <button class="view-details-btn" style="
-                    width:100%;
-                    box-sizing:border-box;
-                    padding:4px 8px;
-                    background:#0079d3;
-                    color:#fff;
-                    border:none;
-                    border-radius:4px;
-                    cursor:pointer;
-                    font-weight:600;
-                ">View Details</button>
-            </td>
+  <button class="view-details-btn"
+          data-id="${e.quizId || e.id}"         // fallback to Firestore doc ID
+          data-answers='${JSON.stringify(e.answers || [])}'
+          data-score="${e.score || 0}"
+          data-time="${e.timeSpent || 0}"
+          style="
+              width:100%;
+              box-sizing:border-box;
+              padding:4px 8px;
+              background:#0079d3;
+              color:#fff;
+              border:none;
+              border-radius:4px;
+              cursor:pointer;
+              font-weight:600;
+          ">
+    View Details
+  </button>
+</td>
+
+
         </tr>
     `).join('')}
 </tbody>
