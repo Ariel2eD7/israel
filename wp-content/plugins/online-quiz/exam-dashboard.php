@@ -7,221 +7,147 @@ function display_exam_dashboard() {
     // Load HTML template
     $html_template_path = plugin_dir_path(__FILE__) . 'exam-dashboard.html';
     $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<div id="dashboard-container"></div>';
-
     echo $html_template;
     ?>
 
-    <script>
-    // ✅ Wait until Firebase is ready
-    async function waitForFirebase() {
-        return new Promise(resolve => {
-            const check = () => {
-                if (window.fapFirebase && window.fapFirebase.db && window.fapFirebase.auth) {
-                    resolve(window.fapFirebase);
-                } else {
-                    setTimeout(check, 100);
-                }
-            };
-            check();
+<script>
+async function waitForFirebase() {
+    return new Promise(resolve => {
+        const check = () => {
+            if (window.fapFirebase && window.fapFirebase.db && window.fapFirebase.auth) {
+                resolve(window.fapFirebase);
+            } else {
+                setTimeout(check, 100);
+            }
+        };
+        check();
+    });
+}
+
+async function waitForUser() {
+    const { auth } = await waitForFirebase();
+    return new Promise(resolve => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            unsubscribe();
+            resolve(user);
         });
+    });
+}
+
+function formatDate(ts) {
+    if (!ts) return "-";
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    return date.toLocaleString();
+}
+
+function formatAvgTime(seconds) {
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+    return `00:${mins}:${secs}`;
+}
+
+async function loadUserResults() {
+    const firebaseObj = await waitForFirebase();
+    const user = await waitForUser();
+
+    const tbody = document.querySelector("#exam-table tbody");
+    tbody.innerHTML = "";
+
+    if (!user) {
+        tbody.innerHTML = `<tr><td colspan="6">Please log in to view your results.</td></tr>`;
+        return;
     }
 
-    // ✅ Wait until Firebase Auth has a current user
-    async function waitForUser() {
-        const { auth } = await waitForFirebase();
-        return new Promise(resolve => {
-            const unsubscribe = auth.onAuthStateChanged(user => {
-                unsubscribe();
-                resolve(user);
+    try {
+        const resultsSnapshot = await firebaseObj.db
+            .collection("users")
+            .doc(user.uid)
+            .collection("exam_results")
+            .orderBy("createdAt", "desc")
+            .get();
+
+        // Group by course
+        const grouped = {};
+        resultsSnapshot.forEach(doc => {
+            const r = doc.data();
+            const course = r.course || "Other Courses";
+            if (!grouped[course]) grouped[course] = [];
+            grouped[course].push({ id: doc.id, ...r });
+        });
+
+        // Sort exams by date descending within each course
+        for (const course in grouped) {
+            grouped[course].sort((a, b) => {
+                const aTime = a.createdAt?.seconds || new Date(a.createdAt).getTime() / 1000 || 0;
+                const bTime = b.createdAt?.seconds || new Date(b.createdAt).getTime() / 1000 || 0;
+                return bTime - aTime;
             });
-        });
-    }
-
-    // ✅ Format time nicely
-    function formatTime(seconds) {
-        const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0');
-        const mins = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-        const secs = (seconds % 60).toString().padStart(2, '0');
-        return `${hrs}:${mins}:${secs}`;
-    }
-
-    async function loadUserResults() {
-        const firebaseObj = await waitForFirebase();
-        const user = await waitForUser();
-
-
-const container = document.getElementById('dashboard-container');
-container.style.cssText = `
-    width: 90%;
-    max-width: 800px;   /* limits width */
-    margin: 0 auto;     /* centers horizontally */
-    box-sizing: border-box;
-`;  
-
-if (!user) {
-
-            container.innerHTML = "<p>Please log in to view your results.</p>";
-            return;
         }
 
-        try {
-            const resultsSnapshot = await firebaseObj.db
-                .collection("users")
-                .doc(user.uid)
-                .collection("exam_results")
-                .orderBy("createdAt", "desc")
-                .get();
+        // Render all courses in one table
+        for (const [courseName, exams] of Object.entries(grouped)) {
+            // Insert course header row
+            const courseRow = document.createElement("tr");
+            courseRow.innerHTML = `<td colspan="6" style="padding:8px; font-weight:700; background:#f0f0f0;">${courseName}</td>`;
+            tbody.appendChild(courseRow);
 
-            // Group by course
-            const grouped = {};
-            resultsSnapshot.forEach(doc => {
-                const r = doc.data();
-                const course = r.course || "Other Courses";
-                if (!grouped[course]) grouped[course] = [];
-                grouped[course].push({ id: doc.id, ...r });
-            });
-
-            // Sort exams in each course by date (most recent first)
-            for (const course in grouped) {
-                grouped[course].sort((a, b) => {
-                    const aTime = a.createdAt?.seconds || new Date(a.createdAt).getTime() / 1000 || 0;
-                    const bTime = b.createdAt?.seconds || new Date(b.createdAt).getTime() / 1000 || 0;
-                    return bTime - aTime;
-                });
-            }
-
-            container.innerHTML = "";
-
-            function formatDate(ts) {
-                if (!ts) return "-";
-                const date = ts.toDate ? ts.toDate() : new Date(ts);
-                return date.toLocaleString();
-            }
-
-            function formatAvgTime(seconds) {
-                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-                const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
-                return `00:${mins}:${secs}`;
-            }
-
-            for (const [courseName, exams] of Object.entries(grouped)) {
-                // Calculate stats
-                const totalExams = exams.length;
-                const avgScore = (exams.reduce((acc, e) => acc + (e.score || 0), 0) / totalExams).toFixed(1);
-                const avgTime = exams.reduce((acc, e) => acc + (e.timeSpent || 0), 0) / totalExams;
-                const lastExamDate = exams[0]?.createdAt ? formatDate(exams[0].createdAt) : "-";
-
-
-// Course section container
-const section = document.createElement("div");
-section.style.cssText = `
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 20px;
-    background: #fff;
-    width: 100%;
-    box-sizing: border-box;
-`;                // Course title & summary
-
-
-
-                section.innerHTML = `
-                    <h3 style="margin-top: 0; margin-bottom: 8px;">${courseName}</h3>
-                    <p style="margin-top: 0; margin-bottom: 16px; font-size: 14px; color: #555;">
-                        Exams taken: ${totalExams} | 
-                        Avg score: ${avgScore} | 
-                        Avg time: ${formatAvgTime(avgTime)} | 
-                        Last exam: ${lastExamDate}
-                    </p>
+            exams.forEach(e => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="padding:8px;">${courseName}</td>
+                    <td style="padding:8px;">${e.exam || '-'}</td>
+                    <td style="padding:8px;">${formatDate(e.createdAt)}</td>
+                    <td style="padding:8px;">${e.score || 0} / ${e.totalQuestions || '-'}</td>
+                    <td style="padding:8px;">${formatAvgTime(e.timeSpent || 0)}</td>
+                    <td style="padding:8px; text-align:center;">
+                        <button class="view-details-btn"
+                                data-id="${e.quizId || e.id}"
+                                data-answers='${JSON.stringify(e.answers || [])}'
+                                data-score="${e.score || 0}"
+                                data-time="${e.timeSpent || 0}"
+                                style="
+                                    width:100%;
+                                    box-sizing:border-box;
+                                    padding:4px 8px;
+                                    background:#0079d3;
+                                    color:#fff;
+                                    border:none;
+                                    border-radius:4px;
+                                    cursor:pointer;
+                                    font-weight:600;
+                                ">
+                            View Details
+                        </button>
+                    </td>
                 `;
-
-// Table of exams
-const table = document.createElement("table");
-table.style.cssText = `
-    width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;   /* important: prevents stretching */
-    word-break: break-word; /* wrap long text */
-    overflow-wrap: anywhere; /* wrap very long words */
-    margin-top: 8px;
-`;
-
-
-// Table headers (optional: give % widths)
-table.innerHTML = `
-<thead>
-    <tr style="text-align:left; background:#f7f7f7;">
-        <th style="padding:8px; width:25%;">Exam</th>
-        <th style="padding:8px; width:20%;">Date</th>
-        <th style="padding:8px; width:20%;">Score</th>
-        <th style="padding:8px; width:20%;">Time</th>
-        <th style="padding:8px; width:15%;">Action</th>
-    </tr>
-</thead>
-<tbody>
-    ${exams.map(e => `
-        <tr>
-            <td style="padding:8px; word-break: break-word;">${e.courseName || e.course || "Other Courses"}</td>
-            <td style="padding:8px;">${formatDate(e.createdAt)}</td>
-            <td style="padding:8px;">${e.score} / ${e.totalQuestions}</td>
-            <td style="padding:8px;">${formatAvgTime(e.timeSpent)}</td>
-
-            <td style="padding:8px; text-align:center;">
-  <button class="view-details-btn"
-          data-id="${e.quizId || e.id}"         // fallback to Firestore doc ID
-          data-answers='${JSON.stringify(e.answers || [])}'
-          data-score="${e.score || 0}"
-          data-time="${e.timeSpent || 0}"
-          style="
-              width:100%;
-              box-sizing:border-box;
-              padding:4px 8px;
-              background:#0079d3;
-              color:#fff;
-              border:none;
-              border-radius:4px;
-              cursor:pointer;
-              font-weight:600;
-          ">
-    View Details
-  </button>
-</td>
-
-
-        </tr>
-    `).join('')}
-</tbody>
-`;
-                section.appendChild(table);
-                container.appendChild(section);
-            }
-
-            // Attach event listeners to buttons
-            container.querySelectorAll('.view-details-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const quizId = btn.getAttribute('data-id');
-                    const answers = btn.getAttribute('data-answers');
-                    const score = btn.getAttribute('data-score');
-                    const time = btn.getAttribute('data-time');
-
-                    window.location.href =
-                        `/quiz_results?quiz_id=${encodeURIComponent(quizId)}`
-                        + `&answers=${encodeURIComponent(answers)}`
-                        + `&score=${score}`
-                        + `&time_spent=${time}`;
-                });
+                tbody.appendChild(tr);
             });
-
-        } catch (err) {
-            console.error("Error fetching dashboard data:", err);
-            container.innerHTML = "<p>Error loading your results.</p>";
         }
-    }
 
-    document.addEventListener('DOMContentLoaded', loadUserResults);
-    </script>
+        // Attach event listeners to buttons
+        document.querySelectorAll('.view-details-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const quizId = btn.getAttribute('data-id');
+                const answers = btn.getAttribute('data-answers');
+                const score = btn.getAttribute('data-score');
+                const time = btn.getAttribute('data-time');
+
+                window.location.href =
+                    `/quiz_results?quiz_id=${encodeURIComponent(quizId)}`
+                    + `&answers=${encodeURIComponent(answers)}`
+                    + `&score=${score}`
+                    + `&time_spent=${time}`;
+            });
+        });
+
+    } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        tbody.innerHTML = "<tr><td colspan='6'>Error loading your results.</td></tr>";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadUserResults);
+</script>
 
 <?php
     return ob_get_clean();
