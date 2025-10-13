@@ -48,7 +48,7 @@ const preQuizScreen = document.getElementById('pre-quiz-screen');
 const preQuizTimer = document.getElementById('pre-quiz-timer');
 const quizContainer = document.getElementById('quiz-container');
 
-let countdown = 5; // seconds
+let countdown = 2; // seconds
 preQuizTimer.textContent = countdown;
 
 const preQuizInterval = setInterval(() => {
