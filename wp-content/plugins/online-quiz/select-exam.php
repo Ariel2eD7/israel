@@ -100,12 +100,14 @@ console.log(\'All loaded exams:\', jsonData);
     console.log(\'Selected Year:\', unescapedOption);
     console.log(\'All matching records:\', jsonData.filter(q => q.course === getText("thirdDropdown")));
 
-    const semesters = jsonData.filter(q =>
-        q.university === getText("firstDropdown") &&
-        q.school === getText("secondDropdown") &&
-        q.course === getText("thirdDropdown") &&
-        q.year === unescapedOption
-    ).map(q => q.semester);
+const semesters = jsonData.filter(q =>
+    (q.university || \'\').trim() === getText("firstDropdown").trim() &&
+    (q.school || \'\').trim() === getText("secondDropdown").trim() &&
+    (q.course || \'\').trim() === getText("thirdDropdown").trim() &&
+    (q.year || \'\').trim() === unescapedOption.trim()
+).map(q => q.semester);
+
+
 
     console.log(\'Filtered for semester dropdown:\', semesters);
 
