@@ -92,11 +92,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 const years = jsonData.filter(q => q.university === getText("firstDropdown") && q.school === getText("secondDropdown") && q.course === unescapedOption).map(q => q.year);
                 populateDropdown("fourthDropdown", [...new Set(years)]);
                 enableDropdown("fourthDropdown");
-            } else if (id === "fourthDropdown") {
-                const semesters = jsonData.filter(q => q.university === getText("firstDropdown") && q.school === getText("secondDropdown") && q.course === getText("thirdDropdown") && q.year === unescapedOption).map(q => q.semester);
-                populateDropdown("fifthDropdown", [...new Set(semesters)]);
-                enableDropdown("fifthDropdown");
-            } else if (id === "fifthDropdown") {
+            } } else if (id === "fourthDropdown") {
+    console.log('Selected Year:', unescapedOption);
+    console.log('All matching records:', jsonData.filter(q => q.course === getText("thirdDropdown")));
+
+    const semesters = jsonData.filter(q =>
+        q.university === getText("firstDropdown") &&
+        q.school === getText("secondDropdown") &&
+        q.course === getText("thirdDropdown") &&
+        q.year === unescapedOption
+    ).map(q => q.semester);
+
+    console.log('Filtered for semester dropdown:', semesters);
+
+    populateDropdown("fifthDropdown", [...new Set(semesters)]);
+    enableDropdown("fifthDropdown");
+}
+ else if (id === "fifthDropdown") {
                 const terms = jsonData.filter(q => q.university === getText("firstDropdown") && q.school === getText("secondDropdown") && q.course === getText("thirdDropdown") && q.year === getText("fourthDropdown") && q.semester === unescapedOption).map(q => q.term);
                 if (terms.length > 0) {
                     populateDropdown("sixthDropdown", [...new Set(terms)]);
