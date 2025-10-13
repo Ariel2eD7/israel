@@ -114,13 +114,23 @@ const semesters = jsonData.filter(q =>
     populateDropdown("fifthDropdown", [...new Set(semesters)]);
     enableDropdown("fifthDropdown");
 }
- else if (id === "fifthDropdown") {
-                const terms = jsonData.filter(q => q.university === getText("firstDropdown") && q.school === getText("secondDropdown") && q.course === getText("thirdDropdown") && q.year === getText("fourthDropdown") && q.semester === unescapedOption).map(q => q.term);
-                if (terms.length > 0) {
-                    populateDropdown("sixthDropdown", [...new Set(terms)]);
-                    enableDropdown("sixthDropdown");
-                }
-            }
+else if (id === "fifthDropdown") {
+    const terms = jsonData.filter(q =>
+        (q.university || \'\').trim() === getText("firstDropdown").trim() &&
+        (q.school || \'\').trim() === getText("secondDropdown").trim() &&
+        (q.course || \'\').trim() === getText("thirdDropdown").trim() &&
+        (q.year || \'\').trim() === getText("fourthDropdown").trim() &&
+        (q.semester || \'\').trim() === unescapedOption.trim()
+    ).map(q => q.term);
+
+    if (terms.length > 0) {
+        populateDropdown("sixthDropdown", [...new Set(terms)]);
+        enableDropdown("sixthDropdown");
+    }
+}
+
+
+
 
             document.getElementById(id + "Options").style.display = "none";
         };
