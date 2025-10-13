@@ -170,32 +170,34 @@ else if (id === "fifthDropdown") {
             }
         });
 
-        document.getElementById("submitButton").addEventListener("click", function () {
-            const selectedUniversity = getText("firstDropdown");
-            const selectedSchool = getText("secondDropdown");
-            const selectedCourse = getText("thirdDropdown");
-            const selectedYear = getText("fourthDropdown");
-            const selectedSemester = getText("fifthDropdown");
-            const selectedTerm = getText("sixthDropdown");
+document.getElementById("submitButton").addEventListener("click", function () {
+    const selectedUniversity = getText("firstDropdown");
+    const selectedSchool = getText("secondDropdown");
+    const selectedCourse = getText("thirdDropdown");
+    const selectedYear = getText("fourthDropdown");
+    const selectedSemester = getText("fifthDropdown");
+    const selectedTerm = getText("sixthDropdown");
 
-            if (selectedUniversity && selectedSchool && selectedCourse && selectedYear && selectedSemester && selectedTerm) {
-                const selectedQuiz = jsonData.find(quiz =>
-                    quiz.university === selectedUniversity &&
-                    quiz.school === selectedSchool &&
-                    quiz.course === selectedCourse &&
-                    quiz.year === selectedYear &&
-                    quiz.semester === selectedSemester &&
-                    quiz.term === selectedTerm
-                );
-                if (selectedQuiz) {
-window.location.href = "https://israel.ussl.co/exam/?quiz_id=" + selectedQuiz.id;
-                } else {
-                    alert("No matching quiz found!");
-                }
-            } else {
-                alert("Please select all dropdown options!");
-            }
-        });
+    if (selectedUniversity && selectedSchool && selectedCourse && selectedYear && selectedSemester && selectedTerm) {
+        const selectedQuiz = jsonData.find(quiz =>
+            (quiz.university || \'\').trim() === selectedUniversity.trim() &&
+            (quiz.school || \'\').trim() === selectedSchool.trim() &&
+            (quiz.course || \'\').trim() === selectedCourse.trim() &&
+            (quiz.year || \'\').trim() === selectedYear.trim() &&
+            (quiz.semester || \'\').trim() === selectedSemester.trim() &&
+            (quiz.term || \'\').trim() === selectedTerm.trim()
+        );
+
+        if (selectedQuiz) {
+            window.location.href = "https://israel.ussl.co/exam/?quiz_id=" + selectedQuiz.id;
+        } else {
+            alert("No matching quiz found!");
+        }
+    } else {
+        alert("Please select all dropdown options!");
+    }
+});
+
     });
     </script>
     ';
