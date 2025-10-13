@@ -45,18 +45,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
   waitForFirebase();
 
-function loadExams(db) {
+  function loadExams(db) {
     db.collection("exams").get().then(snapshot => {
-        jsonData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-        // 👇 ADD THIS LINE HERE
+      jsonData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+              // 👇 ADD THIS LINE HERE
         window.jsonData = jsonData;
+console.log(\'All loaded exams:\', jsonData);
 
-        console.log('All loaded exams:', jsonData);
-
-        populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
+      populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
     }).catch(console.error);
-}
+  } 
 
   function populateDropdown(id, items) {
     const container = document.getElementById(id + "Options");
