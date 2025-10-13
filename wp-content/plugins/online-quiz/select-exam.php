@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function() {
   function loadExams(db) {
     db.collection("exams").get().then(snapshot => {
       jsonData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      console.log('📘 All loaded exams:', jsonData);
+
       populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
     }).catch(console.error);
   } 
