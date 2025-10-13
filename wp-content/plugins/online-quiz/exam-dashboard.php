@@ -97,7 +97,7 @@ async function loadUserResults() {
                     <td style="padding:1px; text-align:center;">${courseName}</td>
                     <td style="padding:1px; text-align:center;">${e.exam || '-'}</td>
                     <td style="padding:1px; text-align:center;">${formatDate(e.createdAt)}</td>
-                    <td style="padding:1px; text-align:center;">$${e.totalQuestions || '-'} / {e.score || 0}</td>
+                    <td style="padding:1px; text-align:center;">${e.totalQuestions || '-'} / ${e.score || 0}</td>
                     <td style="padding:1px; text-align:center;">${formatAvgTime(e.timeSpent || 0)}</td>
                     <td style="padding:1px; text-align:center;">
                        <button class="view-details-btn"
