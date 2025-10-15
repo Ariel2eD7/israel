@@ -11,33 +11,43 @@
     background-color: var(--bg-color) !important;
     color: var(--text-color);
     box-sizing: border-box;
-    overflow-x: hidden;
   "
 >
+
+  <!-- Page Title -->
   <h2 
     style="
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
       font-weight: 700;
       font-size: 1.75rem;
-      line-height: 1.2;
-      word-break: break-word;
     "
   >
-    Recorded Lessons
+    Courses
   </h2>
 
-  <section 
-    id="video-list"
-    style="
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      width: 90%;
-      max-width: 1000px;
-      box-sizing: border-box;
-    "
-  >
-    <p>Loading lessons...</p>
-  </section>
+  <!-- Search Bar -->
+  <div style="width:90%; max-width:600px; margin-bottom:16px;">
+    <input id="video-course-search" type="text" placeholder="Search courses..." 
+           style="
+             width:100%;
+             padding:10px 12px;
+             border-radius:8px;
+             border:1px solid #ccc;
+             font-size:14px;
+           "/>
+  </div>
+
+  <!-- Courses container -->
+  <div id="video-courses-container" 
+       style="
+         width:90%;
+         max-width:800px;
+         display:flex;
+         flex-direction:column;
+         gap:12px;
+       ">
+    <!-- JS will inject course cards here -->
+  </div>
+
 </section>
