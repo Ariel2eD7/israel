@@ -86,34 +86,33 @@ async function loadCourses() {
 
             filteredCourses.forEach(course => {
                 const card = document.createElement('div');
-                card.style.cssText = `
-                    align-items:flex-start;
+card.style.cssText = `
+  position: relative;
+  height: 110px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #f5f6fa;
+`;
 
-                height: 110px;
-                    display:flex;
-                    gap:12px;
-                    padding:12px;
-                    border:1px solid #ddd;
-                    border-radius:8px;
-                    cursor:pointer;
-                    background:#f5f6fa;
-                `;
-              
 card.innerHTML = `
   ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
   <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
     <strong style="font-size:16px;">${course.name}</strong>
     <span style="font-size:13px; color:#666;">${course.description}</span>
   </div>
-  <div style="display: flex; flex-direction: column; justify-content: flex-end;">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-         xmlns="http://www.w3.org/2000/svg"
-         style="cursor:pointer; margin-top:auto;">
-      <circle cx="16" cy="16" r="16" fill="#268AFF"/>
-      <path d="M13 10L19 16L13 22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+       xmlns="http://www.w3.org/2000/svg"
+       style="cursor:pointer; position:absolute; bottom:12px; right:12px;">
+    <circle cx="16" cy="16" r="16" fill="#268AFF"/>
+    <path d="M13 10L19 16L13 22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
 `;
+
 
 
 
