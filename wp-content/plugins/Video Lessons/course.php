@@ -14,6 +14,7 @@ async function waitForFirebase() {
     return new Promise(resolve => {
         const check = () => {
             if (window.fapFirebase && window.fapFirebase.db && window.fapFirebase.auth) {
+                console.log('Firebase ready');
                 resolve(window.fapFirebase);
             } else {
                 setTimeout(check, 100);
@@ -28,6 +29,7 @@ async function waitForUser() {
     return new Promise(resolve => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             unsubscribe();
+            console.log('Current user:', user);
             resolve(user);
         });
     });
@@ -47,13 +49,16 @@ function formatTime(seconds) {
 // Convert YouTube URL to embed URL
 function getYouTubeEmbedUrl(url) {
     if (!url) return '';
+    console.log('Original URL:', url);
     const videoMatch = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/);
     const listMatch = url.match(/[?&]list=([^&]+)/);
     if (videoMatch) {
         let embedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
         if(listMatch) embedUrl += `?list=${listMatch[1]}`;
+        console.log('Embed URL:', embedUrl);
         return embedUrl;
     }
+    console.log('Using fallback URL:', url);
     return url; // fallback for direct video URLs
 }
 
@@ -63,6 +68,8 @@ async function loadCoursePage() {
     const courseId = getQueryParam('course_id');
     const container = document.getElementById('course-container');
 
+    console.log('Course ID:', courseId);
+
     if (!user) { container.innerHTML = '<p>Please log in to view this course.</p>'; return; }
     if (!courseId) { container.innerHTML = '<p>No course selected.</p>'; return; }
 
@@ -70,6 +77,7 @@ async function loadCoursePage() {
         const courseDoc = await firebaseObj.db.collection('courses').doc(courseId).get();
         if (!courseDoc.exists) { container.innerHTML = '<p>Course not found.</p>'; return; }
         const course = courseDoc.data();
+        console.log('Course data:', course);
 
         const lessonsSnapshot = await firebaseObj.db
             .collection('courses').doc(courseId)
@@ -79,13 +87,17 @@ async function loadCoursePage() {
 
         const lessons = [];
         lessonsSnapshot.forEach(doc => lessons.push({ id: doc.id, ...doc.data() }));
+        console.log('Lessons:', lessons);
 
         const videoPlayer = document.getElementById('video-player');
         const lessonsList = document.getElementById('lessons-list');
         const tabContent = document.getElementById('tab-content');
 
         // Set first video
-        if (lessons[0]?.videoUrl) videoPlayer.src = getYouTubeEmbedUrl(lessons[0].videoUrl);
+        if (lessons[0]?.videoUrl) {
+            videoPlayer.src = getYouTubeEmbedUrl(lessons[0].videoUrl) + '?autoplay=0';
+            console.log('First video src set to:', videoPlayer.src);
+        }
 
         // Populate lessons list
         function renderLessonsList() {
@@ -100,6 +112,7 @@ async function loadCoursePage() {
             document.querySelectorAll('.lesson-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const url = item.getAttribute('data-url');
+                    console.log('Clicked lesson URL:', url);
                     if (url) videoPlayer.src = getYouTubeEmbedUrl(url) + '?autoplay=1';
                 });
             });
@@ -128,7 +141,7 @@ async function loadCoursePage() {
         });
 
     } catch (err) {
-        console.error(err);
+        console.error('Error loading course page:', err);
         container.innerHTML = '<p>Error loading course.</p>';
     }
 }
