@@ -100,46 +100,41 @@ const lessonsSnapshot = await firebaseObj.db
             console.log('First video src set to:', videoPlayer.src);
         }
 
-        // Populate lessons list
-        function renderLessonsList() {
-            lessonsList.innerHTML = lessons.map((l, idx) => `
-                <li class="lesson-item" data-url="${l.videoUrl || ''}" style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-                    <span>${idx + 1}. ${l.title || 'Lesson'}</span>
-                    <span style="font-size:12px; color:#666;">${formatTime(l.duration || 0)}</span>
-                </li>
-            `).join('');
+// Populate Lessons tab
+function renderLessonsTab() {
+    tabContent.innerHTML = lessons.map((l, idx) => `
+        <li class="lesson-item" data-url="${l.videoUrl || ''}" style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+            <span>${idx + 1}. ${l.title || 'Lesson'}</span>
+            <span style="font-size:12px; color:#666;">${formatTime(l.duration || 0)}</span>
+        </li>
+    `).join('');
 
-            // Attach click events
-            document.querySelectorAll('.lesson-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const url = item.getAttribute('data-url');
-                    console.log('Clicked lesson URL:', url);
-                    if (url) videoPlayer.src = getYouTubeEmbedUrl(url) + '?autoplay=1';
-                });
-            });
-        }
-
-        renderLessonsList();
-        tabContent.innerHTML = lessonsList.innerHTML; // default tab
-
-        // Tabs functionality
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tabButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const tab = btn.getAttribute('data-tab');
-                if (tab === 'lessons') {
-                    tabContent.innerHTML = lessonsList.innerHTML;
-                    renderLessonsList(); // reattach events
-                } else if (tab === 'description') {
-                    tabContent.innerHTML = course.description || 'No description available.';
-                } else if (tab === 'reviews') {
-                    tabContent.innerHTML = '<p>No reviews yet.</p>';
-                }
-            });
+    // Attach click events
+    document.querySelectorAll('#tab-content .lesson-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const url = item.getAttribute('data-url');
+            if (url) videoPlayer.src = getYouTubeEmbedUrl(url) + '?autoplay=1';
         });
+    });
+}
+
+// Default tab: Lessons
+renderLessonsTab();
+
+// Tabs functionality
+const tabButtons = document.querySelectorAll('.tab-btn');
+tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        tabButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const tab = btn.getAttribute('data-tab');
+        if (tab === 'lessons') renderLessonsTab();
+        else if (tab === 'description') tabContent.innerHTML = course.description || 'No description available.';
+        else if (tab === 'reviews') tabContent.innerHTML = '<p>No reviews yet.</p>';
+    });
+});
+
 
     } catch (err) {
         console.error('Error loading course page:', err);
