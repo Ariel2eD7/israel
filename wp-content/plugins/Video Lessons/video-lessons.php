@@ -106,7 +106,7 @@ async function loadCourses() {
                 `;
                 card.addEventListener('click', () => {
                     // Redirect to lessons page (to be implemented)
-                    window.location.href = `/video-lessons?course_id=${encodeURIComponent(course.id)}`;
+                    window.location.href = `/course-page?course_id=${encodeURIComponent(course.id)}`;
                 });
                 container.appendChild(card);
             });
