@@ -1,38 +1,74 @@
-<!-- Header Section -->
 <section style="
-  background: #268AFF;
-  border-bottom-left-radius: 24px;
-  border-bottom-right-radius: 24px;
-  padding: 24px 20px 40px;
-  color: white;
-  position: relative;
+    padding-top: 55px;
+    direction: ltr;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    box-sizing: border-box;
 ">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <div>
-      <div style="font-weight: 700; font-size: 20px;">My Course</div>
-      <div style="font-size: 14px; opacity: 0.9;">There are 20 courses for you.</div>
+
+  <!-- Modern Blue Header -->
+  <header style="
+      width: 100%;
+      background: #268AFF;
+      padding: 24px 20px 40px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+  ">
+    <!-- Top Row: Title & Profile -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-size: 20px; font-weight: 700;">My Course</div>
+        <div style="font-size: 13px; opacity: 0.9; margin-top: 4px;">There are 20 courses for you.</div>
+      </div>
+      <img src="https://i.pravatar.cc/40?img=5" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%;">
     </div>
-    <img src="https://i.pravatar.cc/40?img=3" style="width: 40px; height: 40px; border-radius: 50%;" />
+
+    <!-- Search Bar -->
+    <div style="margin-top: 20px; position: relative;">
+      <input id="video-course-search" type="text" placeholder="What do you want to learn?" style="
+          width: 100%;
+          padding: 12px 16px 12px 44px;
+          font-size: 14px;
+          border: none;
+          border-radius: 12px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+          background: #fff;
+          color: #333;
+      ">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="
+          position: absolute;
+          left: 14px;
+          top: 50%;
+          transform: translateY(-50%);
+          stroke: #888;
+          stroke-width: 2;
+      ">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </div>
+  </header>
+
+  <!-- Courses Container -->
+  <div id="video-courses-container" style="
+      width: 90%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 0 auto;
+      padding: 20px 0 40px;
+  ">
+    <!-- JS will dynamically inject course cards here -->
   </div>
 
-  <div style="margin-top: 20px; position: relative;">
-    <input id="video-course-search" placeholder="What do you want to learn?" style="
-      width: 100%;
-      padding: 12px 16px 12px 44px;
-      font-size: 14px;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    " />
-    <svg width="20" height="20" style="
-      position: absolute;
-      top: 50%;
-      left: 14px;
-      transform: translateY(-50%);
-      stroke: #888;
-    " viewBox="0 0 24 24" fill="none">
-      <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
-      <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"></line>
-    </svg>
-  </div>
 </section>
