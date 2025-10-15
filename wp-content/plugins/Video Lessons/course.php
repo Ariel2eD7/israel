@@ -126,13 +126,22 @@ document.querySelectorAll('.lesson-item').forEach(item => {
 
                 // Reattach lesson click events after re-render
                 if (tab === 'lessons') {
-                    document.querySelectorAll('#tab-content .lesson-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            const url = item.getAttribute('data-url');
-                            if (url) { videoPlayer.src = url; videoPlayer.play(); }
-                        });
-                    });
+    document.querySelectorAll('#tab-content .lesson-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const url = item.getAttribute('data-url');
+            if (url) {
+                const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+                if (videoIdMatch) {
+                    const videoId = videoIdMatch[1];
+                    videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                } else {
+                    videoPlayer.src = url;
                 }
+            }
+        });
+    });
+}
+
             });
         });
 
