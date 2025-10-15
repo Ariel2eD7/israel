@@ -140,11 +140,11 @@ tabButtons.forEach(btn => {
     tabButtons.forEach(b => {
       b.classList.remove('active');
       b.style.borderBottom = '3px solid transparent';
-      b.style.color = '#666';
+      b.style.color = '#0073e6';
     });
     btn.classList.add('active');
     btn.style.borderBottom = '3px solid #222';
-    btn.style.color = '#333';
+    btn.style.color = '#0073e6';
 
     const tab = btn.getAttribute('data-tab');
     if (tab === 'lessons') renderLessonsTab();
