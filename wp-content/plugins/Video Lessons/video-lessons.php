@@ -87,6 +87,7 @@ async function loadCourses() {
             filteredCourses.forEach(course => {
                 const card = document.createElement('div');
                 card.style.cssText = `
+                height: 110px;
                     display:flex;
                     align-items:center;
                     gap:12px;
@@ -97,7 +98,7 @@ async function loadCourses() {
                     background:#f5f6fa;
                 `;
                 card.innerHTML = `
-                    ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;">` : ''}
+                    ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
                     <div style="flex:1; display:flex; flex-direction:column;">
                         <strong style="font-size:16px;">${course.name}</strong>
                         <span style="font-size:13px; color:#666;">${course.description}</span>
