@@ -79,11 +79,12 @@ async function loadCoursePage() {
         const course = courseDoc.data();
         console.log('Course data:', course);
 
-        const lessonsSnapshot = await firebaseObj.db
-            .collection('courses').doc(courseId)
-            .collection('lessons')
-            .orderBy('order', 'asc')
-            .get();
+const lessonsSnapshot = await firebaseObj.db
+    .collection('lessons')
+    .where('courseId', '==', courseId)
+    .orderBy('order', 'asc')
+    .get();
+
 
         const lessons = [];
         lessonsSnapshot.forEach(doc => lessons.push({ id: doc.id, ...doc.data() }));
