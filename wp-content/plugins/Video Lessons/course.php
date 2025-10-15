@@ -92,6 +92,7 @@ async function loadCoursePage() {
         courseTitleElem.textContent = course.name || 'Course';
 
 document.getElementById('duration-value').textContent = formatTime(totalDuration);
+document.getElementById('lessons-value').textContent = `${lessons.length} Lessons`;
 
 
         if (lessons[0]?.videoUrl) {
