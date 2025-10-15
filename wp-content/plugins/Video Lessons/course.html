@@ -2,11 +2,17 @@
     padding:16px;
     padding-top:80px;
     width:100%;
-    max-width:1000px;
+    max-width:800px;
     margin:0 auto;
     min-height:80vh;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 ">
+
+    <!-- Course Header -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h2 id="course-title" style="margin:0; font-size:22px; font-weight:700;"></h2>
+        <span id="course-duration" style="color:#666; font-size:14px;"></span>
+    </div>
 
     <!-- Video Player -->
     <div id="video-player-container" style="
@@ -16,7 +22,7 @@
         margin-bottom:16px;
         border-radius:12px;
         overflow:hidden;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow:0 4px 10px rgba(0,0,0,0.1);
     ">
         <iframe id="video-player" width="100%" height="100%" 
             src="" 
@@ -28,50 +34,23 @@
         </iframe>
     </div>
 
-    <div style="display:flex; flex-wrap:wrap; gap:16px;">
-        <!-- Tabs -->
-        <div style="flex:1 1 100%;">
-            <div style="display:flex; border-bottom:1px solid #ddd; margin-bottom:8px;">
-                <button class="tab-btn active" data-tab="lessons" style="
-                    flex:1;
-                    padding:10px;
-                    border:none;
-                    background:#f7f7f7;
-                    cursor:pointer;
-                    font-weight:600;
-                    border-radius:12px 12px 0 0;
-                    margin-right:4px;
-                ">Lessons</button>
-                <button class="tab-btn" data-tab="description" style="
-                    flex:1;
-                    padding:10px;
-                    border:none;
-                    background:#f7f7f7;
-                    cursor:pointer;
-                    font-weight:600;
-                    border-radius:12px 12px 0 0;
-                    margin-right:4px;
-                ">Description</button>
-                <button class="tab-btn" data-tab="reviews" style="
-                    flex:1;
-                    padding:10px;
-                    border:none;
-                    background:#f7f7f7;
-                    cursor:pointer;
-                    font-weight:600;
-                    border-radius:12px 12px 0 0;
-                ">Reviews</button>
-            </div>
-            <div id="tab-content" style="
-                padding:12px;
-                border:1px solid #ddd;
-                border-radius:8px;
-                min-height:150px;
-                background:#fff;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            ">
-                <!-- Lessons / Description / Reviews will be injected dynamically -->
-            </div>
+    <!-- Tabs -->
+    <div>
+        <div style="display:flex; border-bottom:1px solid #ddd; margin-bottom:8px; gap:4px;">
+            <button class="tab-btn active" data-tab="lessons" style="
+                flex:1; padding:10px; border:none; background:#f7f7f7; cursor:pointer; font-weight:600; border-radius:12px 12px 0 0;
+            ">Lessons</button>
+            <button class="tab-btn" data-tab="description" style="
+                flex:1; padding:10px; border:none; background:#f7f7f7; cursor:pointer; font-weight:600; border-radius:12px 12px 0 0;
+            ">Description</button>
+            <button class="tab-btn" data-tab="reviews" style="
+                flex:1; padding:10px; border:none; background:#f7f7f7; cursor:pointer; font-weight:600; border-radius:12px 12px 0 0;
+            ">Reviews</button>
+        </div>
+
+        <div id="tab-content" style="
+            padding:12px; border:1px solid #ddd; border-radius:12px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.05); min-height:150px;
+        ">
         </div>
     </div>
 </section>

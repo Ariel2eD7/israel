@@ -7,14 +7,13 @@ function display_course_page() {
     $html_template_path = plugin_dir_path(__FILE__) . 'course.html';
     $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<div id="course-container"></div>';
     echo $html_template;
-    ?>
+?>
 
 <script>
 async function waitForFirebase() {
     return new Promise(resolve => {
         const check = () => {
             if (window.fapFirebase && window.fapFirebase.db && window.fapFirebase.auth) {
-                console.log('Firebase ready');
                 resolve(window.fapFirebase);
             } else {
                 setTimeout(check, 100);
@@ -29,7 +28,6 @@ async function waitForUser() {
     return new Promise(resolve => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             unsubscribe();
-            console.log('Current user:', user);
             resolve(user);
         });
     });
@@ -41,24 +39,20 @@ function getQueryParam(name) {
 }
 
 function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+    const mins = Math.floor(seconds / 60).toString().padStart(2,'0');
+    const secs = Math.floor(seconds % 60).toString().padStart(2,'0');
     return `${mins}:${secs}`;
 }
 
-// Convert YouTube URL to embed URL
 function getYouTubeEmbedUrl(url) {
     if (!url) return '';
-    console.log('Original URL:', url);
     const videoMatch = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/);
     const listMatch = url.match(/[?&]list=([^&]+)/);
     if (videoMatch) {
         let embedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
         if(listMatch) embedUrl += `?list=${listMatch[1]}`;
-        console.log('Embed URL:', embedUrl);
         return embedUrl;
     }
-    console.log('Using fallback URL:', url);
     return url;
 }
 
@@ -68,8 +62,6 @@ async function loadCoursePage() {
     const courseId = getQueryParam('course_id');
     const container = document.getElementById('course-container');
 
-    console.log('Course ID:', courseId);
-
     if (!user) { container.innerHTML = '<p>Please log in to view this course.</p>'; return; }
     if (!courseId) { container.innerHTML = '<p>No course selected.</p>'; return; }
 
@@ -77,50 +69,54 @@ async function loadCoursePage() {
         const courseDoc = await firebaseObj.db.collection('courses').doc(courseId).get();
         if (!courseDoc.exists) { container.innerHTML = '<p>Course not found.</p>'; return; }
         const course = courseDoc.data();
-        console.log('Course data:', course);
 
         const lessonsSnapshot = await firebaseObj.db
             .collection('lessons')
-            .where('courseId', '==', courseId)
-            .orderBy('order', 'asc')
+            .where('courseId','==',courseId)
+            .orderBy('order','asc')
             .get();
 
         const lessons = [];
-        lessonsSnapshot.forEach(doc => lessons.push({ id: doc.id, ...doc.data() }));
-        console.log('Lessons:', lessons);
+        let totalDuration = 0;
+        lessonsSnapshot.forEach(doc => {
+            const data = doc.data();
+            lessons.push({ id: doc.id, ...data });
+            totalDuration += data.duration || 0;
+        });
 
         const videoPlayer = document.getElementById('video-player');
         const tabContent = document.getElementById('tab-content');
+        const courseTitleElem = document.getElementById('course-title');
+        const courseDurationElem = document.getElementById('course-duration');
 
-        // Set first video
+        courseTitleElem.textContent = course.name || 'Course';
+        courseDurationElem.textContent = `Total duration: ${formatTime(totalDuration)}`;
+
         if (lessons[0]?.videoUrl) {
             videoPlayer.src = getYouTubeEmbedUrl(lessons[0].videoUrl) + '?autoplay=0';
-            console.log('First video src set to:', videoPlayer.src);
         }
 
-        // Render Lessons tab
         function renderLessonsTab() {
             tabContent.innerHTML = lessons.map((l, idx) => `
                 <div class="lesson-card" data-url="${l.videoUrl || ''}" style="
-                    padding:12px; 
-                    border-radius:8px; 
-                    margin-bottom:8px; 
-                    border:1px solid #eee; 
-                    display:flex; 
-                    justify-content:space-between; 
-                    align-items:center;
+                    display:flex; align-items:center; justify-content:space-between;
+                    padding:12px; border-radius:12px; background:#fafafa;
+                    margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05);
                     cursor:pointer;
-                    background:#fafafa;
-                    transition: transform 0.2s, box-shadow 0.2s;
                 ">
-                    <div>
-                        <strong>${idx + 1}. ${l.title || 'Lesson'}</strong>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="width:50px; height:50px; background:#ddd; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:bold;">
+                            ${idx+1}
+                        </div>
+                        <div>
+                            <div style="font-weight:600; font-size:14px;">${l.title || 'Lesson'}</div>
+                            <div style="font-size:12px; color:#666;">${formatTime(l.duration || 0)}</div>
+                        </div>
                     </div>
-                    <div style="font-size:12px; color:#666;">${formatTime(l.duration || 0)}</div>
+                    <div style="font-size:20px; color:#666;">▶</div>
                 </div>
             `).join('');
 
-            // Attach click events
             document.querySelectorAll('#tab-content .lesson-card').forEach(item => {
                 item.addEventListener('click', () => {
                     const url = item.getAttribute('data-url');
@@ -129,9 +125,8 @@ async function loadCoursePage() {
             });
         }
 
-        renderLessonsTab(); // Default tab
+        renderLessonsTab();
 
-        // Tabs functionality
         const tabButtons = document.querySelectorAll('.tab-btn');
         tabButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -153,9 +148,8 @@ async function loadCoursePage() {
 
 document.addEventListener('DOMContentLoaded', loadCoursePage);
 </script>
-
 <?php
 return ob_get_clean();
 }
 
-add_shortcode('course_page', 'display_course_page');
+add_shortcode('course_page','display_course_page');
