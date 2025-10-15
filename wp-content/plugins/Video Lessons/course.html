@@ -1,76 +1,10 @@
-<section
-  style="
-    padding-top: 80px;
-    width: 100%;
-    max-width: 100vw;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-color) !important;
-    color: var(--text-color);
-    box-sizing: border-box;
-    overflow-x: hidden;
-  "
->
-  <!-- Course Title -->
-  <h2 style="text-align:center; margin-bottom:16px; font-weight:700; font-size:1.75rem;"></h2>
-
-  <!-- Video Player -->
-  <div id="video-player" style="
-    width: 90%;
-    max-width: 800px;
-    aspect-ratio: 16/9;
-    background:#000;
-    border-radius:8px;
-    margin-bottom:16px;
-    overflow:hidden;
-  ">
-    <!-- JS will insert iframe or video element -->
-  </div>
-
-  <!-- Tabs -->
-  <div id="course-tabs" style="
-    display:flex;
-    gap:12px;
-    width:90%;
-    max-width:800px;
-    margin-bottom:16px;
-    border-bottom:1px solid #ddd;
-  ">
-    <button class="tab-btn active" data-tab="lessons" style="flex:1; padding:8px 0; border:none; background:none; font-weight:600; cursor:pointer;">Lessons</button>
-    <button class="tab-btn" data-tab="description" style="flex:1; padding:8px 0; border:none; background:none; font-weight:600; cursor:pointer;">Description</button>
-    <button class="tab-btn" data-tab="reviews" style="flex:1; padding:8px 0; border:none; background:none; font-weight:600; cursor:pointer;">Reviews</button>
-  </div>
-
-  <!-- Tab Content -->
-  <div id="tab-content" style="
-    width:90%;
-    max-width:800px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  ">
-    <!-- Lessons tab -->
-    <div id="lessons-tab">
-      <input 
-        id="search-lesson"
-        type="text"
-        placeholder="Search lessons..."
-        style="width:100%; padding:10px 12px; font-size:14px; border-radius:8px; border:1px solid #ddd; margin-bottom:12px;"
-      >
-      <section id="lessons-container" style="display:flex; flex-direction:column; gap:12px;">
-        <!-- JS injects lesson cards here -->
-      </section>
-    </div>
-
-    <!-- Description tab -->
-    <div id="description-tab" style="display:none; font-size:14px; color:#555;"></div>
-
-    <!-- Reviews tab -->
-    <div id="reviews-tab" style="display:none; font-size:14px; color:#555;">
-      <p>Coming soon...</p>
-    </div>
-  </div>
+<section id="course-container" style="
+    padding:16px;
+    width:100%;
+    max-width:1000px;
+    margin:0 auto;
+    min-height:80vh;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+">
+    <!-- Dynamic content loaded via course.php script -->
 </section>
