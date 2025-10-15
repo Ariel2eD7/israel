@@ -99,14 +99,21 @@ async function loadCourses() {
                     background:#f5f6fa;
                 `;
               
-                card.innerHTML = `
-    ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
-    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
-        <strong style="font-size:16px;">${course.name}</strong>
-        <span style="font-size:13px; color:#666;">${course.description}</span>
-    </div>
-    <span style="font-size:20px; color:#0079d3;">→</span>
+card.innerHTML = `
+  ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
+      <strong style="font-size:16px;">${course.name}</strong>
+      <span style="font-size:13px; color:#666;">${course.description}</span>
+  </div>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 448 512"
+    style="width:24px; height:24px; fill:#0079d3;"
+  >
+    <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8‑12.5‑45.3 0s‑12.5 32.8 0 45.3L338.8 224 32 224c‑17.7 0‑32 14.3‑32 32s14.3 32 32 32l306.7 0L233.4 393.4c‑12.5 12.5‑12.5 32.8 0 45.3s32.8 12.5 45.3 0l160‑160z"/>
+  </svg>
 `;
+
 
 
                 card.addEventListener('click', () => {
