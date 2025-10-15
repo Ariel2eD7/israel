@@ -44,6 +44,19 @@ function formatTime(seconds) {
     return `${mins}:${secs}`;
 }
 
+// Convert YouTube URL to embed URL
+function getYouTubeEmbedUrl(url) {
+    if (!url) return '';
+    const videoMatch = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/);
+    const listMatch = url.match(/[?&]list=([^&]+)/);
+    if (videoMatch) {
+        let embedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
+        if(listMatch) embedUrl += `?list=${listMatch[1]}`;
+        return embedUrl;
+    }
+    return url; // fallback for direct video URLs
+}
+
 async function loadCoursePage() {
     const firebaseObj = await waitForFirebase();
     const user = await waitForUser();
@@ -71,46 +84,29 @@ async function loadCoursePage() {
         const lessonsList = document.getElementById('lessons-list');
         const tabContent = document.getElementById('tab-content');
 
-        // Set first video 
-if (lessons[0]?.videoUrl) {
-    const url = lessons[0].videoUrl;
-    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
-    if (videoIdMatch) {
-        const videoId = videoIdMatch[1];
-        videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
-    } else {
-        videoPlayer.src = url;
-    }
-}
+        // Set first video
+        if (lessons[0]?.videoUrl) videoPlayer.src = getYouTubeEmbedUrl(lessons[0].videoUrl);
 
         // Populate lessons list
-        lessonsList.innerHTML = lessons.map((l, idx) => `
-            <li class="lesson-item" data-url="${l.videoUrl || ''}" style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-                <span>${idx + 1}. ${l.title || 'Lesson'}</span>
-                <span style="font-size:12px; color:#666;">${formatTime(l.duration || 0)}</span>
-            </li>
-        `).join('');
+        function renderLessonsList() {
+            lessonsList.innerHTML = lessons.map((l, idx) => `
+                <li class="lesson-item" data-url="${l.videoUrl || ''}" style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                    <span>${idx + 1}. ${l.title || 'Lesson'}</span>
+                    <span style="font-size:12px; color:#666;">${formatTime(l.duration || 0)}</span>
+                </li>
+            `).join('');
 
-        // Lesson click
-document.querySelectorAll('.lesson-item').forEach(item => {
-    item.addEventListener('click', () => {
-        const url = item.getAttribute('data-url');
-        if (url) {
-            // Check if YouTube URL
-            const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
-            if (videoIdMatch) {
-                const videoId = videoIdMatch[1];
-                videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            } else {
-                // fallback: direct video URL
-                videoPlayer.src = url;
-            }
+            // Attach click events
+            document.querySelectorAll('.lesson-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const url = item.getAttribute('data-url');
+                    if (url) videoPlayer.src = getYouTubeEmbedUrl(url) + '?autoplay=1';
+                });
+            });
         }
-    });
-});
 
-        // Set default tab to Lessons
-        tabContent.innerHTML = lessonsList.innerHTML;
+        renderLessonsList();
+        tabContent.innerHTML = lessonsList.innerHTML; // default tab
 
         // Tabs functionality
         const tabButtons = document.querySelectorAll('.tab-btn');
@@ -120,28 +116,14 @@ document.querySelectorAll('.lesson-item').forEach(item => {
                 btn.classList.add('active');
 
                 const tab = btn.getAttribute('data-tab');
-                if (tab === 'lessons') tabContent.innerHTML = lessonsList.innerHTML;
-                else if (tab === 'description') tabContent.innerHTML = course.description || 'No description available.';
-                else if (tab === 'reviews') tabContent.innerHTML = '<p>No reviews yet.</p>';
-
-                // Reattach lesson click events after re-render
                 if (tab === 'lessons') {
-    document.querySelectorAll('#tab-content .lesson-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const url = item.getAttribute('data-url');
-            if (url) {
-                const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
-                if (videoIdMatch) {
-                    const videoId = videoIdMatch[1];
-                    videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-                } else {
-                    videoPlayer.src = url;
+                    tabContent.innerHTML = lessonsList.innerHTML;
+                    renderLessonsList(); // reattach events
+                } else if (tab === 'description') {
+                    tabContent.innerHTML = course.description || 'No description available.';
+                } else if (tab === 'reviews') {
+                    tabContent.innerHTML = '<p>No reviews yet.</p>';
                 }
-            }
-        });
-    });
-}
-
             });
         });
 
