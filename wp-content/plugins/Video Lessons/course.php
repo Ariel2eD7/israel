@@ -72,7 +72,16 @@ async function loadCoursePage() {
         const tabContent = document.getElementById('tab-content');
 
         // Set first video
-        if (lessons[0]?.videoUrl) videoPlayer.src = lessons[0].videoUrl;
+if (lessons[0]?.videoUrl) {
+    const url = lessons[0].videoUrl;
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+    if (videoIdMatch) {
+        const videoId = videoIdMatch[1];
+        videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
+    } else {
+        videoPlayer.src = url;
+    }
+}
 
         // Populate lessons list
         lessonsList.innerHTML = lessons.map((l, idx) => `
@@ -83,12 +92,22 @@ async function loadCoursePage() {
         `).join('');
 
         // Lesson click
-        document.querySelectorAll('.lesson-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const url = item.getAttribute('data-url');
-                if (url) { videoPlayer.src = url; videoPlayer.play(); }
-            });
-        });
+document.querySelectorAll('.lesson-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const url = item.getAttribute('data-url');
+        if (url) {
+            // Check if YouTube URL
+            const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+            if (videoIdMatch) {
+                const videoId = videoIdMatch[1];
+                videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            } else {
+                // fallback: direct video URL
+                videoPlayer.src = url;
+            }
+        }
+    });
+});
 
         // Set default tab to Lessons
         tabContent.innerHTML = lessonsList.innerHTML;
