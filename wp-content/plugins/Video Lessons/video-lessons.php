@@ -105,7 +105,7 @@ card.innerHTML = `
     <strong style="font-size:16px;">${course.name}</strong>
     <span style="font-size:13px; color:#666;">${course.description}</span>
   </div>
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" justify-content:flex-end;
        xmlns="http://www.w3.org/2000/svg" style="cursor:pointer;">
     <circle cx="16" cy="16" r="16" fill="#268AFF"/>
     <path d="M13 10L19 16L13 22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
