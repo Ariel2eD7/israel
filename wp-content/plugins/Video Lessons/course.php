@@ -90,7 +90,9 @@ async function loadCoursePage() {
         const courseDurationElem = document.getElementById('course-duration');
 
         courseTitleElem.textContent = course.name || 'Course';
-        courseDurationElem.textContent = `Total duration: ${formatTime(totalDuration)}`;
+
+document.getElementById('duration-value').textContent = formatTime(totalDuration);
+
 
         if (lessons[0]?.videoUrl) {
             videoPlayer.src = getYouTubeEmbedUrl(lessons[0].videoUrl) + '?autoplay=0';
