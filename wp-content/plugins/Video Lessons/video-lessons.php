@@ -94,7 +94,7 @@ async function loadCourses() {
                     border:1px solid #ddd;
                     border-radius:8px;
                     cursor:pointer;
-                    background:#fff;
+                    background:#f5f6fa;
                 `;
                 card.innerHTML = `
                     ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;">` : ''}
