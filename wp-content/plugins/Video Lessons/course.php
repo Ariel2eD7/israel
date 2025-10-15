@@ -71,7 +71,7 @@ async function loadCoursePage() {
         const lessonsList = document.getElementById('lessons-list');
         const tabContent = document.getElementById('tab-content');
 
-        // Set first video
+        // Set first video 
 if (lessons[0]?.videoUrl) {
     const url = lessons[0].videoUrl;
     const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
