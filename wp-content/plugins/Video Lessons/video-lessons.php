@@ -97,14 +97,17 @@ async function loadCourses() {
                     cursor:pointer;
                     background:#f5f6fa;
                 `;
+              
                 card.innerHTML = `
-                    ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
-                    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
-                        <strong style="font-size:16px;">${course.name}</strong>
-                        <span style="font-size:13px; color:#666;">${course.description}</span>
-                    </div>
-                    <span style="font-size:20px; color:#0079d3;">→</span>
-                `;
+    ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
+        <strong style="font-size:16px;">${course.name}</strong>
+        <span style="font-size:13px; color:#666;">${course.description}</span>
+    </div>
+    <span style="font-size:20px; color:#0079d3;">→</span>
+`;
+
+
                 card.addEventListener('click', () => {
                     // Redirect to lessons page (to be implemented)
                     window.location.href = `/course-page?course_id=${encodeURIComponent(course.id)}`;
