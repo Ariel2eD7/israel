@@ -8,6 +8,9 @@
 
 if (!defined('ABSPATH')) exit;
 
+include_once plugin_dir_path(__FILE__) . 'course.php';
+
+
 function display_video_dashboard() {
     ob_start();
 
