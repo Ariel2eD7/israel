@@ -90,6 +90,9 @@ async function loadCoursePage() {
         const courseDurationElem = document.getElementById('course-duration');
 
         courseTitleElem.textContent = course.name || 'Course';
+        document.getElementById('about-course-text').textContent =
+    course.about || course.description?.slice(0, 180) + '...' || 'No course summary available.';
+
 
 document.getElementById('duration-value').textContent = formatTime(totalDuration);
 document.getElementById('lessons-value').textContent = `${lessons.length} Lessons`;
