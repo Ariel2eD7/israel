@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 /**
  * Plugin Name: Video Lessons
  * Description: A plugin to display recorded lessons organized by course and group.
