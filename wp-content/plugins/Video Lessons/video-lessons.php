@@ -87,9 +87,10 @@ async function loadCourses() {
             filteredCourses.forEach(course => {
                 const card = document.createElement('div');
                 card.style.cssText = `
+                    align-items:flex-start;
+
                 height: 110px;
                     display:flex;
-                    align-items:center;
                     gap:12px;
                     padding:12px;
                     border:1px solid #ddd;
