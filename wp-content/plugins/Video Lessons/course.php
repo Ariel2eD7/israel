@@ -132,7 +132,7 @@ document.getElementById('lessons-value').textContent = `${lessons.length} Lesson
         }
 
         renderLessonsTab();
-
+ 
 
 const tabButtons = document.querySelectorAll('.tab-btn');
 tabButtons.forEach(btn => {
@@ -143,7 +143,7 @@ tabButtons.forEach(btn => {
       b.style.color = '#0073e6';
     });
     btn.classList.add('active');
-    btn.style.borderBottom = '3px solid #222';
+    btn.style.borderBottom = '3px solid #0073e6';
     btn.style.color = '#0073e6';
 
     const tab = btn.getAttribute('data-tab');
