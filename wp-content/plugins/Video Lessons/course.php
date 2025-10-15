@@ -130,18 +130,27 @@ document.getElementById('lessons-value').textContent = `${lessons.length} Lesson
 
         renderLessonsTab();
 
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tabButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
 
-                const tab = btn.getAttribute('data-tab');
-                if (tab === 'lessons') renderLessonsTab();
-                else if (tab === 'description') tabContent.innerHTML = course.description || 'No description available.';
-                else if (tab === 'reviews') tabContent.innerHTML = '<p>No reviews yet.</p>';
-            });
-        });
+const tabButtons = document.querySelectorAll('.tab-btn');
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabButtons.forEach(b => {
+      b.classList.remove('active');
+      b.style.borderBottom = '3px solid transparent';
+      b.style.color = '#666';
+    });
+    btn.classList.add('active');
+    btn.style.borderBottom = '3px solid #222';
+    btn.style.color = '#333';
+
+    const tab = btn.getAttribute('data-tab');
+    if (tab === 'lessons') renderLessonsTab();
+    else if (tab === 'description') tabContent.innerHTML = course.description || 'No description available.';
+    else if (tab === 'reviews') tabContent.innerHTML = '<p>No reviews yet.</p>';
+  });
+});
+
+
 
     } catch (err) {
         console.error('Error loading course page:', err);
