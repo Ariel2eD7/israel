@@ -85,10 +85,10 @@ async function loadUserResults() {
         }
 
         // Render all courses in one table
-        for (const [courseName, exams] of Object.entries(grouped)) {
+        for (const [courseName, exams] of Object.entries(grouped)) { 
             // Insert course header row
             const courseRow = document.createElement("tr");
-            courseRow.innerHTML = `<td colspan="6" style="padding:8px; font-weight:700; background:#f0f0f0;">${courseName}</td>`;
+            courseRow.innerHTML = `<td colspan="6" style="background-color: var(--button-bg-color) !important; padding:8px; font-weight:700; background:#f0f0f0;">${courseName}</td>`;
             tbody.appendChild(courseRow);
 
             exams.forEach(e => {
