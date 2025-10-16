@@ -71,33 +71,27 @@ function upload_exam_form() {
     document.addEventListener('DOMContentLoaded', () => {
 
 
-                const uploadContainer = document.getElementById('upload-exam-tabs');
+        const uploadContainer = document.getElementById('upload-exam-tabs');
 
-        // 🔸 Hide upload container by default
-        uploadContainer.style.display = 'none';
+// 🔸 Hide upload container by default
+uploadContainer.style.display = 'none';
 
-        // 🔸 Wait for Firebase to load
-        const checkFirebase = setInterval(() => {
-            if (window.firebase && firebase.auth) {
-                clearInterval(checkFirebase);
-                firebase.auth().onAuthStateChanged((user) => {
-                    if (!user) {
-                        const msg = document.createElement('div');
-                        msg.innerHTML = `
-                          <div style="text-align:center; padding:20px; background:#f8f8f8; border:1px solid #ddd; border-radius:10px;">
-                            ⚠️ רק משתמשים מחוברים יכולים להעלות מבחנים.<br>
-                            <a href="/login" style="color:#0073aa; text-decoration:underline;">התחבר עכשיו</a>
-                          </div>
-                        `;
-                        uploadContainer.parentNode.insertBefore(msg, uploadContainer);
-                    } else {
-                        uploadContainer.style.display = 'block';
-                    }
-                });
+// 🔸 Wait for Firebase to load
+const checkFirebase = setInterval(() => {
+    if (window.firebase && firebase.auth) {
+        clearInterval(checkFirebase);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                uploadContainer.style.display = 'block';
+            } else {
+                uploadContainer.style.display = 'none';
             }
-        }, 200);
+        });
+    }
+}, 200);
 
-        
+
+
         // Tabs
         const tabJson = document.getElementById('tab-json');
         const tabMeta = document.getElementById('tab-meta');
