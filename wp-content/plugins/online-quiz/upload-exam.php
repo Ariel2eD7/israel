@@ -69,6 +69,34 @@ function upload_exam_form() {
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+
+        // 🔐 Hide upload area if not logged in
+waitForFirebase().then((auth) => {
+  auth.onAuthStateChanged((user) => {
+    const uploadContainer = document.getElementById('upload-exam-tabs');
+
+    if (!uploadContainer) return;
+
+    if (!user) {
+      uploadContainer.style.display = 'none';
+      // Optionally, show message or redirect
+      const msg = document.createElement('div');
+      msg.innerHTML = `
+        <div style="text-align:center; padding:20px;">
+          ⚠️ רק משתמשים מחוברים יכולים להעלות מבחנים.
+          <br>
+          <a href="/login" style="color:#0073aa; text-decoration:underline;">התחבר עכשיו</a>
+        </div>
+      `;
+      uploadContainer.parentNode.insertBefore(msg, uploadContainer);
+    } else {
+      uploadContainer.style.display = 'block';
+    }
+  });
+});
+
+
+
         // Tabs
         const tabJson = document.getElementById('tab-json');
         const tabMeta = document.getElementById('tab-meta');
