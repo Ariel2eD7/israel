@@ -105,6 +105,8 @@ background-color: var(--bg-color) !important;
       border-bottom: 0;
       margin-bottom: 0;
       padding-bottom: 0;
+      position: relative;   /* add this */
+      z-index: 10;    
   ">
     <button class="tab-btn active" data-tab="lessons" style="
         flex:1;
@@ -155,8 +157,9 @@ background-color: var(--bg-color) !important;
     border-top: 1px solid #ddd;
     width: 100vw;
 
-    margin-top: -4px;  /* pulls the hr up by 8px */
-    padding: 0;
+ margin-top: -2px;  /* pulls the hr up by 8px */
+    padding: 0; padding-bottom: 30px;
+        padding: 0;
   " />
 
   <div id="tab-content" style="
