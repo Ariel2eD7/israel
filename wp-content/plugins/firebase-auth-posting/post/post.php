@@ -167,7 +167,7 @@ for (const doc of snapshot.docs) {
   const el = document.createElement("div");
 el.innerHTML = `
   <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-    <a href="https://indexing.co.il/profile-2?email=${encodeURIComponent(userEmail)}"
+    <a href="https://israel.ussl.co/profile-2?email=${encodeURIComponent(userEmail)}"
        class="no-post-click"
        style="text-decoration: none; color: inherit; display: flex; align-items: flex-start; gap: 10px;">
        
@@ -333,7 +333,7 @@ el.innerHTML = `
         const profileLink = container.querySelector('#profile-link');
         if (profileLink) {
           const userEmail = userData.email || post.userEmail || 'anonymous@example.com';
-          profileLink.href = `https://indexing.co.il/profile-2?email=${encodeURIComponent(userEmail)}`;
+          profileLink.href = `https://israel.ussl.co/profile-2?email=${encodeURIComponent(userEmail)}`;
         }
 
         const dateEl = container.querySelector('#post-date');
