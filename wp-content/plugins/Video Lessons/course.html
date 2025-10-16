@@ -97,18 +97,18 @@ background-color: var(--bg-color) !important;
 </div>
 
 
-
 <!-- Tabs -->
 <div>
   <div style="
       display:flex;
       justify-content: space-around;
-      border-bottom:0px solid #ddd;
-      margin-bottom:0px;
+      border-bottom: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
   ">
     <button class="tab-btn active" data-tab="lessons" style="
         flex:1;
-        padding:12px;
+        padding: 12px 12px 8px;  /* reduce bottom padding to 8px */
         border:none;
         background:transparent;
         cursor:pointer;
@@ -120,7 +120,7 @@ background-color: var(--bg-color) !important;
     ">Lessons</button>
     <button class="tab-btn" data-tab="description" style="
         flex:1;
-        padding:12px;
+        padding: 12px 12px 8px; /* match bottom padding */
         border:none;
         background:transparent;
         cursor:pointer;
@@ -132,7 +132,7 @@ background-color: var(--bg-color) !important;
     ">Description</button>
     <button class="tab-btn" data-tab="reviews" style="
         flex:1;
-        padding:12px;
+        padding: 12px 12px 8px; /* match bottom padding */
         border:none;
         background:transparent;
         cursor:pointer;
@@ -143,27 +143,30 @@ background-color: var(--bg-color) !important;
         transition: border-color 0.2s, color 0.2s;
     ">Reviews</button>
   </div>
-    <!-- Full width hr below tabs -->
-<hr style="
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  border: none;
-  border-top: 1px solid #ddd;
-  width: 100vw;
-" />
 
+  <!-- Full width hr below tabs, pulled up to touch the bottom -->
+  <hr style="
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    border: none;
+    border-top: 1px solid #ddd;
+    width: 100vw;
+
+    margin-top: -8px;  /* pulls the hr up by 8px */
+    padding: 0;
+  " />
 
   <div id="tab-content" style="
-  background-color: var(--bg-color) !important;
-      padding:16px;
-      border:1px solid #ddd;
-      border-top:none;
-      border-radius:0 0 12px 12px;
-      box-shadow:0 2px 6px rgba(0,0,0,0.05);
-      min-height:150px;
+    background-color: var(--bg-color) !important;
+    padding:16px;
+    border:1px solid #ddd;
+    border-top:none;
+    border-radius:0 0 12px 12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    min-height:150px;
   ">
     <!-- Lessons / Description / Reviews injected here -->
   </div> 
