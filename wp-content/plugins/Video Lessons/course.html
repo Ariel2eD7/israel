@@ -1,10 +1,11 @@
 <style>
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    height: 100vh !important;
-    overflow: hidden !important;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden; /* allow vertical scrolling but prevent horizontal */
+  overflow-y: auto;
+}
 
   #course-container {
   min-height: 100vh;
@@ -22,7 +23,7 @@ direction: ltr;
  min-height: 100vh;
   display: flex;
   flex-direction: column;    width:100%;
-  
+
     max-width:800px;
     margin:0 auto;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
