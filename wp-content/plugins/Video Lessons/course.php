@@ -114,7 +114,7 @@ document.getElementById('lessons-value').textContent = `${lessons.length} Lesson
                     cursor:pointer;
                 ">
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="border: 1px solid #ddd !important; width:50px; height:50px; background-color: var(--bg-color) !important; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:bold;">
+                        <div style="border: 1px solid #ddd !important; width:50px; height:50px; background-color: var(--button-bg-color) !important; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:bold;">
                             ${idx+1}
                         </div>
                         <div>
