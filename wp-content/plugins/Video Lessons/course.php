@@ -105,7 +105,7 @@ document.getElementById('lessons-value').textContent = `${lessons.length} Lesson
         function renderLessonsTab() {
             tabContent.innerHTML = lessons.map((l, idx) => `
                 <div class="lesson-card" data-url="${l.videoUrl || ''}" style="
-                background-color: var(--button-bg-color) !important;
+                background-color: #E8F2FC !important;
 
                 border: 1px solid #ddd !important;
                     display:flex; align-items:center; justify-content:space-between;
