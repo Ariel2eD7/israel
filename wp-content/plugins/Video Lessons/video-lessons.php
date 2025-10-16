@@ -93,7 +93,7 @@ background-color: var(--button-bg-color) !important;
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   cursor: pointer;
