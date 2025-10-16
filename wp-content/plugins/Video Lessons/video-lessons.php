@@ -87,7 +87,8 @@ async function loadCourses() {
             filteredCourses.forEach(course => {
                 const card = document.createElement('div');
 card.style.cssText = `
-  position: relative;
+background-color: var(--button-bg-color) !important;
+  position: relative; 
   height: 110px;
   display: flex;
   align-items: flex-start;
