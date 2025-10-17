@@ -1,401 +1,235 @@
-/* Ensure full viewport height and remove default margin/padding */
+/* =========================
+   General Layout
+========================= */
 html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
-
 body {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
-
 .main-content {
-  flex: 1;
+    flex: 1;
 }
-
 footer {
-  margin-top: auto;
+    margin-top: auto;
 }
 
-/* Card deck container */
+* {
+    box-sizing: border-box;
+}
+
+/* =========================
+   Card Deck Container
+========================= */
 .card-deck {
-  position: relative;
-  width: 300px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center cards vertically */
-  align-items: center; /* Center cards horizontally */
-  height: 60vh;
-  padding: 20px;
-  box-sizing: border-box; /* Include padding in height */
+    position: relative;
+    width: 300px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* Individual cards */
+/* =========================
+   Cards
+========================= */
 .card {
-  user-select: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60vh;
-  background-color: #fff;
-  border-radius: 10px;
-  border: 1px solid black; /* Thin black border */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  color: #333;
-  z-index: 10;
-  transform-origin: center center;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  will-change: transform;
-  transform: translateZ(0); /* GPU acceleration */
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60vh;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform-origin: center center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #333;
+    z-index: 10;
+    border: 1px solid #000;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
-/* Rotation for first five cards */
-.card:nth-child(1) { transform: rotate(0deg); }
+.applyModal {
+    will-change: transform, opacity;
+}
+
+.card-inner {
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* Top bar for each card */
+.card-top {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 40px;
+    background-color: #007BFF;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* =========================
+   Driving Theory Question Elements
+========================= */
+.question-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 50px;
+    padding: 0 10px;
+}
+
+.answer-text {
+    display: none;
+    font-size: 16px;
+    color: #007BFF;
+    margin-top: 15px;
+    padding: 0 10px;
+}
+
+.show-answer .answer-text {
+    display: block;
+}
+
+/* =========================
+   Swipe Indicator
+========================= */
+.swipe-indicator {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    background-color: rgba(173, 216, 230, 0.5);
+    border-radius: 50%;
+    border: 2px solid #000;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    display: none;
+    text-align: center;
+    line-height: 150px;
+    z-index: 1000;
+    color: black;
+    padding: 0;
+}
+
+/* =========================
+   Swipe Transitions
+========================= */
+.swipe-card {
+    transition: transform 0.3s ease-out;
+    will-change: transform;
+}
+
+.swipe-card.swiped {
+    transform: translateX(100%);
+}
+
+/* =========================
+   Action Buttons
+========================= */
+#card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 300px;
+}
+
+#card-actions button {
+    flex: 1;
+    margin: 0 5px;
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#card-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* =========================
+   Card Rotation
+========================= */
+.card:nth-child(1) { transform: rotate(0deg); z-index: 15; }
 .card:nth-child(2) { transform: rotate(-5deg); }
 .card:nth-child(3) { transform: rotate(5deg); }
 .card:nth-child(4) { transform: rotate(-5deg); }
 .card:nth-child(5) { transform: rotate(5deg); }
+.card:nth-child(n+6) { transform: rotate(5deg); }
 
-/* Prevent excessive rotation on cards beyond fifth */
-.card:nth-child(n+6) {
-  transform: rotate(5deg);
-}
-
-/* Inner card layout */
-.card-inner {
-  padding: 20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-/* Decorative top bar on card */
-.card-top {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 40px;
-  background-color: #007BFF;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-/* Job info text */
-.job-position {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-top: 10px;
-}
-
-.job-date {
-  font-size: 14px;
-  color: #555;
-  margin-top: 45px;
-  position: absolute;
-  top: 0;
-  left: 65%;
-}
-
-.job-description {
-  font-size: 14px;
-  color: #777;
-  margin: 15px 0 20px;
-}
-
-/* Phone reveal button */
-.uncover-phone {
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  transition: background-color 0.3s ease;
-}
-.uncover-phone:hover {
-  background-color: #0056b3;
-}
-.phone-number {
-  display: none;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-}
-.phone-icon {
-  font-size: 18px;
-}
-.uncover-phone.show-phone span {
-  display: none;
-}
-.uncover-phone.show-phone .phone-number {
-  display: block;
-}
-
-/* Swipe instructions text */
-.swipe-instruction {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 18px;
-  color: #666;
-}
-
-/* Cursor pointer on hover */
-.card-deck .card:hover {
-  cursor: pointer;
-}
-
-/* Highest z-index for top card */
-.card:nth-child(1) {
-  z-index: 15;
-}
-
-/* Modal styles */
-#applyModal {
-  display: none;
-  position: fixed;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 400px;
-  background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  z-index: 1000;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow: hidden;
-  border: 1px solid black;
-  animation: fadeIn 0.3s ease-out;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  font-size: 22px;
-  font-weight: 600;
-  color: #333;
-}
-
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-}
-
-/* Form inputs */
-input[type="file"], textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Apply button */
-#applyButton {
-  background-color: #007BFF;
-  color: white;
-  padding: 12px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-  margin: 20px 0 20px 0;
-  transition: background-color 0.3s ease;
-}
-#applyButton:hover {
-  background-color: #0056b3;
-}
-
-/* Fade in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -40%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-/* Circular swipe indicator */
-.swipe-indicator {
-  position: fixed;
-  top: 45%;
-  left: 50%;
-  width: 150px; /* doubled */
-  height: 150px; /* doubled */
-  background-color: rgba(173, 216, 230, 0.5);
-  border-radius: 50%;
-  border: 2px solid #000;
-  transform: translate(-50%, -50%);
-  font-size: 15px;
-  display: none;
-  text-align: center;
-  line-height: 150px;
-  z-index: 1000;
-  box-sizing: border-box;
-  color: black;
-  padding: 0;
-}
-
-/* Prevent horizontal scrolling on body */
-body {
-  overflow-x: hidden;
-}
-
-/* Box sizing for all elements */
-* {
-  box-sizing: border-box;
-}
-
-/* Plugin container styling */
-.plugin-container {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Responsive images and videos inside plugin */
-.plugin-container img,
-.plugin-container video {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Smooth transitions for swipe cards */
-.swipe-card {
-  transition: transform 0.3s ease-out;
-  will-change: transform;
-}
-
-/* Swipe card moved state */
-.swipe-card.swiped {
-  transform: translateX(100%);
-}
-
-/* Styled link for posting jobs */
-.post-job-link {
-  display: inline-block;
-  background-color: #007BFF;
-  color: #fff;
-  padding: 10px 25px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
-.post-job-link:hover {
-  background-color: #0056b3;
-}
-
-/* Job form styling */
-.scd-job-form {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  direction: rtl;
-}
-
-.scd-job-form .form-group {
-  margin-bottom: 20px;
-}
-
-.scd-job-form label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #333;
-}
-
-.scd-job-form input[type="text"],
-.scd-job-form input[type="tel"] {
-  width: 100%;
-  padding: 12px 15px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.scd-job-form .submit-button {
-  background-color: #3b5998;
-  color: white;
-  font-size: 16px;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.scd-job-form .submit-button:hover {
-  background-color: #2e4a8b;
-}
-
-/* Responsive form adjustments */
+/* =========================
+   Responsive
+========================= */
 @media (max-width: 600px) {
-  .scd-job-form {
-    padding: 20px;
-  }
+    .card-deck {
+        width: 90%;
+        height: 70vh;
+        padding: 10px;
+    }
 
-  .scd-job-form input,
-  .scd-job-form .submit-button {
-    font-size: 14px;
-  }
+    .card {
+        height: 70vh;
+    }
+
+    #card-actions {
+        width: 100%;
+    }
+
+    #card-actions button {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .question-title {
+        font-size: 16px;
+    }
+
+    .answer-text {
+        font-size: 14px;
+    }
 }
 
-/* Hide footer on specific page ID */
+/* =========================
+   Footer Hide on Theory Page
+========================= */
 .page-id-1658 footer,
 .page-id-1658 .site-footer,
 .page-id-1658 .elementor-location-footer,
 .page-id-1658 .elementor-location-footer > .elementor-section-wrap {
-  display: none !important;
-}
-
-/* Center table text */
-table.widefat th,
-table.widefat td {
-  text-align: center;
-  vertical-align: middle;
-}
-
-/* ApplyModal additional optimization */
-.applyModal {
-  will-change: transform, opacity;
+    display: none !important;
 }
