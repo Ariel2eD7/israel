@@ -25,27 +25,35 @@ if (document.getElementById("fetch-questions")) {
   document.getElementById("fetch-questions").addEventListener("click", uploadToFirebase);
 }
 
-// Frontend quiz
+// Frontend quiz - load and show ALL questions
 async function loadQuestions() {
   const appDiv = document.getElementById("theory-exam-app");
-  const snapshot = await db.collection("israel_theory_questions").limit(1).get();
+  const snapshot = await db.collection("israel_theory_questions").get();
 
   if (snapshot.empty) {
     appDiv.innerHTML = "<p>No questions found.</p>";
     return;
   }
 
-  const doc = snapshot.docs[0].data();
-  appDiv.innerHTML = `
-    <div class="question-box">
-      <h3>שאלה:</h3>
-      <p>${doc.question}</p>
-      <button onclick="document.getElementById('answer-box').style.display='block'">הצג תשובה</button>
-      <div id="answer-box" style="display:none;">
-        <p><strong>תשובה:</strong> ${doc.answer}</p>
+  let html = '';
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const answerBoxId = `answer-box-${doc.id}`;
+
+    html += `
+      <div class="question-box">
+        <h3>שאלה:</h3>
+        <p>${data.question}</p>
+        <button onclick="document.getElementById('${answerBoxId}').style.display='block'">הצג תשובה</button>
+        <div id="${answerBoxId}" style="display:none;">
+          <p><strong>תשובה:</strong> ${data.answer}</p>
+        </div>
       </div>
-    </div>
-  `;
+      <hr/>
+    `;
+  });
+
+  appDiv.innerHTML = html;
 }
 
 if (document.getElementById("theory-exam-app")) {
