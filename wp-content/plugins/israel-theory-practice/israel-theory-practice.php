@@ -100,58 +100,62 @@ function itp_fetch_questions_callback() {
         return ['success' => true, 'response' => $response];
     }
 
-    $limit = 1000;
-    $skip = 0;
-    $total = 0;
-    $messages = [];
-
-    while (true) {
-        $apiUrl = "https://www.gov.il/api/v1/DynamicCollector/dynamiccollectorresults/theoryexamhe_data?skip={$skip}&limit={$limit}";
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $apiUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-$response = curl_exec($ch);
-$err = curl_error($ch);
-curl_close($ch);
-
-if ($err || !$response) {
-    echo "Failed to fetch data from gov.il API. cURL error: " . $err . "\n";
-    break;
-}
 
 
-        $data = json_decode($response, true);
-        if (empty($data['items'])) {
-            $messages[] = "No more questions found.";
-            break;
-        }
+$limit = 1000;
+$skip = 0;
+$total = 0;
+$messages = [];
 
-        foreach ($data['items'] as $item) {
-            $fields = $item['fields'] ?? [];
-            if (empty($fields['title2'])) continue;
+while (true) {
+    $resource_id = 'bf7cb748-f220-474b-a4d5-2d59f93db28d';
+    $apiUrl = "https://data.gov.il/api/3/action/datastore_search?resource_id={$resource_id}&limit={$limit}&offset={$skip}";
 
-            $docData = [
-                'question' => $fields['title2'],
-                'answer' => $fields['description4'] ?? 'אין תשובה',
-                'category' => $fields['category'] ?? 'ללא קטגוריה',
-                'timestamp' => (string)time(),
-            ];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $response = curl_exec($ch);
+    $err = curl_error($ch);
+    curl_close($ch);
 
-            $uploadResult = uploadToFirestore($firestoreUrl, $docData);
-            if ($uploadResult['success']) {
-                $messages[] = "Uploaded question: {$docData['question']}";
-            } else {
-                $messages[] = "Error uploading question: {$docData['question']}, error: {$uploadResult['error']}";
-            }
-        }
-
-        $skip += $limit;
-        $total += count($data['items']);
-        $messages[] = "Total questions uploaded: $total";
+    if ($err || !$response) {
+        $messages[] = "Failed to fetch data from gov.il API. cURL error: " . $err;
+        break;
     }
 
-    $messages[] = "Import complete!";
+    $data = json_decode($response, true);
+    if (empty($data['result']['records'])) {
+        $messages[] = "No more questions found.";
+        break;
+    }
 
-    wp_send_json_success(implode("<br>", $messages));
+    foreach ($data['result']['records'] as $record) {
+        if (empty($record['title2'])) continue;
+
+        $docData = [
+            'question' => $record['title2'],
+            'answer' => $record['description4'] ?? 'אין תשובה',
+            'category' => $record['category'] ?? 'ללא קטגוריה',
+            'timestamp' => (string)time(),
+        ];
+
+        $uploadResult = uploadToFirestore($firestoreUrl, $docData);
+        if ($uploadResult['success']) {
+            $messages[] = "Uploaded question: {$docData['question']}";
+        } else {
+            $messages[] = "Error uploading question: {$docData['question']}, error: {$uploadResult['error']}";
+        }
+    }
+
+    $skip += $limit;
+    $total += count($data['result']['records']);
+    $messages[] = "Total questions uploaded: $total";
+}
+
+$messages[] = "Import complete!";
+
+wp_send_json_success(implode("<br>", $messages));
+
+
 }
