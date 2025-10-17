@@ -48,6 +48,10 @@ document.addEventListener("DOMContentLoaded", function() {
   function loadExams(db) {
     db.collection("exams").get().then(snapshot => {
       jsonData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+              // 👇 ADD THIS LINE HERE
+        window.jsonData = jsonData;
+console.log(\'All loaded exams:\', jsonData);
+
       populateDropdown("firstDropdown", [...new Set(jsonData.map(q => q.university))]);
     }).catch(console.error);
   } 
@@ -93,16 +97,40 @@ document.addEventListener("DOMContentLoaded", function() {
                 populateDropdown("fourthDropdown", [...new Set(years)]);
                 enableDropdown("fourthDropdown");
             } else if (id === "fourthDropdown") {
-                const semesters = jsonData.filter(q => q.university === getText("firstDropdown") && q.school === getText("secondDropdown") && q.course === getText("thirdDropdown") && q.year === unescapedOption).map(q => q.semester);
-                populateDropdown("fifthDropdown", [...new Set(semesters)]);
-                enableDropdown("fifthDropdown");
-            } else if (id === "fifthDropdown") {
-                const terms = jsonData.filter(q => q.university === getText("firstDropdown") && q.school === getText("secondDropdown") && q.course === getText("thirdDropdown") && q.year === getText("fourthDropdown") && q.semester === unescapedOption).map(q => q.term);
-                if (terms.length > 0) {
-                    populateDropdown("sixthDropdown", [...new Set(terms)]);
-                    enableDropdown("sixthDropdown");
-                }
-            }
+    console.log(\'Selected Year:\', unescapedOption);
+    console.log(\'All matching records:\', jsonData.filter(q => q.course === getText("thirdDropdown")));
+
+const semesters = jsonData.filter(q =>
+    (q.university || \'\').trim() === getText("firstDropdown").trim() &&
+    (q.school || \'\').trim() === getText("secondDropdown").trim() &&
+    (q.course || \'\').trim() === getText("thirdDropdown").trim() &&
+    (q.year || \'\').trim() === unescapedOption.trim()
+).map(q => q.semester);
+
+
+
+    console.log(\'Filtered for semester dropdown:\', semesters);
+
+    populateDropdown("fifthDropdown", [...new Set(semesters)]);
+    enableDropdown("fifthDropdown");
+}
+else if (id === "fifthDropdown") {
+    const terms = jsonData.filter(q =>
+        (q.university || \'\').trim() === getText("firstDropdown").trim() &&
+        (q.school || \'\').trim() === getText("secondDropdown").trim() &&
+        (q.course || \'\').trim() === getText("thirdDropdown").trim() &&
+        (q.year || \'\').trim() === getText("fourthDropdown").trim() &&
+        (q.semester || \'\').trim() === unescapedOption.trim()
+    ).map(q => q.term);
+
+    if (terms.length > 0) {
+        populateDropdown("sixthDropdown", [...new Set(terms)]);
+        enableDropdown("sixthDropdown");
+    }
+}
+
+
+
 
             document.getElementById(id + "Options").style.display = "none";
         };
@@ -142,32 +170,34 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
-        document.getElementById("submitButton").addEventListener("click", function () {
-            const selectedUniversity = getText("firstDropdown");
-            const selectedSchool = getText("secondDropdown");
-            const selectedCourse = getText("thirdDropdown");
-            const selectedYear = getText("fourthDropdown");
-            const selectedSemester = getText("fifthDropdown");
-            const selectedTerm = getText("sixthDropdown");
+document.getElementById("submitButton").addEventListener("click", function () {
+    const selectedUniversity = getText("firstDropdown");
+    const selectedSchool = getText("secondDropdown");
+    const selectedCourse = getText("thirdDropdown");
+    const selectedYear = getText("fourthDropdown");
+    const selectedSemester = getText("fifthDropdown");
+    const selectedTerm = getText("sixthDropdown");
 
-            if (selectedUniversity && selectedSchool && selectedCourse && selectedYear && selectedSemester && selectedTerm) {
-                const selectedQuiz = jsonData.find(quiz =>
-                    quiz.university === selectedUniversity &&
-                    quiz.school === selectedSchool &&
-                    quiz.course === selectedCourse &&
-                    quiz.year === selectedYear &&
-                    quiz.semester === selectedSemester &&
-                    quiz.term === selectedTerm
-                );
-                if (selectedQuiz) {
-window.location.href = "https://israel.ussl.co/exam/?quiz_id=" + selectedQuiz.id;
-                } else {
-                    alert("No matching quiz found!");
-                }
-            } else {
-                alert("Please select all dropdown options!");
-            }
-        });
+    if (selectedUniversity && selectedSchool && selectedCourse && selectedYear && selectedSemester && selectedTerm) {
+        const selectedQuiz = jsonData.find(quiz =>
+            (quiz.university || \'\').trim() === selectedUniversity.trim() &&
+            (quiz.school || \'\').trim() === selectedSchool.trim() &&
+            (quiz.course || \'\').trim() === selectedCourse.trim() &&
+            (quiz.year || \'\').trim() === selectedYear.trim() &&
+            (quiz.semester || \'\').trim() === selectedSemester.trim() &&
+            (quiz.term || \'\').trim() === selectedTerm.trim()
+        );
+
+        if (selectedQuiz) {
+            window.location.href = "https://israel.ussl.co/exam/?quiz_id=" + selectedQuiz.id;
+        } else {
+            alert("No matching quiz found!");
+        }
+    } else {
+        alert("Please select all dropdown options!");
+    }
+});
+
     });
     </script>
     ';

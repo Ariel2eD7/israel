@@ -4,7 +4,8 @@
     Quiz Results
   </h2>
 
-  <!-- Results go here -->
+
+  <!-- Results go here --> 
   <section id="quiz-results-container" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; color: var(--text-color) !important; background-color: var(--bg-color) !important;">
     <!-- Injected cards will go here -->
   </section>
@@ -16,5 +17,13 @@
   <h4 id="time-text" style=" font-weight: 400; font-size: 1rem; text-align: center; color: var(--text-color) !important;">
     Time Spent: 00:00:00
   </h4>
+
+
+<footer style="text-align: center; margin-top: 30px;">
+  <button onclick="window.location.href='/exam?quiz_id=' + quizResultsData.quizId" 
+    style="padding: 12px 30px; color: white; background-color: #0079d3; border: none; border-radius: 6px; font-weight: 700;">
+    🔁 Retake Exam
+  </button>
+</footer>
 
 </section>

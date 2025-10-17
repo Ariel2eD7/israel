@@ -48,7 +48,7 @@ const preQuizScreen = document.getElementById('pre-quiz-screen');
 const preQuizTimer = document.getElementById('pre-quiz-timer');
 const quizContainer = document.getElementById('quiz-container');
 
-let countdown = 5; // seconds
+let countdown = 2; // seconds
 preQuizTimer.textContent = countdown;
 
 const preQuizInterval = setInterval(() => {
@@ -282,10 +282,8 @@ checkAllAnswered();
 
         updateTimer(); // Initial display
         const timerInterval = setInterval(updateTimer, 1000);
-
-        // Handle form submit and scoring
-
-        document.getElementById('quiz-form').addEventListener('submit', e => {
+// Handle form submit and scoring
+document.getElementById('quiz-form').addEventListener('submit', async e => {
     e.preventDefault();
 
     // Ask user for confirmation
@@ -293,8 +291,7 @@ checkAllAnswered();
     if (!sure) return; // User clicked cancel
 
     // ✅ Remove exit warning after submission
-window.removeEventListener('beforeunload', beforeUnloadHandler);
-
+    window.removeEventListener('beforeunload', beforeUnloadHandler);
 
     const formData = new FormData(e.target);
     const userAnswers = [];
@@ -303,16 +300,62 @@ window.removeEventListener('beforeunload', beforeUnloadHandler);
         userAnswers.push(val);
     }
 
+    // Calculate score
     let score = 0;
     userAnswers.forEach((ans, i) => {
         if (ans === correctAnswers[i]) score++;
     });
 
+    // Calculate time spent
+    const timeSpent = durationSeconds - timeRemaining;
+
+    // 🧠 Save result to Firestore for logged-in user
+async function saveUserResultToFirestore(quizId, score, userAnswers, timeSpent, quizData) {
+    try {
+        const { auth, db } = window.fapFirebase;
+        const user = auth.currentUser;
+        if (!user) {
+            console.warn("⚠️ No user logged in — skipping result save.");
+            return;
+        }
+
+        const resultData = {
+            quizId,
+            course: quizData.course || "Unknown Course",   // ✅ Use course
+            score,
+            totalQuestions: userAnswers.length,
+            answers: userAnswers,
+            timeSpent,
+            createdAt: new Date().toISOString(),
+        };
+
+        const userRef = db.collection("users").doc(user.uid).collection("exam_results");
+        await userRef.add(resultData);
+
+        console.log("✅ Exam result saved for user:", user.uid);
+    } catch (err) {
+        console.error("❌ Failed to save result:", err);
+    }
+}
+
+
+// Save result
+await saveUserResultToFirestore(
+    quizId,
+    score,
+    userAnswers,
+    timeSpent,
+    quiz // ✅ passing full quiz object
+);
+
+
+    // Redirect to results page
     window.location.href = `/quiz_results?quiz_id=${quizId}`
         + `&answers=${encodeURIComponent(JSON.stringify(userAnswers))}`
         + `&score=${score}`
-        + `&time_spent=${durationSeconds - timeRemaining}`;
+        + `&time_spent=${timeSpent}`;
 });
+
 
 
     } catch (err) {

@@ -69,6 +69,29 @@ function upload_exam_form() {
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+
+
+        const uploadContainer = document.getElementById('upload-exam-tabs');
+
+// 🔸 Hide upload container by default
+uploadContainer.style.display = 'none';
+
+// 🔸 Wait for Firebase to load
+const checkFirebase = setInterval(() => {
+    if (window.firebase && firebase.auth) {
+        clearInterval(checkFirebase);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                uploadContainer.style.display = 'block';
+            } else {
+                uploadContainer.style.display = 'none';
+            }
+        });
+    }
+}, 200);
+
+
+
         // Tabs
         const tabJson = document.getElementById('tab-json');
         const tabMeta = document.getElementById('tab-meta');

@@ -51,6 +51,7 @@ function display_quiz_results() {
             });
           }
 
+
           document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('quiz-results-container');
             const quizTitleElem = document.getElementById('quiz-title');
@@ -81,7 +82,6 @@ function display_quiz_results() {
 
             try {
               const db = await waitForFirebase();
-
               const doc = await db.collection('exams').doc(quizId).get();
 
               if (!doc.exists) {
@@ -93,62 +93,88 @@ function display_quiz_results() {
               const questions = quiz.questions || [];
 
               // Set the quiz title
-
               quizTitleElem.textContent += ' — ' + (quiz.title || 'Untitled');
 
-              // Build the questions HTML with inline styles
-             
+              // Build the questions HTML
               let html = '';
 
-questions.forEach((q, i) => {
-  const userAnswer = (userAnswers[i] || '(No answer)').trim();
-  const correctAnswerObj = (q.answers || []).find(a => a.correct);
-  const correctAnswer = correctAnswerObj ? correctAnswerObj.text.trim() : 'N/A';
-  const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+              questions.forEach((q, i) => {
+                const userAnswer = (userAnswers[i] || '(No answer)').trim();
+                const correctAnswerObj = (q.answers || []).find(a => a.correct);
+                const correctAnswer = correctAnswerObj ? correctAnswerObj.text.trim() : 'N/A';
 
-  const borderColor = isCorrect ? '#46d160' : '#ff5c5c'; // green or red
-  const textColor = isCorrect ? '#2f9e44' : '#d7263d';
-  const icon = isCorrect ? '✅' : '❌';
+                html += `
+                  <fieldset style="
+                    margin-bottom: 24px; 
+                    padding: 16px 20px; 
+                    border-radius: 8px; 
+                    border: 1px solid #ddd; 
+                    color: var(--text-color);
+                    background-color: var(--bg-color);
+                    box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.05);
+                  ">
+                    <legend style="
+                      font-weight: 700;
+                      font-size: 1.125rem;
+                      margin-bottom: 12px;
+                      padding: 0 6px;
+                    ">
+                      ${i + 1}. ${q.text}
+                    </legend>
+                `;
 
-  html += `
-    <article style="
-      color: var(--text-color) !important;
-      background-color: var(--button-bg-color) !important;
-      border: 1px solid #edeff1;
-      border-left: 6px solid ${borderColor};
-      padding: 16px;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    ">
-      <p style="margin: 0 0 10px 0; font-weight: 600;">
-        ${i + 1}. ${q.text}
-      </p>
-      <p style="margin: 0 0 8px 0;">
-        ${icon} התשובה שלך: <strong style="color: ${textColor};">${userAnswer}</strong>
-      </p>
-      ${!isCorrect ? `
-        <p style="margin: 0;">
-          התשובה הנכונה: <strong>${correctAnswer}</strong>
-        </p>
-      ` : ''}
-    </article>
-  `;
-});
+                (q.answers || []).forEach((ans) => {
+                  const isCorrect = ans.text.trim().toLowerCase() === correctAnswer.toLowerCase();
+                  const isUserAnswer = ans.text.trim().toLowerCase() === userAnswer.toLowerCase();
 
+                  let bgColor = 'var(--button-bg-color)';
+                  let borderColor = '#ddd';
+                  let icon = '';
 
+                  if (isCorrect) {
+                    bgColor = '#e8f9ee'; // light green
+                    borderColor = '#28a745';
+                    icon = '✅';
+                  } else if (isUserAnswer && !isCorrect) {
+                    bgColor = '#fde8e8'; // light red
+                    borderColor = '#d7263d';
+                    icon = '❌';
+                  }
+
+                  html += `
+                    <div style="
+                      display: flex;
+                      align-items: center;
+                      padding: 10px 14px;
+                      margin-bottom: 12px;
+                      border-radius: 6px;
+                      border: 1px solid ${borderColor};
+                      background: ${bgColor};
+                      box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+                    ">
+                      ${icon ? `<span style="margin-right: 8px;">${icon}</span>` : `<span style="width: 20px; display:inline-block;"></span>`}
+                      <span>${ans.text}</span>
+                    </div>
+                  `;
+                });
+
+                html += `</fieldset>`;
+              });
 
               container.innerHTML = html;
 
               // Set score and time spent
               scoreTextElem.textContent = `הציון שלך: ${questions.length} / ${score}`;
 
-              // Format timeSpent (seconds) as HH:MM:SS
+
+              // Format timeSpent as HH:MM:SS
               function formatTime(seconds) {
                 const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0');
                 const mins = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
                 const secs = (seconds % 60).toString().padStart(2, '0');
                 return `${hrs}:${mins}:${secs}`;
               }
+
               timeTextElem.textContent = `Time Spent: ${formatTime(timeSpent)}`;
 
             } catch (error) {
@@ -157,7 +183,6 @@ questions.forEach((q, i) => {
             }
           });
         </script>
-
         <?php
         return ob_get_clean();
     }
@@ -165,5 +190,5 @@ questions.forEach((q, i) => {
     return "<p>No quiz results to display.</p>";
 }
 
-// Register the shortcode here
+// Register the shortcode
 add_shortcode('quiz_results', 'display_quiz_results');

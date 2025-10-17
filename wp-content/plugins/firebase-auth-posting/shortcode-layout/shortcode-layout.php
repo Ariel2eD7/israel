@@ -1,4 +1,6 @@
 <?php
+
+
 function fap_shortcode_layout_wrapper() 
 {
   ob_start();
@@ -65,6 +67,15 @@ if (!window.fapProfileInitialized) {
 
   waitForFirebase().then((auth) => {
     auth.onAuthStateChanged((user) => {
+            const loggedInMenu = document.getElementById("logged-in-menu");
+
+             if (user) {
+        console.log("✅ User logged in");
+        if (loggedInMenu) loggedInMenu.style.display = "block";
+      } else {
+        console.log("❌ No user logged in");
+        if (loggedInMenu) loggedInMenu.style.display = "none";
+      }
       if (!user) {
         console.log("❌ No user logged in");
         return;
@@ -481,6 +492,8 @@ if (sidebarBtn && sidebar && overlay) {
 
     });
   </script>
+
+
 
   <?php
   return ob_get_clean();
