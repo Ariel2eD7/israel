@@ -107,11 +107,19 @@ function itp_fetch_questions_callback() {
 
     while (true) {
         $apiUrl = "https://www.gov.il/api/v1/DynamicCollector/dynamiccollectorresults/theoryexamhe_data?skip={$skip}&limit={$limit}";
-        $response = file_get_contents($apiUrl);
-        if (!$response) {
-            $messages[] = "Failed to fetch data from gov.il API";
-            break;
-        }
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+$response = curl_exec($ch);
+$err = curl_error($ch);
+curl_close($ch);
+
+if ($err || !$response) {
+    echo "Failed to fetch data from gov.il API. cURL error: " . $err . "\n";
+    break;
+}
+
 
         $data = json_decode($response, true);
         if (empty($data['items'])) {
