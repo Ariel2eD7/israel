@@ -1,7 +1,6 @@
 jQuery(document).ready(function ($) {
     const $cardDeck = $('.card-deck');
     const $modal = $('#answerModal');
-    const swipeThreshold = 0.1;
     let isSwiping = false, isModalOpen = false, isModalPreventedClose = false;
     let $swipeIndicator;
 
@@ -11,56 +10,51 @@ jQuery(document).ready(function ($) {
 
         if (e.type === 'touchstart') e.preventDefault();
 
-        const startPos = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
-        const card = $(this);
+        const startX = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
         const startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
+        const card = $(this);
         const startTime = Date.now();
+
         $('body').css('overflow-x', 'hidden');
 
         $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
 
         function onMove(e) {
             if (e.type === 'touchmove') e.preventDefault();
-            const movePos = e.type === 'mousemove' ? e.pageX : e.originalEvent.touches[0].pageX;
-            const offset = movePos - startPos;
+            const moveX = e.type === 'mousemove' ? e.pageX : e.originalEvent.touches[0].pageX;
             const moveY = e.type === 'mousemove' ? e.pageY : e.originalEvent.touches[0].pageY;
+            const offsetX = moveX - startX;
             const offsetY = moveY - startY;
 
-            card.css('transform', `translate(${offset}px, ${offsetY}px) rotate(${offset / 10}deg)`);
+            card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
 
-            if (offset > 0) {
-                $swipeIndicator.text('לשאלה הבאה'); // Right swipe
-            } else {
-                $swipeIndicator.text('הצג תשובה'); // Left swipe
-            }
+            // Show circular indicator text
+            $swipeIndicator.text(offsetX > 0 ? 'לשאלה הבאה' : 'הצג תשובה');
             $swipeIndicator.show();
         }
 
         function onEnd() {
             $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
 
-            const offset = card.position().left;
-            const swipeSpeed = Math.abs(offset) / (Date.now() - startTime);
+            const cardOffsetX = card.position().left;
+            const swipeSpeed = Math.abs(cardOffsetX) / (Date.now() - startTime);
             const fastSwipeThreshold = 0.5;
             const distanceThreshold = 25;
 
-            if (Math.abs(offset) > distanceThreshold || swipeSpeed > fastSwipeThreshold) {
-                if (offset < 0 && !isModalOpen) {
+            if (Math.abs(cardOffsetX) > distanceThreshold || swipeSpeed > fastSwipeThreshold) {
+                if (cardOffsetX < 0 && !isModalOpen) {
                     setTimeout(() => openModal(card), 50);
-                } else if (offset > 0) {
+                } else if (cardOffsetX > 0) {
                     card.fadeOut(300, function () {
                         card.remove();
                         resetCards();
                     });
                 }
             } else {
-                card.css('transform', 'translate(0, 0) rotate(0)');
+                card.css('transform', 'translate(0,0) rotate(0)');
             }
 
-            $swipeIndicator.fadeOut(200, function () {
-                $swipeIndicator.remove();
-            });
-
+            $swipeIndicator.fadeOut(200, function () { $(this).remove(); });
             $('body').css('overflow-x', 'auto');
             isSwiping = false;
         }
@@ -70,20 +64,18 @@ jQuery(document).ready(function ($) {
 
     function resetCards() {
         const cards = $cardDeck.find('.card');
-        cards.each((index, card) => {
-            let rotation = (index % 2 === 0 ? 1 : -1) * (index * 5);
-            if (Math.abs(rotation) > 5) {
-                rotation = 5 * Math.sign(rotation);
-            }
+        cards.each((i, card) => {
+            let rotation = (i % 2 === 0 ? 1 : -1) * (i * 5);
+            if (Math.abs(rotation) > 5) rotation = 5 * Math.sign(rotation);
             $(card).css('transform', `translateX(0) rotate(${rotation}deg)`);
-            $(card).css('z-index', index === 0 ? 15 : 10);
+            $(card).css('z-index', i === 0 ? 15 : 10);
         });
-        $cardDeck.find('.card:first-child').on('mousedown touchstart', startDrag);
+        $cardDeck.find('.card:first-child').off('mousedown touchstart').on('mousedown touchstart', startDrag);
     }
 
     function openModal(card) {
-        const question = card.find('.question-text').text();
-        const answer = card.find('.answer-text').text();
+        const question = card.find('.question-text').text() || '';
+        const answer = card.find('.answer-text').text() || '';
         $('#modalQuestion').text(question);
         $('#modalAnswer').text(answer);
 
@@ -106,16 +98,15 @@ jQuery(document).ready(function ($) {
         resetCards();
     }
 
-    // Close modal when clicking outside content
+    // Close modal by clicking outside
     $(document).on('click', function (event) {
         if (isModalOpen && !$(event.target).closest('.modal-content').length && !$(event.target).is('#answerModal')) {
             closeModal();
         }
     });
 
-    $modal.find('.modal-content').on('click', function (event) {
-        event.stopPropagation();
-    });
+    // Prevent modal content clicks from closing
+    $modal.find('.modal-content').on('click', function (e) { e.stopPropagation(); });
 
     $(document).on('mousedown touchstart', '.card:first-child', startDrag);
     resetCards();
