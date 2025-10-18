@@ -1,3 +1,5 @@
+here?
+
 jQuery(document).ready(function($) {
 
 
@@ -15,7 +17,7 @@ $(document).on('click', '.show-answer-btn', function() {
     console.log('Show Answer button clicked!');
     const $btn = $(this);
     const $card = $btn.closest('.card');
-const $correctAnswer = $card.find('.question-answer');
+    const $correctAnswer = $card.find('[id^="correctAnswer"]');
     console.log('$correctAnswer found:', $correctAnswer.length);
     if ($correctAnswer.length) {
         $correctAnswer.css('background', 'yellow');
