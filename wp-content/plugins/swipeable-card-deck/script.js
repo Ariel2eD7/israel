@@ -11,6 +11,21 @@ const firebaseConfig = {
     appId: "1:986241388920:web:9df7c0a79721fbe4bc388d"
 };
 
+$(document).on('click', '.question-answer button', function() {
+    const $btn = $(this);
+    const $card = $btn.closest('.card');
+    const $correctAnswer = $card.find('[id^="correctAnswer"]');
+    if ($correctAnswer.length) {
+        $correctAnswer.css('background', 'yellow');
+    }
+});
+
+
+
+function sanitizeAnswerHTML(html) {
+    return html.replace(/onclick="[^"]*"/g, '');
+}
+
 
 let lastVisibleDoc = null;
 const batchSize = 10;
@@ -156,8 +171,8 @@ const db = firebase.firestore();
         }
     }
 
-
-    function createTheoryCard(data) {
+function createTheoryCard(data) {
+    const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
     const card = $(`
         <div class="card swipe-card">
             <div class="card-inner">
@@ -165,16 +180,13 @@ const db = firebase.firestore();
                     <div class="card-top"></div>
                     <div class="job-position question-title">${data.question}</div>
                     <div class="job-description category">${data.category}</div>
-                    <div class="question-answer" style="display:none;">${data.answer}</div>
-                    <button class="show-answer-btn">הצג תשובה נכונה</button>
+                    <div class="question-answer">${sanitizedAnswer}</div>
                 </div>
             </div>
         </div>
     `);
     return card;
 }
-
-
 
 
 function loadTheoryQuestions() {
@@ -213,11 +225,6 @@ function loadTheoryQuestions() {
       });
 }
 
-// Attach this inside your document ready, after loadTheoryQuestions()
-$(document).on('click', '.show-answer-btn', function() {
-    const $card = $(this).closest('.card');
-    $card.find('.question-answer').toggle(); // Show/hide the answer
-});
 
 
 
