@@ -12,6 +12,24 @@ const firebaseConfig = {
     appId: "1:986241388920:web:9df7c0a79721fbe4bc388d"
 };
 
+$(document).on('click', '.show-answer-btn', function() {
+    console.log('Show Answer button clicked!');
+    const $btn = $(this);
+    const $card = $btn.closest('.card');
+    const $correctAnswer = $card.find('[id^="correctAnswer"]');
+    console.log('$correctAnswer found:', $correctAnswer.length);
+    if ($correctAnswer.length) {
+        $correctAnswer.css('background', 'yellow');
+    } else {
+        console.log('No correctAnswer element found inside this card.');
+    }
+});
+
+
+function sanitizeAnswerHTML(html) {
+    return html.replace(/onclick="[^"]*"/g, '');
+}
+
 
 let lastVisibleDoc = null;
 const batchSize = 10;
@@ -158,21 +176,23 @@ const db = firebase.firestore();
     }
 
 function createTheoryCard(data) {
-    const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
-    const card = $(`
-        <div class="card swipe-card">
-            <div class="card-inner">
-                <div class="card-content">
-                    <div class="card-top"></div>
-                    <div class="job-position question-title">${data.question}</div>
-                    <div class="job-description category">${data.category}</div>
-                    <div class="question-answer">${sanitizedAnswer}</div>
-                </div>
-            </div>
+  const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
+  const card = $(`
+    <div class="card swipe-card">
+      <div class="card-inner">
+        <div class="card-content">
+          <div class="card-top"></div>
+          <div class="job-position question-title">${data.question}</div>
+          <div class="job-description category">${data.category}</div>
+          <div class="question-answer">${sanitizedAnswer}</div>
+          <button class="show-answer-btn">Show Answer</button> <!-- Add this -->
         </div>
-    `);
-    return card;
+      </div>
+    </div>
+  `);
+  return card;
 }
+
 
 
 function loadTheoryQuestions() {
