@@ -1,11 +1,12 @@
 /* Ensure full viewport height */
 html, body { height: 100%; margin: 0; padding: 0; }
 body { display: flex; flex-direction: column; }
-.main-content { flex: 1; padding-top: 100px; }
+.main-content { flex: 1; }
 footer { margin-top: auto; }
 
 .card-deck {
     position: relative; width: 300px;  margin: 0 auto;
+  padding-top: 100px; /* Or use margin-top if more appropriate */
 
     display: flex;
     flex-direction: column;
@@ -16,7 +17,7 @@ footer { margin-top: auto; }
     box-sizing: border-box; /* Include padding in the height calculation */
 }
 .card {
-    user-select: none; position: absolute; top: 0; left: 0; width: 100%; height: 75vh;
+    user-select: none; position: absolute; top: 0; left: 0; width: 100%; height: 60vh;
     background-color: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transform-origin: center center; transition: transform 0.2s ease, opacity 0.2s ease; overflow: hidden;
     display: flex; justify-content: center; align-items: center; font-size: 16px; color: #333; z-index: 10; border: 1px solid black; /* Add a thin black border */
