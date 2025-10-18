@@ -164,7 +164,7 @@ const db = firebase.firestore();
     function loadTheoryQuestions() {
     db.collection("israel_theory_questions")
       .orderBy("timestamp", "desc")
-      .limit(10)
+      .limit(2000)
       .get()
       .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
