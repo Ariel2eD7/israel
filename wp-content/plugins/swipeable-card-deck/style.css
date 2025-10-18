@@ -4,9 +4,9 @@ body { display: flex; flex-direction: column; }
 .main-content { flex: 1; }
 footer { margin-top: auto; }
 
-.card-deck {
+.card-deck { 
     position: relative; width: 300px;  margin: 0 auto;
-  padding-top: 100px; /* Or use margin-top if more appropriate */
+  top: 80px; /* Add space from top of container */
 
     display: flex;
     flex-direction: column;
