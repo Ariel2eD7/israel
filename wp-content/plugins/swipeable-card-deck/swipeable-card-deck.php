@@ -12,7 +12,11 @@ function scd_enqueue_scripts() {
     wp_enqueue_style( 'scd-style', plugin_dir_url( __FILE__ ) . 'style.css' );
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'scd-swipe', plugin_dir_url( __FILE__ ) . 'script.js', ['jquery'], '', true );
-    wp_localize_script('scd-swipe', 'ajaxurl', admin_url('admin-ajax.php'));
+
+    wp_localize_script('scd-swipe', 'scd_ajax', array(
+    'ajax_url' => admin_url('admin-ajax.php')
+));
+
 
 }
 add_action( 'wp_enqueue_scripts', 'scd_enqueue_scripts' );
