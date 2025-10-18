@@ -1,4 +1,20 @@
 jQuery(document).ready(function($) {
+
+
+    // Firebase config
+const firebaseConfig = {
+    apiKey: "AIzaSyCB2YecnexzZko4wTF0tkd_jOhpS9d6rb8",
+    authDomain: "my-wordpress-firebase-site.firebaseapp.com",
+    projectId: "my-wordpress-firebase-site",
+    storageBucket: "my-wordpress-firebase-site.appspot.com",
+    messagingSenderId: "986241388920",
+    appId: "1:986241388920:web:9df7c0a79721fbe4bc388d"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
     const $cardDeck = $('.card-deck');
     const $modal = $('#applyModal');
     const swipeThreshold = 0.1;
@@ -122,6 +138,44 @@ jQuery(document).ready(function($) {
         }
     }
 
+    function createTheoryCard(data) {
+    const card = $(`
+        <div class="card swipe-card">
+            <div class="card-inner">
+                <div class="card-content">
+                    <div class="card-top"></div>
+                    <div class="job-position question-title">${data.question}</div>
+                    <div class="job-description category">${data.category}</div>
+                    <div class="question-answer">${data.answer}</div>
+                </div>
+            </div>
+        </div>
+    `);
+    return card;
+}
+
+
+    function loadTheoryQuestions() {
+    db.collection("israel_theory_questions")
+      .orderBy("timestamp", "desc")
+      .limit(10)
+      .get()
+      .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const card = createTheoryCard(data);
+              $('.card-deck').append(card);
+          });
+          resetCards();
+      })
+      .catch((error) => {
+          console.error("Error loading theory questions:", error);
+      });
+}
+
+
+
+
     function resetCards() {
         const cards = $cardDeck.find('.card');
         cards.each((index, card) => {
@@ -238,6 +292,10 @@ $modal.find('#applyButton').click(function() {
 
     $(document).on('mousedown touchstart', '.card:first-child', startDrag);
     resetCards();
+
+
+    loadTheoryQuestions();
+
  
     // Phone button click handler
     $(document).on('touchstart click', '.uncover-phone', function() {

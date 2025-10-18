@@ -9,13 +9,22 @@
 
 // Enqueue necessary styles and scripts
 function scd_enqueue_scripts() {
-    wp_enqueue_style( 'scd-style', plugin_dir_url( __FILE__ ) . 'style.css' );
-    wp_enqueue_script( 'jquery' );
-    wp_enqueue_script( 'scd-swipe', plugin_dir_url( __FILE__ ) . 'script.js', ['jquery'], '', true );
+    wp_enqueue_style('scd-style', plugin_dir_url(__FILE__) . 'style.css');
+    wp_enqueue_script('jquery');
 
+    // ✅ Enqueue Firebase SDKs
+    wp_enqueue_script('firebase-app', 'https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js', [], null, true);
+    wp_enqueue_script('firebase-firestore', 'https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore-compat.js', ['firebase-app'], null, true);
+
+    // ✅ Your main script (must come AFTER Firebase scripts)
+    wp_enqueue_script('scd-swipe', plugin_dir_url(__FILE__) . 'script.js', ['jquery', 'firebase-app', 'firebase-firestore'], null, true);
+
+    // Localize script (optional for AJAX)
     wp_localize_script('scd-swipe', 'scd_ajax', array(
-    'ajax_url' => admin_url('admin-ajax.php')
-));
+        'ajax_url' => admin_url('admin-ajax.php')
+    ));
+}
+
 
 
 }
