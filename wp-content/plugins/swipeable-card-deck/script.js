@@ -29,88 +29,96 @@ const db = firebase.firestore();
     let phoneButtonClickCount = {}; // Track how many times the phone button has been clicked per card
     let $swipeIndicator;  // Declare outside so we can reference it in different functions
 
-function startDrag(e) {
-    if (isSwiping || isModalOpen) return; // Prevent swipe when modal is open
-    isSwiping = true;
-
-    if (e.type === 'touchstart') {
-        e.preventDefault();
-    }
-
-    const startPos = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
-    const card = $(this);
-    const cardStartPos = card.position().left || 0;
-
-    const startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
-    const startTime = Date.now();
-
-    // Prevent horizontal scrolling on the body during swipe
-    $('body').css('overflow-x', 'hidden');
-
-    // Create the circular indicator and append it to the body to be centered on screen
-    $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
-
-    // Handle the swipe movement
-    function onMove(e) {
-        if (e.type === 'touchmove') {
-            e.preventDefault(); // Prevent the page from scrolling horizontally
+    function startDrag(e) {
+        if (isSwiping || isModalOpen) return; // Prevent swipe when modal is open
+        isSwiping = true;
+        // Prevent default touch behavior (no horizontal scroll on mobile)
+        if (e.type === 'touchstart') {
+            e.preventDefault();
         }
-        const movePos = e.type === 'mousemove' ? e.pageX : e.originalEvent.touches[0].pageX;
-        const offset = movePos - startPos;
-        const moveY = e.type === 'mousemove' ? e.pageY : e.originalEvent.touches[0].pageY;
-        const offsetY = moveY - startY;
+    
+        const startPos = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
+        const card = $(this);
+        const cardStartPos = card.position().left || 0;
+    
 
-        card.css('transform', `translate(${offset}px, ${offsetY}px) rotate(${offset / 10}deg)`);
-
-        // Show and update the circular window based on swipe direction
-        if (offset > 0) {
-            $swipeIndicator.text('למשרה הבאה'); // Right swipe
-        } else {
-            $swipeIndicator.text('להגשת מועמדות'); // Left swipe
-        }
-        $swipeIndicator.show(); // Make it visible during swipe
-    }
-
-    // End swipe detection
-    function onEnd() {
-        $(document).off('mousemove', onMove);
-        document.removeEventListener('touchmove', onMove, { passive: false });
-        $(document).off('mouseup touchend', onEnd);
-
-        const offset = card.position().left;
-        const swipeSpeed = Math.abs(offset) / (Date.now() - startTime);
-        const fastSwipeThreshold = 0.5;
-        const swipeThreshold = 25;
-
-        if (Math.abs(offset) > swipeThreshold || swipeSpeed > fastSwipeThreshold) {
-            if (offset < 0 && !isModalOpen) {
-                setTimeout(() => {
-                    openModal(card);
-                }, 50);
-            } else if (offset > 0) {
-                card.fadeOut(300, function() {
-                    card.remove();
-                    phoneButtonClickCount = {};
-                    resetCards();
-                });
+        const startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
+        // Store the start time for swipe speed calculation
+        const startTime = Date.now();
+    
+        // Prevent horizontal scrolling on the body during swipe
+        $('body').css('overflow-x', 'hidden');
+    
+        // Create the circular indicator and append it to the body to be centered on screen
+        $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
+    
+        // Handle the swipe movement
+        function onMove(e) {
+            if (e.type === 'touchmove') {
+                e.preventDefault(); // Prevent the page from scrolling horizontally
             }
-        } else {
-            card.css('transform', 'translate(0, 0) rotate(0)');
+            const movePos = e.type === 'mousemove' ? e.pageX : e.originalEvent.touches[0].pageX;
+            const offset = movePos - startPos;
+            const moveY = e.type === 'mousemove' ? e.pageY : e.originalEvent.touches[0].pageY;
+            const offsetY = moveY - startY; // Track vertical movement too
+            
+            card.css('transform', `translate(${offset}px, ${offsetY}px) rotate(${offset / 10}deg)`);
+                
+            // Show and update the circular window based on swipe direction
+            if (offset > 0) {
+                $swipeIndicator.text('למשרה הבאה'); // Right swipe: "למשרה הבאה"
+            } else {
+                $swipeIndicator.text('להגשת מועמדות'); // Left swipe: "להגשת מועמדות"
+            }
+            $swipeIndicator.show(); // Make it visible during swipe
         }
-
-        $swipeIndicator.fadeOut(200, function() {
-            $swipeIndicator.remove();
-        });
-
-        $('body').css('overflow-x', 'auto');
-        isSwiping = false;
+    
+        // End swipe detection
+        function onEnd() {
+            $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
+            
+            // Calculate the swipe distance
+            const offset = card.position().left;
+    
+            // Calculate swipe speed
+            const swipeSpeed = Math.abs(offset) / (Date.now() - startTime); // Time-based speed (distance/time)
+    
+            // If the swipe speed is fast enough (based on some threshold), treat it like a completed swipe
+            const fastSwipeThreshold = 0.5; // Adjust this based on testing for how fast the swipe needs to be
+            const swipeThreshold = 25; // Distance threshold
+    
+            // If the card is swiped beyond the threshold or is fast enough, perform the action
+            if (Math.abs(offset) > swipeThreshold || swipeSpeed > fastSwipeThreshold) {
+                if (offset < 0 && !isModalOpen) {
+                    setTimeout(() => {
+                        openModal(card);
+                    }, 50); // Slight delay lets the swipe complete before modal opens
+                } else if (offset > 0) {
+                    // Right swipe case: remove the card if swiped right
+                    card.fadeOut(300, function() {
+                        card.remove();
+                        phoneButtonClickCount = {};
+                        resetCards();
+                    });
+                }
+            } else {
+                // If swipe didn't reach the threshold, reset the card
+                card.css('transform', 'translate(0, 0) rotate(0)');
+            }
+    
+            // Hide the circular window after swipe ends
+            $swipeIndicator.fadeOut(200, function() {
+                $swipeIndicator.remove(); // Remove the indicator after fading out
+            });
+    
+            // Allow scrolling again after swipe ends
+            $('body').css('overflow-x', 'auto');
+    
+            isSwiping = false;
+        }
+    
+        $(document).on('mousemove touchmove', onMove).on('mouseup touchend', onEnd);
     }
-
-    $(document).on('mousemove', onMove);
-    document.addEventListener('touchmove', onMove, { passive: false }); // <-- Important fix here
-    $(document).on('mouseup touchend', onEnd);
-}
-
             function updateSecondCardContent() {
         const cards = $cardDeck.find('.card');
         const topCardIndex = cards.index(cards.first()); // Find the index of the top card
