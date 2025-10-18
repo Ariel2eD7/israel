@@ -1,5 +1,4 @@
-like this?
-
+is this ok
 
 jQuery(document).ready(function($) {
 
@@ -13,21 +12,6 @@ const firebaseConfig = {
     messagingSenderId: "986241388920",
     appId: "1:986241388920:web:9df7c0a79721fbe4bc388d"
 };
-
-$(document).on('click', '.question-answer button', function() {
-    const $btn = $(this);
-    const $card = $btn.closest('.card');
-    const $correctAnswer = $card.find('[id^="correctAnswer"]');
-    if ($correctAnswer.length) {
-        $correctAnswer.css('background', 'yellow');
-    }
-});
-
-
-
-function sanitizeAnswerHTML(html) {
-    return html.replace(/onclick="[^"]*"/g, '');
-}
 
 
 let lastVisibleDoc = null;
