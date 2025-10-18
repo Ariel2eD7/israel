@@ -193,17 +193,16 @@ function createTheoryCard(data) {
           <div class="card-top"></div>
           <div class="job-position question-title">${data.question}</div>
           <div class="job-description category">${data.category}</div>
-          <div id="correctAnswer_${data.id || Date.now()}" class="correct-answer" style="display:none; padding: 10px; background: #ffffcc; margin-top: 10px;">
+          <button class="show-answer-btn">Show Answer</button>
+          <div id="correctAnswer_${data.id || Date.now()}" class="correct-answer" style="display: none;">
             ${sanitizedAnswer}
           </div>
-          <button class="show-answer-btn">Show Answer</button>
         </div>
       </div>
     </div>
   `);
   return card;
 }
-
 
 
 function loadTheoryQuestions() {
