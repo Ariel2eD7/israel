@@ -175,24 +175,23 @@ const db = firebase.firestore();
     }
 
 function createTheoryCard(data) {
-    const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
-    const card = $(`
-        <div class="card swipe-card">
-            <div class="card-inner">
-                <div class="card-content">
-                    <div class="card-top"></div>
-                    <div class="job-position question-title">${data.question}</div>
-                    <div class="job-description category">${data.category}</div>
-                    <div class="question-answer">
-                        ${sanitizedAnswer}
-                        <button class="show-answer-btn">Show Answer</button>
-                    </div>
-                </div>
-            </div>
+  const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
+  const card = $(`
+    <div class="card swipe-card">
+      <div class="card-inner">
+        <div class="card-content">
+          <div class="card-top"></div>
+          <div class="job-position question-title">${data.question}</div>
+          <div class="job-description category">${data.category}</div>
+          <div class="question-answer">${sanitizedAnswer}</div>
+          <button class="show-answer-btn">Show Answer</button> <!-- Add this -->
         </div>
-    `);
-    return card;
+      </div>
+    </div>
+  `);
+  return card;
 }
+
 
 
 function loadTheoryQuestions() {
