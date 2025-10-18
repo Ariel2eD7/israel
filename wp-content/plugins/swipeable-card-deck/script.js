@@ -12,15 +12,17 @@ const firebaseConfig = {
 };
 
 $(document).on('click', '.show-answer-btn', function() {
-    console.log('Button clicked!');
+    console.log('Show Answer button clicked!');
     const $btn = $(this);
     const $card = $btn.closest('.card');
     const $correctAnswer = $card.find('[id^="correctAnswer"]');
+    console.log('$correctAnswer found:', $correctAnswer.length);
     if ($correctAnswer.length) {
         $correctAnswer.css('background', 'yellow');
+    } else {
+        console.log('No correctAnswer element found inside this card.');
     }
 });
-
 
 
 function sanitizeAnswerHTML(html) {
