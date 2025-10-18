@@ -23,7 +23,7 @@ function scd_enqueue_scripts() {
     wp_localize_script('scd-swipe', 'scd_ajax', array(
         'ajax_url' => admin_url('admin-ajax.php')
     ));
-}
+
 
 
 
