@@ -1,7 +1,7 @@
 /* Ensure full viewport height */
-html, body { height: 100%; margin: 0; padding: 0; padding-top: 100px;}
+html, body { height: 100%; margin: 0; padding: 0; }
 body { display: flex; flex-direction: column; }
-.main-content { flex: 1; }
+.main-content { flex: 1; padding-top: 100px; }
 footer { margin-top: auto; }
 
 .card-deck {
