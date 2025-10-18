@@ -54,10 +54,19 @@ const db = firebase.firestore();
     let phoneButtonClickCount = {}; // Track how many times the phone button has been clicked per card
     let $swipeIndicator;  // Declare outside so we can reference it in different functions
 
-    function startDrag(e) {
-        if (isSwiping || isModalOpen) return; // Prevent swipe when modal is open
-        isSwiping = true;
-        // Prevent default touch behavior (no horizontal scroll on mobile)
+
+
+function startDrag(e) {
+    // Skip swipe if the user is tapping a button or link
+    const isButtonTap = $(e.target).closest('button, .show-answer-btn, a').length > 0;
+    if (isButtonTap) return;
+
+    if (isSwiping || isModalOpen) return;
+    isSwiping = true;
+    // Prevent default touch behavior (no horizontal scroll on mobile)
+
+
+    
         if (e.type === 'touchstart') {
             e.preventDefault();
         }
