@@ -21,24 +21,23 @@ footer {
 .card-deck {
     position: relative;
     width: 300px;
-    margin: 0 auto;
+    margin: 100px auto 0;  /* 👈 Top margin creates the gap from the top of screen */
 
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center card horizontally */
-    
-    height: 60vh;
-    padding-top: 100px; /* 👈 Add space between top of screen and cards */
+    align-items: center;
+
+    height: calc(100vh - 100px);  /* 👈 Make room for top margin */
     box-sizing: border-box;
 }
 
 .card {
     user-select: none;
     position: absolute;
-    top: 100px; /* 👈 Push cards down inside card-deck */
+    top: 0;
     left: 0;
     width: 100%;
-    height: 60vh;
+    height: 100%; /* 👈 Use full height of .card-deck */
 
     background-color: #fff;
     border-radius: 10px;
@@ -54,10 +53,12 @@ footer {
     color: #333;
     z-index: 10;
     border: 1px solid black;
-    
+
     will-change: transform;
     transform: translateZ(0);  /* Triggers GPU acceleration */
 }
+
+
 
 .applyModal {
     will-change: transform, opacity;
