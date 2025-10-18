@@ -101,11 +101,17 @@ const db = firebase.firestore();
                     }, 50); // Slight delay lets the swipe complete before modal opens
                 } else if (offset > 0) {
                     // Right swipe case: remove the card if swiped right
-                    card.fadeOut(300, function() {
-                        card.remove();
-                        phoneButtonClickCount = {};
-                        resetCards();
-                    });
+               card.fadeOut(300, function() {
+    card.remove();   
+    phoneButtonClickCount = {};
+    resetCards();
+
+    const remainingCards = $cardDeck.find('.card').length;
+    if (remainingCards < 3) { // Threshold can be adjusted
+        loadTheoryQuestions();
+    }
+});
+
                 }
             } else {
                 // If swipe didn't reach the threshold, reset the card
