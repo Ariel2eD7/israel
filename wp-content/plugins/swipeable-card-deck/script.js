@@ -11,6 +11,12 @@ const firebaseConfig = {
     appId: "1:986241388920:web:9df7c0a79721fbe4bc388d"
 };
 
+
+let lastVisibleDoc = null;
+const batchSize = 10;
+let loading = false;
+
+
 // Initialize Firebase
 
 if (!firebase.apps.length) {
@@ -161,21 +167,39 @@ const db = firebase.firestore();
 }
 
 
-    function loadTheoryQuestions() {
-    db.collection("israel_theory_questions")
-      .orderBy("timestamp", "desc")
-      .limit(2000)
-      .get()
+function loadTheoryQuestions() {
+    if (loading) return; // prevent duplicate loads
+    loading = true;
+
+    let query = db.collection("israel_theory_questions")
+                  .orderBy("timestamp", "desc")
+                  .limit(batchSize);
+
+    if (lastVisibleDoc) {
+        query = query.startAfter(lastVisibleDoc);
+    }
+
+    query.get()
       .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+              loading = false;
+              return; // No more documents to load
+          }
+
+          lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+
           querySnapshot.forEach((doc) => {
               const data = doc.data();
               const card = createTheoryCard(data);
               $('.card-deck').append(card);
           });
+
           resetCards();
+          loading = false;
       })
       .catch((error) => {
           console.error("Error loading theory questions:", error);
+          loading = false;
       });
 }
 
@@ -272,11 +296,20 @@ $modal.find('#applyButton').click(function() {
         success: function(response) {
             alert('Your application has been sent!');
             closeModal();
+
             card.fadeOut(300, function() {
-                card.remove();
-                phoneButtonClickCount = {};
-                resetCards();
-            });
+    card.remove();
+    phoneButtonClickCount = {};
+    resetCards();
+
+    // Check if cards left are less than threshold, then load more
+    const remainingCards = $cardDeck.find('.card').length;
+    if (remainingCards < 3) { // Threshold, can adjust
+        loadTheoryQuestions();
+    }
+});
+
+
         },
         error: function() {
             alert('Error sending application. Please try again.');
