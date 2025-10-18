@@ -11,28 +11,18 @@ const firebaseConfig = {
     appId: "1:986241388920:web:9df7c0a79721fbe4bc388d"
 };
 
-
-
-
 $(document).on('click', '.show-answer-btn', function() {
+    console.log('Show Answer button clicked!');
     const $btn = $(this);
     const $card = $btn.closest('.card');
     const $correctAnswer = $card.find('[id^="correctAnswer"]');
-
+    console.log('$correctAnswer found:', $correctAnswer.length);
     if ($correctAnswer.length) {
-        if ($correctAnswer.is(':visible')) {
-            $correctAnswer.slideUp();
-            $btn.text('Show Answer');
-        } else {
-            $correctAnswer.slideDown();
-            $btn.text('Hide Answer');
-        }
+        $correctAnswer.css('background', 'yellow');
     } else {
         console.log('No correctAnswer element found inside this card.');
     }
 });
-
-
 
 
 function sanitizeAnswerHTML(html) {
@@ -193,16 +183,15 @@ function createTheoryCard(data) {
           <div class="card-top"></div>
           <div class="job-position question-title">${data.question}</div>
           <div class="job-description category">${data.category}</div>
-          <button class="show-answer-btn">Show Answer</button>
-          <div id="correctAnswer_${data.id || Date.now()}" class="correct-answer" style="display: none;">
-            ${sanitizedAnswer}
-          </div>
+          <div class="question-answer">${sanitizedAnswer}</div>
+          <button class="show-answer-btn">Show Answer</button> <!-- Add this -->
         </div>
       </div>
     </div>
   `);
   return card;
 }
+
 
 
 function loadTheoryQuestions() {
