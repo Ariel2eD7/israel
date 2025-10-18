@@ -84,17 +84,6 @@ function scd_display_card_deck() {
 
 
 
-// Add "Post Job" or "Login" link
-if ( is_user_logged_in() ) {
-    echo '<div class="post-job-link-container" style="text-align:center; margin:20px 0;">';
-    echo '<a href="https://indexing.co.il/%d7%a4%d7%a8%d7%a1%d7%9d-%d7%9e%d7%a9%d7%a8%d7%94" class="post-job-link">פרסם משרה חדשה</a>';
-    echo '</div>';
-} else {
-    echo '<div class="post-job-link-container" style="text-align:center; margin:20px 0;">';
-    echo '<a href="https://indexing.co.il/login" class="post-job-link">התחבר כדי לפרסם משרה</a>';
-    echo '</div>';
-}
-
 
 
 
