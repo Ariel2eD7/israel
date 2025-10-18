@@ -11,7 +11,8 @@ const firebaseConfig = {
     appId: "1:986241388920:web:9df7c0a79721fbe4bc388d"
 };
 
-$(document).on('click', '.question-answer button', function() {
+$(document).on('click', '.show-answer-btn', function() {
+    console.log('Button clicked!');
     const $btn = $(this);
     const $card = $btn.closest('.card');
     const $correctAnswer = $card.find('[id^="correctAnswer"]');
@@ -180,7 +181,10 @@ function createTheoryCard(data) {
                     <div class="card-top"></div>
                     <div class="job-position question-title">${data.question}</div>
                     <div class="job-description category">${data.category}</div>
-                    <div class="question-answer">${sanitizedAnswer}</div>
+                    <div class="question-answer">
+                        ${sanitizedAnswer}
+                        <button class="show-answer-btn">Show Answer</button>
+                    </div>
                 </div>
             </div>
         </div>
