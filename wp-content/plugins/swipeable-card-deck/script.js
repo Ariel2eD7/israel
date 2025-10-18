@@ -156,6 +156,7 @@ const db = firebase.firestore();
         }
     }
 
+
     function createTheoryCard(data) {
     const card = $(`
         <div class="card swipe-card">
@@ -164,13 +165,16 @@ const db = firebase.firestore();
                     <div class="card-top"></div>
                     <div class="job-position question-title">${data.question}</div>
                     <div class="job-description category">${data.category}</div>
-                    <div class="question-answer">${data.answer}</div>
+                    <div class="question-answer" style="display:none;">${data.answer}</div>
+                    <button class="show-answer-btn">הצג תשובה נכונה</button>
                 </div>
             </div>
         </div>
     `);
     return card;
 }
+
+
 
 
 function loadTheoryQuestions() {
@@ -209,6 +213,11 @@ function loadTheoryQuestions() {
       });
 }
 
+// Attach this inside your document ready, after loadTheoryQuestions()
+$(document).on('click', '.show-answer-btn', function() {
+    const $card = $(this).closest('.card');
+    $card.find('.question-answer').toggle(); // Show/hide the answer
+});
 
 
 
