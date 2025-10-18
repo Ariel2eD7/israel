@@ -1,4 +1,3 @@
-is this ok
 
 jQuery(document).ready(function($) {
 
