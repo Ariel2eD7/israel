@@ -37,7 +37,7 @@ footer {
     top: 0;
     left: 0;
     width: 100%;
-    height: 80%; /* 👈 Use full height of .card-deck */
+    height: 100%; /* 👈 Use full height of .card-deck */
 
     background-color: #fff;
     border-radius: 10px;
