@@ -2,7 +2,7 @@
 /**
  * Plugin Name: driving theory
  * Description: A swipeable card deck where the top card is swipeable and the cards are displayed at an angle.
- * Version: 1.0
+ * Version: 1.0 
  * Author: Your Name  
  * License: GPL2  
  */ 
