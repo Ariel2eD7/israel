@@ -145,7 +145,7 @@ function startDrag(e) {
         const offsetX = currentX - startX;
         const offsetY = currentY - startY;
 
-        if (Math.abs(offsetX) > 5) moved = true; // only consider as swipe if moved enough
+        if (Math.abs(offsetX) > 5) moved = true; // small threshold to detect actual swipe
 
         card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
 
@@ -163,7 +163,8 @@ function startDrag(e) {
         const threshold = 25;
         const fastSwipeThreshold = 0.5;
 
-        if (moved) { // only perform swipe if actual movement
+        if (moved) {
+            // Only perform swipe if user actually moved
             if (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold) {
                 if (offsetX < 0 && !isModalOpen) {
                     setTimeout(() => openModal(card), 50);
