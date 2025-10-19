@@ -27,76 +27,76 @@ $(document).on('click', '.show-answer-btn', function() {
 
 
 function sanitizeAnswerHTML(html) {
-  const temp = document.createElement('div');
-  temp.innerHTML = html;
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
 
-  // Remove any original buttons and onclicks
-  temp.querySelectorAll('button').forEach(el => el.remove());
-  temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
+    // Remove original buttons and onclicks
+    temp.querySelectorAll('button').forEach(el => el.remove());
+    temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
-  const answersContainer = document.createElement('div');
-  answersContainer.classList.add('answers-container');
+    const answersContainer = document.createElement('div');
+    answersContainer.classList.add('answers-container');
 
-  // Extract the UL (list of answers)
-  const ul = temp.querySelector('ul');
-  if (ul) {
-    ul.querySelectorAll('li').forEach((li) => {
-      const button = document.createElement('button');
-      button.classList.add('answer-option');
+    // Extract the UL (list of answers)
+    const ul = temp.querySelector('ul');
+    if (ul) {
+        ul.querySelectorAll('li').forEach((li) => {
+            const button = document.createElement('button');
+            button.classList.add('answer-option');
 
-      // Check if this LI contains the correct answer marker
-      const correctEl = li.querySelector('[id^="correctAnswer"]');
-      if (correctEl) button.dataset.correct = 'true';
-      else button.dataset.correct = 'false';
+            // Check if this LI contains the correct answer marker
+            const correctEl = li.querySelector('[id^="correctAnswer"]');
+            if (correctEl) button.dataset.correct = 'true';
+            else button.dataset.correct = 'false';
 
-      // Keep all visible content
-      button.innerHTML = li.innerHTML.trim();
+            // Keep all visible content
+            button.innerHTML = li.innerHTML.trim();
 
-      // Apply text color to all inner elements
-      button.querySelectorAll('*').forEach(el => el.style.color = 'var(--text-color)');
+            // Apply text color to all inner elements
+            button.querySelectorAll('*').forEach(el => el.style.color = 'var(--text-color)');
 
-      answersContainer.appendChild(button);
-    });
-    ul.remove(); // remove original list to avoid duplicates
-  }
-
-  // Handle extra elements outside the list (images, text)
-  const extrasContainer = document.createElement('div');
-  temp.childNodes.forEach(node => {
-    if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
-      const clonedNode = node.cloneNode(true);
-
-      // Remove padding, empty spans, and <br>
-      clonedNode.style.paddingTop = '0';
-      clonedNode.style.paddingBottom = '0';
-      clonedNode.querySelectorAll('span').forEach(span => {
-        if (!span.textContent.trim()) span.remove();
-      });
-      clonedNode.querySelectorAll('br').forEach(br => br.remove());
-
-      clonedNode.style.color = 'var(--text-color)';
-
-      // Remove extra space for images
-      if (clonedNode.tagName === 'IMG') {
-        clonedNode.style.marginTop = '0';
-        clonedNode.style.marginBottom = '0';
-        clonedNode.style.display = 'block';
-      }
-
-      extrasContainer.appendChild(clonedNode);
-    } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-      const span = document.createElement('span');
-      span.textContent = node.textContent.trim();
-      span.style.color = 'var(--text-color)';
-      extrasContainer.appendChild(span);
+            answersContainer.appendChild(button);
+        });
+        ul.remove(); // remove original list
     }
-  });
 
-  const wrapper = document.createElement('div');
-  wrapper.appendChild(extrasContainer);
-  wrapper.appendChild(answersContainer);
+    // Handle extra elements outside the list (images, text)
+    const extrasContainer = document.createElement('div');
+    temp.childNodes.forEach(node => {
+        if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
+            const clonedNode = node.cloneNode(true);
 
-  return wrapper.innerHTML.trim();
+            // Remove padding, empty spans, <br>
+            clonedNode.style.paddingTop = '0';
+            clonedNode.style.paddingBottom = '0';
+            clonedNode.querySelectorAll('span').forEach(span => {
+                if (!span.textContent.trim()) span.remove();
+            });
+            clonedNode.querySelectorAll('br').forEach(br => br.remove());
+
+            clonedNode.style.color = 'var(--text-color)';
+
+            // Remove extra space for images
+            if (clonedNode.tagName === 'IMG') {
+                clonedNode.style.marginTop = '0';
+                clonedNode.style.marginBottom = '0';
+                clonedNode.style.display = 'block';
+            }
+
+            extrasContainer.appendChild(clonedNode);
+        } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+            const span = document.createElement('span');
+            span.textContent = node.textContent.trim();
+            span.style.color = 'var(--text-color)';
+            extrasContainer.appendChild(span);
+        }
+    });
+
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(extrasContainer);
+    wrapper.appendChild(answersContainer);
+
+    return wrapper.innerHTML.trim();
 }
 
 
@@ -245,36 +245,40 @@ $(document).on('click', '.answer-option', function () {
     }
 
 function createTheoryCard(data) {
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = data.answer;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data.answer;
 
-  // Find the span with codes (float:left)
-  const codeSpan = tempDiv.querySelector('span[style*="float: left"]');
-  let codes = "";
-  if (codeSpan) {
-      codes = codeSpan.innerText.trim();
-      codeSpan.remove(); // Remove from main answer
-  }
+    // Extract the span with the codes at the bottom
+    const codeSpan = tempDiv.querySelector('span[style*="float: left"]');
+    let codes = "";
+    if (codeSpan) {
+        codes = codeSpan.innerText.trim();
+        codeSpan.remove(); // Remove from main answer content
+    }
 
-  const sanitizedAnswer = sanitizeAnswerHTML(tempDiv.innerHTML);
+    const sanitizedAnswer = sanitizeAnswerHTML(tempDiv.innerHTML);
 
-  const card = $(`
-    <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color);">
-      <div class="card-inner">
-        <div class="card-content">
-          <div class="card-top">
-            <div class="job-description category" style="color: var(--text-color);">${data.category}</div>
-          </div>
-          <div class="question-title" style="font-weight: bold; color: var(--text-color); padding-bottom: 10px;">${data.question}</div>
-          <div class="question-answers">${sanitizedAnswer}</div>
-          <div class="question-footer" style="text-align: left; font-size: 14px; color: #555;">${codes}</div>
+    const card = $(`
+        <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color);">
+            <div class="card-inner">
+                <div class="card-content">
+                    <div class="card-top">
+                        <div class="job-description category" style="color: var(--text-color);">${data.category}</div>
+                    </div>
+                    <div class="question-title" style="font-weight: bold; color: var(--text-color); padding-bottom: 10px;">
+                        ${data.question}
+                    </div>
+                    <div class="question-answers">${sanitizedAnswer}</div>
+                </div>
+                <div class="card-footer" style="text-align: left; font-size: 14px; color: #555; padding: 8px 10px; border-top: 1px solid #ccc;">
+                    ${codes}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  `);
-  return card;
-}
+    `);
 
+    return card;
+}
 
 
 function loadTheoryQuestions() {
