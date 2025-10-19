@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: swipeable card deck
+ * Plugin Name: swipeable card deck2
  * Description: A swipeable card deck where the top card is swipeable and the cards are displayed at an angle.
  * Version: 1.0
  * Author: Your Name
