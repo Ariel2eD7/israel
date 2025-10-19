@@ -222,7 +222,7 @@ $(document).on('click', '.answer-option', function () {
             function updateSecondCardContent() {
         const cards = $cardDeck.find('.card');
         const topCardIndex = cards.index(cards.first()); // Find the index of the top card
-        const secondCard = cards.eq(1); // The second card in the deck
+        const secondCard = cards.eq(1); // The second card in the deck 
 
         // Check if there is a second card and update its content
         if (secondCard.length) {
