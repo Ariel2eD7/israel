@@ -376,7 +376,7 @@ html, body {
   cursor: default;
 }
 
-.answer-option img {
+.answer-option img { 
   max-width: 100%;
   height: auto;
   display: block;
