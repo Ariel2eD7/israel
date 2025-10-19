@@ -335,7 +335,7 @@ html, body {
   white-space: normal;
   word-break: break-word;
   overflow-wrap: break-word;
-  padding: 12px 14px;
+  padding: 3px 3px;
   min-height: 48px;
   width: 100%;                   /* make the button full width */
   box-sizing: border-box;
