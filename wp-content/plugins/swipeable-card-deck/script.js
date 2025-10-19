@@ -30,30 +30,50 @@ function sanitizeAnswerHTML(html) {
     const temp = document.createElement('div');
     temp.innerHTML = html;
 
-    // Remove original "הצג תשובה נכונה" button if it exists
+    // Remove original button if exists
     const btn = temp.querySelector('button');
     if (btn) btn.remove();
 
-    // Remove onclick attributes
+    // Remove any inline onclick
     temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
-    // Convert each <li> to a button element
-    const lis = temp.querySelectorAll('li');
     const newContainer = document.createElement('div');
     newContainer.classList.add('answers-container');
 
+    // Keep any images or elements that appear BEFORE the list (e.g. diagrams)
+    temp.childNodes.forEach(node => {
+        if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
+            newContainer.appendChild(node.cloneNode(true));
+        }
+    });
+
+    // Convert each <li> to a button
+    const lis = temp.querySelectorAll('li');
     lis.forEach(li => {
         const button = document.createElement('button');
         button.classList.add('answer-option');
         button.innerHTML = li.innerHTML;
-        // Check if this is the correct one
+
         if (li.querySelector('[id^="correctAnswer"]')) {
             button.dataset.correct = 'true';
         } else {
             button.dataset.correct = 'false';
         }
+
         newContainer.appendChild(button);
     });
+
+    // Keep any content AFTER the list too
+    const ul = temp.querySelector('ul');
+    if (ul) {
+        let sibling = ul.nextSibling;
+        while (sibling) {
+            if (sibling.nodeType === Node.ELEMENT_NODE) {
+                newContainer.appendChild(sibling.cloneNode(true));
+            }
+            sibling = sibling.nextSibling;
+        }
+    }
 
     return newContainer.outerHTML.trim();
 }

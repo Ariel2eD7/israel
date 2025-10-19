@@ -8,6 +8,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .main-content {
@@ -21,13 +22,11 @@ footer {
 .card-deck {
     position: relative;
     width: 300px;
-    margin: 100px auto 0;  /* 👈 Top margin creates the gap from the top of screen */
-
+    margin: 100px auto 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    height: calc(660px);  /* 👈 Make room for top margin */
+    height: 660px;
     box-sizing: border-box;
 }
 
@@ -37,62 +36,83 @@ footer {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%; /* 👈 Use full height of .card-deck */
-
+    height: 100%;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transform-origin: center center;
     transition: transform 0.2s ease, opacity 0.2s ease;
-    overflow: hidden;
-
+    overflow: auto;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     font-size: 16px;
     color: #333;
     z-index: 10;
     border: 1px solid black;
-
     will-change: transform;
-    transform: translateZ(0);  /* Triggers GPU acceleration */
+    transform: translateZ(0);
 }
 
-
-
-.applyModal {
-    will-change: transform, opacity;
-}
-table.widefat th, table.widefat td {
+.card-inner {
+    padding: 20px;
     text-align: center;
-    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
 }
 
-.card:nth-child(1) { transform: rotate(0deg); }
-.card:nth-child(2) { transform: rotate(-5deg); }
-.card:nth-child(3) { transform: rotate(5deg); }
-.card:nth-child(4) { transform: rotate(-5deg); }
-.card:nth-child(5) { transform: rotate(5deg); }
-
-/* Prevent excessive rotation */
-.card:nth-child(n+6) {
-    transform: rotate(5deg); /* Maximum rotation for all cards after the fifth one */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    gap: 12px;
+    direction: rtl;
+    text-align: right;
 }
 
-.card-inner { padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
-.card-content { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
+.card-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+}
 
 .card-top {
-    content: ''; display: block; width: 100%; height: 40px; background-color: #007BFF; position: absolute; top: 0; left: 0;
+    content: '';
+    display: block;
+    width: 100%;
+    height: 40px;
+    background-color: #007BFF;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
+
 .job-position { font-size: 16px; font-weight: bold; color: #333; margin-top: 10px; }
 .job-date { font-size: 14px; color: #555; margin-top: 45px; position: absolute; top: 0; left: 65%; }
 
 .job-description { font-size: 14px; color: #777; margin-top: 15px; margin-bottom: 20px; }
 
 .uncover-phone {
-    background-color: #007BFF; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 5px;
-    cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; position: absolute; bottom: 10px; left: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 .uncover-phone:hover { background-color: #0056b3; }
 .phone-number { display: none; font-size: 16px; font-weight: bold; color: white; }
@@ -102,19 +122,66 @@ table.widefat th, table.widefat td {
 
 .swipe-instruction { text-align: center; margin-top: 20px; font-size: 18px; color: #666; }
 .card-deck .card:hover { cursor: pointer; }
-.card:nth-child(1) { z-index: 15; }
+
+.card:nth-child(1) { transform: rotate(0deg); z-index: 15; }
+.card:nth-child(2) { transform: rotate(-5deg); }
+.card:nth-child(3) { transform: rotate(5deg); }
+.card:nth-child(4) { transform: rotate(-5deg); }
+.card:nth-child(5) { transform: rotate(5deg); }
+.card:nth-child(n+6) { transform: rotate(5deg); }
 
 #applyModal {
-    display: none; position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%);
-    width: 300px; height: 400px; background-color: #fff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); border-radius: 10px;
-    z-index: 1000; padding: 20px; box-sizing: border-box; overflow: hidden; border: 1px solid black;
+    display: none;
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 400px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid black;
 }
 
-.modal-header h3 { margin-top: 0; font-size: 22px; font-weight: 600; color: #333; }
-.modal-content { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.modal-header h3 {
+    margin-top: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+}
 
-input[type="file"], textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
-#applyButton { background-color: #007BFF; color: white; padding: 12px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-bottom: 20px; margin-top: 20px;}
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+input[type="file"], textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#applyButton {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
 #applyButton:hover { background-color: #0056b3; }
 
 @keyframes fadeIn {
@@ -122,74 +189,54 @@ input[type="file"], textarea { width: 100%; padding: 12px; margin: 10px 0; borde
     to { opacity: 1; transform: translate(-50%, -50%); }
 }
 #applyModal { animation: fadeIn 0.3s ease-out; }
-/* Circular swipe indicator */
-/* Circular swipe indicator */
 
-
-/* Circular swipe indicator */
 .swipe-indicator {
     position: fixed;
     top: 45%;
     left: 50%;
-    width: 150px; /* Double the original width */
-    height: 150px; /* Double the original height */
-    background-color: rgba(173, 216, 230, 0.5);  /* Light blue with 50% transparency */
-    border-radius: 50%;  /* Ensure it stays circular */
-    border: 2px solid #000;  /* Black border */
-    transform: translate(-50%, -50%);  /* Center the circle on the screen */
-    font-size: 15px;  /* Larger text size */
-    display: none;  /* Initially hidden */
+    width: 150px;
+    height: 150px;
+    background-color: rgba(173, 216, 230, 0.5);
+    border-radius: 50%;
+    border: 2px solid #000;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    display: none;
     text-align: center;
-    line-height: 150px;  /* Center text vertically within the circle */
-    z-index: 1000;  /* Ensure it appears above other elements */
+    line-height: 150px;
+    z-index: 1000;
     box-sizing: border-box;
-    color: black;  /* Black text */
-    padding: 0;  /* No padding, use line-height to center text */
+    color: black;
+    padding: 0;
 }
-/* Prevent horizontal scrolling on the body when swiping */
-body {
-    overflow-x: hidden;
-}
+
 /* Prevent horizontal scroll on mobile */
 html, body {
-    height: 100%;
   width: 100%;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
 
-/* Make sure no elements overflow */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-/* Plugin container class to ensure it fits within screen */
 .plugin-container {
   max-width: 100%;
   overflow-x: hidden;
 }
 
-/* Optional: For images and media inside the plugin */
 .plugin-container img, .plugin-container video {
   max-width: 100%;
   height: auto;
 }
-/* Apply smooth transitions to the card */
+
 .swipe-card {
-    transition: transform 0.3s ease-out;  /* Smooth transition when swiping */
-    will-change: transform;  /* Hint the browser to optimize for transforms */
+    transition: transform 0.3s ease-out;
+    will-change: transform;
 }
-
-/* Additional styles (if needed) */
 .swipe-card.swiped {
-    transform: translateX(100%);  /* Example of translating the card on swipe */
+    transform: translateX(100%);
 }
-
-
-
-
-
 
 .post-job-link {
     display: inline-block;
@@ -205,10 +252,6 @@ html, body {
     background-color: #0056b3;
 }
 
-
-
-
-
 .scd-job-form {
     max-width: 500px;
     margin: 40px auto;
@@ -219,9 +262,7 @@ html, body {
     direction: rtl;
 }
 
-.scd-job-form .form-group {
-    margin-bottom: 20px;
-}
+.scd-job-form .form-group { margin-bottom: 20px; }
 
 .scd-job-form label {
     display: block;
@@ -251,21 +292,15 @@ html, body {
     width: 100%;
     font-weight: bold;
 }
-
 .scd-job-form .submit-button:hover {
     background-color: #2e4a8b;
 }
+
 @media (max-width: 600px) {
-    .scd-job-form {
-        padding: 20px;
-    }
-
+    .scd-job-form { padding: 20px; }
     .scd-job-form input,
-    .scd-job-form .submit-button {
-        font-size: 14px;
-    }
+    .scd-job-form .submit-button { font-size: 14px; }
 }
-
 
 /* Hide site footer only on page ID 1658 */
 .page-id-1658 footer,
@@ -275,7 +310,7 @@ html, body {
     display: none !important;
 }
 
-
+/* ✅ Answer buttons */
 .answers-container {
   display: flex;
   flex-direction: column;
@@ -285,16 +320,17 @@ html, body {
 .answer-option {
   padding: 10px;
   text-align: right;
-  background: var(--button-bg-color);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
+  direction: rtl;
 }
 
 .answer-option:hover:not(:disabled) {
-  background: rgba(255,255,255,0.1);
+  background: #eaeaea;
 }
 
 .answer-option.correct-answer {
