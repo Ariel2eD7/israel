@@ -198,8 +198,8 @@ input[type="file"], textarea {
 
 .swipe-indicator {
     position: fixed;
-    top: 45%;
-    left: 50%;
+    top: 50%;
+    left: 50%; /* center horizontally; adjust in JS for left/right swipe */
     width: 150px;
     height: 150px;
     background-color: rgba(173, 216, 230, 0.5);
@@ -209,12 +209,13 @@ input[type="file"], textarea {
     font-size: 15px;
     display: none;
     text-align: center;
-    line-height: 150px;
+    line-height: 150px; /* vertical text centering */
     z-index: 1000;
     box-sizing: border-box;
     color: black;
     padding: 0;
 }
+
 
 /* Prevent horizontal scroll on mobile */
 html, body {
