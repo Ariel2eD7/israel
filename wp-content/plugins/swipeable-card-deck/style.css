@@ -29,6 +29,9 @@ footer {
     height: 680px;
     box-sizing: border-box;
 }
+.swipe-instruction {
+  display: none; /* hides it visually, but keeps DOM structure */
+}
 
 .card {
     user-select: none;
