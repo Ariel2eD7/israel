@@ -30,7 +30,7 @@ function sanitizeAnswerHTML(html) {
   const temp = document.createElement('div');
   temp.innerHTML = html;
 
-  // Remove original buttons and onclicks
+  // Remove any original buttons and onclicks
   temp.querySelectorAll('button').forEach(el => el.remove());
   temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
@@ -44,32 +44,23 @@ function sanitizeAnswerHTML(html) {
       const button = document.createElement('button');
       button.classList.add('answer-option');
 
-      // Clone LI content but remove only the correctAnswer marker element
-      const clonedLi = li.cloneNode(true);
-      clonedLi.querySelectorAll('[id^="correctAnswer"]').forEach(el => el.remove());
+      // Check if this LI contains the correct answer marker
+      const correctEl = li.querySelector('[id^="correctAnswer"]');
+      if (correctEl) button.dataset.correct = 'true';
+      else button.dataset.correct = 'false';
 
-      // Use the remaining content as button innerHTML
-      let content = clonedLi.innerHTML.trim();
-
-      button.innerHTML = content;
+      // Keep **all visible content**, including marker text if any
+      button.innerHTML = li.innerHTML.trim();
 
       // Apply text color to all inner elements
       button.querySelectorAll('*').forEach(el => el.style.color = 'var(--text-color)');
 
-      // Mark correct/incorrect
-      if (li.querySelector('[id^="correctAnswer"]')) {
-        button.dataset.correct = 'true';
-      } else {
-        button.dataset.correct = 'false';
-      }
-
       answersContainer.appendChild(button);
     });
-
     ul.remove(); // remove original list to avoid duplicates
   }
 
-  // Handle extra elements (images or leftover text) outside the list
+  // Handle extra elements outside the list (images, text)
   const extrasContainer = document.createElement('div');
   temp.childNodes.forEach(node => {
     if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
