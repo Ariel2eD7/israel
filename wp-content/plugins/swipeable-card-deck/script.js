@@ -126,19 +126,22 @@ const db = firebase.firestore();
 
 
 function startDrag(e) {
-    if (isSwiping || isModalOpen) return;
     const card = $(this);
 
-    // Track start positions
+    // If user tapped a button or link, skip drag entirely
+    if ($(e.target).closest('button, .show-answer-btn, a').length > 0) return;
+
+    if (isSwiping || isModalOpen) return;
+    isSwiping = true;
+
     const startX = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
     const startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
     const startTime = Date.now();
-    let moved = false; // Track if user has moved enough to consider it a swipe
+    let moved = false;
 
-    // Prevent text selection
-    e.preventDefault();
+    // Prevent horizontal scroll but allow button clicks
+    if (e.type === 'touchstart') e.preventDefault();
 
-    // Create swipe indicator
     $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
 
     function onMove(e) {
@@ -147,7 +150,7 @@ function startDrag(e) {
         const offsetX = currentX - startX;
         const offsetY = currentY - startY;
 
-        // If the user moved more than 5px horizontally, consider it a swipe
+        // Only consider it a swipe if moved > 5px horizontally
         if (Math.abs(offsetX) > 5) moved = true;
 
         card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
@@ -158,7 +161,7 @@ function startDrag(e) {
         $swipeIndicator.show();
     }
 
-    function onEnd(e) {
+    function onEnd() {
         $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
         $swipeIndicator.fadeOut(200, function () { $(this).remove(); });
         $('body').css('overflow-x', 'auto');
@@ -168,8 +171,8 @@ function startDrag(e) {
         const threshold = 25;
         const fastSwipeThreshold = 0.5;
 
+        // Only perform swipe if the user actually moved horizontally
         if (moved) {
-            // Only trigger swipe if user actually moved
             if (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold) {
                 if (offsetX < 0 && !isModalOpen) {
                     setTimeout(() => openModal(card), 50);
