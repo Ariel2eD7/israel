@@ -27,7 +27,18 @@ $(document).on('click', '.show-answer-btn', function() {
 
 
 function sanitizeAnswerHTML(html) {
-    return html.replace(/onclick="[^"]*"/g, '');
+    // Create a temporary element to safely manipulate HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    // Remove the original "הצג תשובה נכונה" button from Firebase
+    const btn = temp.querySelector('button');
+    if (btn) btn.remove();
+
+    // Also remove inline onclick attributes if any remain
+    temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
+
+    return temp.innerHTML.trim();
 }
 
 
