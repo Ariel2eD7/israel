@@ -26,7 +26,7 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 670px;
+    height: 660px;
     box-sizing: border-box;
 }
 .swipe-instruction {
