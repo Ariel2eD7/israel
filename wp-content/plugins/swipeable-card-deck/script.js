@@ -27,55 +27,52 @@ $(document).on('click', '.show-answer-btn', function() {
 
 
 function sanitizeAnswerHTML(html) {
-    const temp = document.createElement('div');
-    temp.innerHTML = html;
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
 
-    // Remove original button if exists
-    const btn = temp.querySelector('button');
-    if (btn) btn.remove();
+  // remove inline onclicks and original buttons
+  temp.querySelectorAll('button').forEach(el => el.remove());
+  temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
-    // Remove any inline onclick
-    temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
+  const answersContainer = document.createElement('div');
+  answersContainer.classList.add('answers-container');
 
-    const newContainer = document.createElement('div');
-    newContainer.classList.add('answers-container');
+  // Extract the UL (the list of answers)
+  const ul = temp.querySelector('ul');
+  if (ul) {
+    ul.querySelectorAll('li').forEach(li => {
+      const button = document.createElement('button');
+      button.classList.add('answer-option');
 
-    // Keep any images or elements that appear BEFORE the list (e.g. diagrams)
-    temp.childNodes.forEach(node => {
-        if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
-            newContainer.appendChild(node.cloneNode(true));
-        }
+      // put the entire LI content inside the button
+      button.innerHTML = li.innerHTML.trim();
+
+      // check if it contains the correct answer marker
+      if (li.querySelector('[id^="correctAnswer"]')) {
+        button.dataset.correct = 'true';
+      } else {
+        button.dataset.correct = 'false';
+      }
+
+      answersContainer.appendChild(button);
     });
+    ul.remove(); // remove original list to avoid duplicates
+  }
 
-    // Convert each <li> to a button
-    const lis = temp.querySelectorAll('li');
-    lis.forEach(li => {
-        const button = document.createElement('button');
-        button.classList.add('answer-option');
-        button.innerHTML = li.innerHTML;
-
-        if (li.querySelector('[id^="correctAnswer"]')) {
-            button.dataset.correct = 'true';
-        } else {
-            button.dataset.correct = 'false';
-        }
-
-        newContainer.appendChild(button);
-    });
-
-    // Keep any content AFTER the list too
-    const ul = temp.querySelector('ul');
-    if (ul) {
-        let sibling = ul.nextSibling;
-        while (sibling) {
-            if (sibling.nodeType === Node.ELEMENT_NODE) {
-                newContainer.appendChild(sibling.cloneNode(true));
-            }
-            sibling = sibling.nextSibling;
-        }
+  // Keep remaining elements outside the list only ONCE
+  const extrasContainer = document.createElement('div');
+  temp.childNodes.forEach(node => {
+    if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
+      extrasContainer.appendChild(node.cloneNode(true));
     }
+  });
 
-    return newContainer.outerHTML.trim();
+  // final structure: extras (e.g., image or footer), then answers
+  const wrapper = document.createElement('div');
+  wrapper.appendChild(extrasContainer);
+  wrapper.appendChild(answersContainer);
+
+  return wrapper.innerHTML.trim();
 }
 
 
