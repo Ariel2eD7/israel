@@ -326,45 +326,53 @@ html, body {
 }
 
 
+/* ✅ Answer buttons modern look */
 .answer-option {
-  display: flex;                 /* let content expand horizontally */
-  justify-content: flex-start;   /* align content nicely */
-  align-items: center;           /* center vertically if single line */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   text-align: right;
-  direction: rtl;                /* support Hebrew properly */
+  direction: rtl;
   white-space: normal;
   word-break: break-word;
   overflow-wrap: break-word;
-  padding: 3px 3px;
+  padding: 10px 12px;
   min-height: 48px;
-  width: 100%;                   /* make the button full width */
+  width: 100%;
   box-sizing: border-box;
   border: 1px solid var(--text-color);
-  border-radius: 6px;
-  background: var(--button-bg-color);
+  border-radius: 8px;
+  background: var(--button-bg-color, #f5f5f5);
   cursor: pointer;
-  transition: background 0.3s;
-  color: var(--text-color);      /* ✅ Text color set here */
+  transition: all 0.3s ease;
+  color: var(--text-color, #333);
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-
-
 
 .answer-option:hover:not(:disabled) {
-  background: #eaeaea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: #e0e0e0;
 }
 
+/* Modern green/red for answers */
 .answer-option.correct-answer {
-  background: #4caf50;
+  background: linear-gradient(135deg, #43e97b, #38f9d7); /* lively green gradient */
   color: #fff;
+  border-color: #2ecc71;
+  box-shadow: 0 4px 10px rgba(0, 200, 100, 0.3);
 }
 
 .answer-option.wrong-answer {
-  background: #f44336;
+  background: linear-gradient(135deg, #f85032, #e73827); /* vivid red gradient */
   color: #fff;
+  border-color: #e74c3c;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
 }
 
 .answer-option:disabled {
-  opacity: 0.7;
+  opacity: 0.8;
   cursor: default;
 }
 
@@ -382,6 +390,7 @@ html, body {
 }
 
 .answer-option * {
-  float: none !important; /* 🧼 clean floats from Firebase HTML */
+  float: none !important;
   max-width: 100%;
 }
+
