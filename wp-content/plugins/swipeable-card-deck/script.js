@@ -191,7 +191,7 @@ function createTheoryCard(data) {
       <div class="card-inner">
         <div class="card-content">
           <div class="card-top"></div>
-          <div class="job-position question-title">${data.question}</div>
+          <div class="job-position question-title" style="color: var(--text-color);">${data.question}</div>
           <div class="job-description category">${data.category}</div>
           <div class="question-answer">${sanitizedAnswer}</div>
           <button class="show-answer-btn">Show Answer</button> <!-- Add this -->
