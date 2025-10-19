@@ -146,7 +146,7 @@ function startDrag(e) {
         const offsetX = currentX - startX;
         const offsetY = currentY - startY;
 
-        if (Math.abs(offsetX) > 5) moved = true; // Start swipe after small movement
+        if (Math.abs(offsetX) > 5 || Math.abs(offsetY) > 5) moved = true;
 
         if (moved) {
             card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
@@ -178,9 +178,13 @@ function startDrag(e) {
                 });
             }
         } else if (!moved) {
-            // If no swipe, let click events fire normally (buttons will work)
+            // If no swipe, trigger a click manually on the element under pointer
+            let target;
+            if (e.type === 'mouseup') target = document.elementFromPoint(e.clientX, e.clientY);
+            else target = document.elementFromPoint(e.originalEvent.changedTouches[0].clientX, e.originalEvent.changedTouches[0].clientY);
+            
+            if (target) $(target).trigger('click');
         } else {
-            // Swipe too short → reset
             card.css('transform', 'translate(0,0) rotate(0)');
         }
 
