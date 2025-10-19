@@ -67,9 +67,15 @@ function sanitizeAnswerHTML(html) {
       const clonedNode = node.cloneNode(true);
       clonedNode.style.color = 'var(--text-color)';
 
-      // Remove extra padding/margin at the top
-      clonedNode.style.marginTop = '0';
-      clonedNode.style.paddingTop = '0';
+      // Remove extra space above and below images
+      if (clonedNode.tagName === 'IMG') {
+        clonedNode.style.marginTop = '0';
+        clonedNode.style.marginBottom = '0';
+        clonedNode.style.display = 'block';
+      } else {
+        clonedNode.style.marginTop = '0';
+        clonedNode.style.paddingTop = '0';
+      }
 
       extrasContainer.appendChild(clonedNode);
     } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
