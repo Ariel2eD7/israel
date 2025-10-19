@@ -127,18 +127,18 @@ const db = firebase.firestore();
 
 function startDrag(e) {
     if (isSwiping || isModalOpen) return;
-    isSwiping = true;
-
     const card = $(this);
+
+    // Track start positions
     const startX = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
     const startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
     const startTime = Date.now();
+    let moved = false; // Track if user has moved enough to consider it a swipe
 
-    // Prevent text selection and horizontal scrolling
+    // Prevent text selection
     e.preventDefault();
-    $('body').css('overflow-x', 'hidden');
 
-    // Create circular swipe indicator
+    // Create swipe indicator
     $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
 
     function onMove(e) {
@@ -146,6 +146,9 @@ function startDrag(e) {
         const currentY = e.type === 'mousemove' ? e.pageY : e.originalEvent.touches[0].pageY;
         const offsetX = currentX - startX;
         const offsetY = currentY - startY;
+
+        // If the user moved more than 5px horizontally, consider it a swipe
+        if (Math.abs(offsetX) > 5) moved = true;
 
         card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
 
@@ -155,35 +158,34 @@ function startDrag(e) {
         $swipeIndicator.show();
     }
 
-    function onEnd() {
+    function onEnd(e) {
         $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
+        $swipeIndicator.fadeOut(200, function () { $(this).remove(); });
+        $('body').css('overflow-x', 'auto');
 
         const offsetX = card.position().left;
         const swipeSpeed = Math.abs(offsetX) / (Date.now() - startTime);
         const threshold = 25;
         const fastSwipeThreshold = 0.5;
 
-        if (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold) {
-            if (offsetX < 0 && !isModalOpen) {
-                setTimeout(() => openModal(card), 50);
-            } else if (offsetX > 0) {
-                card.fadeOut(300, function () {
-                    card.remove();
-                    phoneButtonClickCount = {};
-                    resetCards();
-
-                    if ($cardDeck.find('.card').length < 3) loadTheoryQuestions();
-                });
+        if (moved) {
+            // Only trigger swipe if user actually moved
+            if (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold) {
+                if (offsetX < 0 && !isModalOpen) {
+                    setTimeout(() => openModal(card), 50);
+                } else if (offsetX > 0) {
+                    card.fadeOut(300, function () {
+                        card.remove();
+                        phoneButtonClickCount = {};
+                        resetCards();
+                        if ($cardDeck.find('.card').length < 3) loadTheoryQuestions();
+                    });
+                }
+            } else {
+                card.css('transform', 'translate(0,0) rotate(0)');
             }
-        } else {
-            card.css('transform', 'translate(0,0) rotate(0)');
         }
 
-        $swipeIndicator.fadeOut(200, function () {
-            $(this).remove();
-        });
-
-        $('body').css('overflow-x', 'auto');
         isSwiping = false;
     }
 
