@@ -44,18 +44,17 @@ function sanitizeAnswerHTML(html) {
       const button = document.createElement('button');
       button.classList.add('answer-option');
 
-      // Extract only visible content (ignore hidden elements like correctAnswer marker)
+      // Clone LI content first
       const clonedLi = li.cloneNode(true);
+
+      // Remove hidden correct answer markers inside cloned LI
       clonedLi.querySelectorAll('[id^="correctAnswer"]').forEach(el => el.remove());
 
-      // Trim text content; if empty, skip creating this button
-      const textContent = clonedLi.textContent.trim();
-      if (!textContent && clonedLi.querySelectorAll('img').length === 0) {
-        return; // skip this li
-      }
+      // Use innerHTML even if text is empty (preserves images)
+      button.innerHTML = clonedLi.innerHTML.trim() || '&nbsp;';
 
-      // Use innerHTML if there’s anything visible (text or image)
-      button.innerHTML = clonedLi.innerHTML.trim();
+      // Ensure text inside button has proper color
+      button.querySelectorAll('*').forEach(el => el.style.color = 'var(--text-color)');
 
       // Mark correct/incorrect
       if (li.querySelector('[id^="correctAnswer"]')) {
