@@ -56,7 +56,7 @@ footer {
 }
 
 .card-inner {
-    padding: 60px 10px 10px; /* 👈 push content below .card-top */
+    padding: 20px 10px 10px; /* 👈 push content below .card-top */
     text-align: center;
     display: flex;
     flex-direction: column;
