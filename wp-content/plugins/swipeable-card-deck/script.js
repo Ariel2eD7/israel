@@ -150,7 +150,7 @@ function startDrag(e) {
 
         if (moved) {
             card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
-            $swipeIndicator.text(offsetX > 0 ? 'למשרה הבאה' : 'להגשת מועמדות').show();
+            $swipeIndicator.text(offsetX > 0 ? 'לשאלה הבאה' : 'להגשת מועמדות').show();
         }
     }
 
