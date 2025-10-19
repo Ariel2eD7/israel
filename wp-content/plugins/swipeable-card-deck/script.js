@@ -127,10 +127,6 @@ const db = firebase.firestore();
 
 function startDrag(e) {
     const card = $(this);
-
-    // If user tapped a button or link, skip drag entirely
-    if ($(e.target).closest('button, .show-answer-btn, a').length > 0) return;
-
     if (isSwiping || isModalOpen) return;
     isSwiping = true;
 
@@ -139,7 +135,6 @@ function startDrag(e) {
     const startTime = Date.now();
     let moved = false;
 
-    // Prevent horizontal scroll but allow button clicks
     if (e.type === 'touchstart') e.preventDefault();
 
     $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
@@ -150,18 +145,15 @@ function startDrag(e) {
         const offsetX = currentX - startX;
         const offsetY = currentY - startY;
 
-        // Only consider it a swipe if moved > 5px horizontally
-        if (Math.abs(offsetX) > 5) moved = true;
+        if (Math.abs(offsetX) > 5) moved = true; // only consider as swipe if moved enough
 
         card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
 
-        if (offsetX > 0) $swipeIndicator.text('למשרה הבאה');
-        else $swipeIndicator.text('להגשת מועמדות');
-
+        $swipeIndicator.text(offsetX > 0 ? 'למשרה הבאה' : 'להגשת מועמדות');
         $swipeIndicator.show();
     }
 
-    function onEnd() {
+    function onEnd(e) {
         $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
         $swipeIndicator.fadeOut(200, function () { $(this).remove(); });
         $('body').css('overflow-x', 'auto');
@@ -171,8 +163,7 @@ function startDrag(e) {
         const threshold = 25;
         const fastSwipeThreshold = 0.5;
 
-        // Only perform swipe if the user actually moved horizontally
-        if (moved) {
+        if (moved) { // only perform swipe if actual movement
             if (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold) {
                 if (offsetX < 0 && !isModalOpen) {
                     setTimeout(() => openModal(card), 50);
