@@ -126,8 +126,14 @@ const db = firebase.firestore();
 
 
 function startDrag(e) {
+    const $target = $(e.target);
+
+    // If user tapped a button or link, do NOT start swipe
+    if ($target.closest('button, .show-answer-btn, a').length) return;
+
     const card = $(this);
     if (isSwiping || isModalOpen) return;
+
     isSwiping = true;
 
     const startX = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
@@ -145,15 +151,14 @@ function startDrag(e) {
         const offsetX = currentX - startX;
         const offsetY = currentY - startY;
 
-        if (Math.abs(offsetX) > 5) moved = true; // small threshold to detect actual swipe
+        if (Math.abs(offsetX) > 5) moved = true; // only trigger swipe after 5px horizontal movement
 
         card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
-
         $swipeIndicator.text(offsetX > 0 ? 'למשרה הבאה' : 'להגשת מועמדות');
         $swipeIndicator.show();
     }
 
-    function onEnd(e) {
+    function onEnd() {
         $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
         $swipeIndicator.fadeOut(200, function () { $(this).remove(); });
         $('body').css('overflow-x', 'auto');
@@ -163,8 +168,7 @@ function startDrag(e) {
         const threshold = 25;
         const fastSwipeThreshold = 0.5;
 
-        if (moved) {
-            // Only perform swipe if user actually moved
+        if (moved) { // Only perform swipe if user actually dragged
             if (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold) {
                 if (offsetX < 0 && !isModalOpen) {
                     setTimeout(() => openModal(card), 50);
