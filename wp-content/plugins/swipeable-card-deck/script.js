@@ -27,18 +27,35 @@ $(document).on('click', '.show-answer-btn', function() {
 
 
 function sanitizeAnswerHTML(html) {
-    // Create a temporary element to safely manipulate HTML
     const temp = document.createElement('div');
     temp.innerHTML = html;
 
-    // Remove the original "הצג תשובה נכונה" button from Firebase
+    // Remove original "הצג תשובה נכונה" button if it exists
     const btn = temp.querySelector('button');
     if (btn) btn.remove();
 
-    // Also remove inline onclick attributes if any remain
+    // Remove onclick attributes
     temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
-    return temp.innerHTML.trim();
+    // Convert each <li> to a button element
+    const lis = temp.querySelectorAll('li');
+    const newContainer = document.createElement('div');
+    newContainer.classList.add('answers-container');
+
+    lis.forEach(li => {
+        const button = document.createElement('button');
+        button.classList.add('answer-option');
+        button.innerHTML = li.innerHTML;
+        // Check if this is the correct one
+        if (li.querySelector('[id^="correctAnswer"]')) {
+            button.dataset.correct = 'true';
+        } else {
+            button.dataset.correct = 'false';
+        }
+        newContainer.appendChild(button);
+    });
+
+    return newContainer.outerHTML.trim();
 }
 
 
@@ -170,6 +187,25 @@ function startDrag(e) {
     
         $(document).on('mousemove touchmove', onMove).on('mouseup touchend', onEnd);
     }
+
+    // Handle answer button clicks
+$(document).on('click', '.answer-option', function () {
+    const $btn = $(this);
+    const isCorrect = $btn.data('correct') === true || $btn.data('correct') === 'true';
+    const $all = $btn.closest('.answers-container').find('.answer-option');
+
+    // Disable all after first click
+    $all.prop('disabled', true);
+
+    if (isCorrect) {
+        $btn.addClass('correct-answer');
+    } else {
+        $btn.addClass('wrong-answer');
+        // highlight the correct one too
+        $all.filter('[data-correct="true"]').addClass('correct-answer');
+    }
+});
+
             function updateSecondCardContent() {
         const cards = $cardDeck.find('.card');
         const topCardIndex = cards.index(cards.first()); // Find the index of the top card
@@ -200,14 +236,12 @@ function createTheoryCard(data) {
   const card = $(`
     <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color);">
       <div class="card-inner">
-        <div class="card-content" >
+        <div class="card-content">
           <div class="card-top">
-          <div class="job-description category" style="vertical-align: middle; color: var(--text-color);">${data.category}</div>
+            <div class="job-description category" style="color: var(--text-color);">${data.category}</div>
           </div>
-          <div class="job-position question-title" style="color: var(--text-color); padding-bottom: 15px;">${data.question}</div>
-          
-          <div class="question-answer" style="color: var(--text-color);">${sanitizedAnswer}</div>
-          <button class="show-answer-btn" style="border-color: white; background-color: var(--button-bg-color) !important; color: var(--text-color);">Show Answer</button> <!-- Add this -->
+          <div class="question-title" style="color: var(--text-color); padding-bottom: 10px;">${data.question}</div>
+          <div class="question-answers">${sanitizedAnswer}</div>
         </div>
       </div>
     </div>
