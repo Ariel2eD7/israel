@@ -102,7 +102,7 @@ footer {
 .job-position { font-size: 16px; font-weight: bold; color: #333; margin-top: 10px; }
 .job-date { font-size: 14px; color: #555; margin-top: 45px; position: absolute; top: 0; left: 65%; }
 
-.job-description { font-size: 14px; color: #777; margin-top: 0px; margin-bottom: 20px; }
+.job-description {     text-align: center; font-size: 14px; color: #777; margin-top: 0px; margin-bottom: 20px;  }
 
 .uncover-phone {
     background-color: #007BFF;
