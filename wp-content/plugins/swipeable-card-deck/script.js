@@ -187,7 +187,7 @@ function startDrag(e) {
 function createTheoryCard(data) {
   const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
   const card = $(`
-    <div class="card swipe-card" style="background-color: var(--bg-color); border-color: white;">
+    <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color);">
       <div class="card-inner">
         <div class="card-content" >
           <div class="card-top">
