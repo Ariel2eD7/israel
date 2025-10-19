@@ -19,7 +19,7 @@ function scd_enqueue_scripts() {
     // ✅ Your main script (must come AFTER Firebase scripts)
     wp_enqueue_script('scd-swipe', plugin_dir_url(__FILE__) . 'script.js', ['jquery', 'firebase-app', 'firebase-firestore'], null, true);
 
-    // Localize script (optional for AJAX)
+    // Localize script (optional for AJAX) 
     wp_localize_script('scd-swipe', 'scd_ajax', array(
         'ajax_url' => admin_url('admin-ajax.php')
     ));
