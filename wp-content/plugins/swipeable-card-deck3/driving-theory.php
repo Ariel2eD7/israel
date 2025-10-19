@@ -7,7 +7,7 @@
  * License: GPL2
  */
 
-// Enqueue necessary styles and scripts
+// Enqueue necessary styles and scripts 
 function scd_enqueue_scripts() {
     wp_enqueue_style('scd-style', plugin_dir_url(__FILE__) . 'style.css');
     wp_enqueue_script('jquery');
