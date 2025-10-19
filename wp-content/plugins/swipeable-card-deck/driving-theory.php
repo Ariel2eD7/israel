@@ -5,7 +5,7 @@
  * Version: 1.0
  * Author: Your Name
  * License: GPL2 
- */
+ */ 
 
 // Enqueue necessary styles and scripts 
 function scd_enqueue_scripts() {
