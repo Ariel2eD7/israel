@@ -259,9 +259,9 @@ function createTheoryCard(data) {
     const sanitizedAnswer = sanitizeAnswerHTML(tempDiv.innerHTML);
 
     const card = $(`
-        <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color);">
-            <div class="card-inner">
-                <div class="card-content">
+        <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color); display: flex; flex-direction: column;">
+            <div class="card-inner" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="card-content" style="flex: 1; overflow-y: auto;">
                     <div class="card-top">
                         <div class="job-description category" style="color: var(--text-color);">${data.category}</div>
                     </div>
@@ -270,7 +270,7 @@ function createTheoryCard(data) {
                     </div>
                     <div class="question-answers">${sanitizedAnswer}</div>
                 </div>
-                <div class="card-footer" style="text-align: left; font-size: 14px; color: #555; padding: 8px 10px; border-top: 1px solid #ccc;">
+                <div class="card-footer" style="text-align: left; font-size: 14px; color: #555; padding: 8px 10px; border-top: 1px solid #ccc; flex-shrink: 0;">
                     ${codes}
                 </div>
             </div>
