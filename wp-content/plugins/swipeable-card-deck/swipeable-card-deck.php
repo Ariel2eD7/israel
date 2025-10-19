@@ -67,8 +67,6 @@ function scd_display_card_deck() {
               </div>";
     }
 
-    echo '</div><div class="swipe-instruction">Swipe the top card!</div>';
-
     // Modal HTML for job applications
     echo '<div id="applyModal">
             <div class="modal-header"><h3>הגש מועמדות</h3></div>
