@@ -34,11 +34,6 @@ function sanitizeAnswerHTML(html) {
   temp.querySelectorAll('button').forEach(el => el.remove());
   temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
-  // Remove the unwanted span with «C1» | «C» | … 
-  temp.querySelectorAll('span').forEach(span => {
-    if (span.textContent.includes('«')) span.remove();
-  });
-
   const answersContainer = document.createElement('div');
   answersContainer.classList.add('answers-container');
 
@@ -54,7 +49,7 @@ function sanitizeAnswerHTML(html) {
       if (correctEl) button.dataset.correct = 'true';
       else button.dataset.correct = 'false';
 
-      // Keep **all visible content**, including marker text if any
+      // Keep all visible content
       button.innerHTML = li.innerHTML.trim();
 
       // Apply text color to all inner elements
@@ -71,6 +66,11 @@ function sanitizeAnswerHTML(html) {
     if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
       const clonedNode = node.cloneNode(true);
       clonedNode.style.color = 'var(--text-color)';
+
+      // Remove extra padding/margin at the top
+      clonedNode.style.marginTop = '0';
+      clonedNode.style.paddingTop = '0';
+
       extrasContainer.appendChild(clonedNode);
     } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
       const span = document.createElement('span');
