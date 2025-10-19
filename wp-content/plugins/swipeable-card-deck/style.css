@@ -311,27 +311,46 @@ html, body {
 }
 
 /* ✅ Answer buttons */
+
 .answer-option img {
   max-width: 100%;
   height: auto;
   display: inline-block;
+  margin-top: 6px;
 }
+
+.answer-option span,
+.answer-option div {
+  display: inline;
+  line-height: 1.4;
+}
+
 
 .answers-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 10px;
+  width: 100%;
 }
+
 .answer-option {
-  display: block;
+  display: flex;                 /* let content expand horizontally */
+  justify-content: flex-start;   /* align content nicely */
+  align-items: center;           /* center vertically if single line */
   text-align: right;
+  direction: rtl;                /* support Hebrew properly */
   white-space: normal;
   word-break: break-word;
-  padding: 10px;
+  overflow-wrap: break-word;
+  padding: 12px 14px;
+  min-height: 48px;
+  width: 100%;                   /* make the button full width */
+  box-sizing: border-box;
   border: 1px solid var(--text-color);
-  background: var(--button-bg-color);
   border-radius: 6px;
+  background: var(--button-bg-color);
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 
@@ -339,17 +358,18 @@ html, body {
   background: #eaeaea;
 }
 
+
 .answer-option.correct-answer {
-  background: #28a745;
+  background: #4caf50;
   color: #fff;
-  border-color: #28a745;
 }
 
 .answer-option.wrong-answer {
-  background: #dc3545;
+  background: #f44336;
   color: #fff;
-  border-color: #dc3545;
 }
+
+
 
 .answer-option:disabled {
   opacity: 0.7;
