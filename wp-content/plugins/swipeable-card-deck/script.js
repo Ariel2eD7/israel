@@ -30,7 +30,7 @@ function sanitizeAnswerHTML(html) {
   const temp = document.createElement('div');
   temp.innerHTML = html;
 
-  // Remove inline onclicks and original buttons
+  // Remove original buttons and onclicks
   temp.querySelectorAll('button').forEach(el => el.remove());
   temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
@@ -44,12 +44,20 @@ function sanitizeAnswerHTML(html) {
       const button = document.createElement('button');
       button.classList.add('answer-option');
 
-      // Include only visible text and images inside <li>
+      // Extract only visible content (ignore hidden elements like correctAnswer marker)
       const clonedLi = li.cloneNode(true);
       clonedLi.querySelectorAll('[id^="correctAnswer"]').forEach(el => el.remove());
+
+      // Trim text content; if empty, skip creating this button
+      const textContent = clonedLi.textContent.trim();
+      if (!textContent && clonedLi.querySelectorAll('img').length === 0) {
+        return; // skip this li
+      }
+
+      // Use innerHTML if there’s anything visible (text or image)
       button.innerHTML = clonedLi.innerHTML.trim();
 
-      // Set correct/incorrect marker
+      // Mark correct/incorrect
       if (li.querySelector('[id^="correctAnswer"]')) {
         button.dataset.correct = 'true';
       } else {
@@ -61,18 +69,14 @@ function sanitizeAnswerHTML(html) {
     ul.remove(); // remove original list to avoid duplicates
   }
 
-  // Keep remaining elements outside the list only ONCE (images, extra text, etc.)
+  // Handle extra elements (images or leftover text) outside the list
   const extrasContainer = document.createElement('div');
   temp.childNodes.forEach(node => {
     if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
       const clonedNode = node.cloneNode(true);
-
-      // Apply color: var(--text-color) to any leftover text nodes
       clonedNode.style.color = 'var(--text-color)';
-
       extrasContainer.appendChild(clonedNode);
     } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-      // Wrap plain text in a span with correct color
       const span = document.createElement('span');
       span.textContent = node.textContent.trim();
       span.style.color = 'var(--text-color)';
@@ -80,7 +84,6 @@ function sanitizeAnswerHTML(html) {
     }
   });
 
-  // Wrap everything together: extras first, then answers
   const wrapper = document.createElement('div');
   wrapper.appendChild(extrasContainer);
   wrapper.appendChild(answersContainer);
