@@ -228,7 +228,7 @@ $(document).on('click', '.answer-option', function () {
         if (secondCard.length) {
             const nextCard = cards.eq(topCardIndex + 1); // Get the next card in the deck
 
-            if (nextCard.length) {
+            if (nextCard.length) { 
                 // Extract the content from the next card
                 const jobField = nextCard.find('.job-field').text();
                 const jobDate = nextCard.find('.job-date').text();
