@@ -189,7 +189,7 @@ function createTheoryCard(data) {
   const card = $(`
     <div class="card swipe-card">
       <div class="card-inner">
-        <div class="card-content">
+        <div class="card-content" style="background-color: var(--bg-color);">
           <div class="card-top"></div>
           <div class="job-position question-title" style="color: var(--text-color);">${data.question}</div>
           <div class="job-description category">${data.category}</div>
