@@ -191,7 +191,7 @@ function createTheoryCard(data) {
       <div class="card-inner">
         <div class="card-content" >
           <div class="card-top">
-          <div class="job-description category" style="color: var(--text-color);">${data.category}</div>
+          <div class="job-description category" style="vertical-align: middle; color: var(--text-color);">${data.category}</div>
           </div>
           <div class="job-position question-title" style="color: var(--text-color); padding-bottom: 15px;">${data.question}</div>
           
