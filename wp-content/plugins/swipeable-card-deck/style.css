@@ -197,22 +197,22 @@ input[type="file"], textarea {
 #applyModal { animation: fadeIn 0.3s ease-out; }
 
 .swipe-indicator {
-    position: fixed;
-    top: 45% !important;
-    left: 50%;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
     width: 150px;
     height: 150px;
     background-color: rgba(173, 216, 230, 0.5);
     border-radius: 50%;
     border: 2px solid #000;
-    transform: translate(-50%, -50%);
     font-size: 15px;
-    display: none;
     text-align: center;
     line-height: 150px;
-    z-index: 1000;
+    z-index: 10000; /* higher than everything else */
     box-sizing: border-box;
     color: black;
+    display: none;
     padding: 0;
 }
 
