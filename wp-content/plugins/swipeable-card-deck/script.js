@@ -245,7 +245,19 @@ $(document).on('click', '.answer-option', function () {
     }
 
 function createTheoryCard(data) {
-  const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = data.answer;
+
+  // Find the span with codes (float:left)
+  const codeSpan = tempDiv.querySelector('span[style*="float: left"]');
+  let codes = "";
+  if (codeSpan) {
+      codes = codeSpan.innerText.trim();
+      codeSpan.remove(); // Remove from main answer
+  }
+
+  const sanitizedAnswer = sanitizeAnswerHTML(tempDiv.innerHTML);
+
   const card = $(`
     <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color);">
       <div class="card-inner">
@@ -255,6 +267,7 @@ function createTheoryCard(data) {
           </div>
           <div class="question-title" style="font-weight: bold; color: var(--text-color); padding-bottom: 10px;">${data.question}</div>
           <div class="question-answers">${sanitizedAnswer}</div>
+          <div class="question-footer" style="text-align: left; font-size: 14px; color: #555;">${codes}</div>
         </div>
       </div>
     </div>
