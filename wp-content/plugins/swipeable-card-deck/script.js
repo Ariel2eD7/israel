@@ -65,16 +65,22 @@ function sanitizeAnswerHTML(html) {
   temp.childNodes.forEach(node => {
     if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
       const clonedNode = node.cloneNode(true);
+
+      // Remove padding, empty spans, and <br>
+      clonedNode.style.paddingTop = '0';
+      clonedNode.style.paddingBottom = '0';
+      clonedNode.querySelectorAll('span').forEach(span => {
+        if (!span.textContent.trim()) span.remove();
+      });
+      clonedNode.querySelectorAll('br').forEach(br => br.remove());
+
       clonedNode.style.color = 'var(--text-color)';
 
-      // Remove extra space above and below images
+      // Remove extra space for images
       if (clonedNode.tagName === 'IMG') {
         clonedNode.style.marginTop = '0';
         clonedNode.style.marginBottom = '0';
         clonedNode.style.display = 'block';
-      } else {
-        clonedNode.style.marginTop = '0';
-        clonedNode.style.paddingTop = '0';
       }
 
       extrasContainer.appendChild(clonedNode);
