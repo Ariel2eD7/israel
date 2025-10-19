@@ -190,9 +190,11 @@ function createTheoryCard(data) {
     <div class="card swipe-card" style="background-color: var(--bg-color); border-color: white;">
       <div class="card-inner">
         <div class="card-content" >
-          <div class="card-top"></div>
-          <div class="job-position question-title" style="color: var(--text-color);">${data.question}</div>
+          <div class="card-top">
           <div class="job-description category" style="color: var(--text-color);">${data.category}</div>
+          </div>
+          <div class="job-position question-title" style="color: var(--text-color);">${data.question}</div>
+          
           <div class="question-answer" style="color: var(--text-color);">${sanitizedAnswer}</div>
           <button class="show-answer-btn" style="border-color: white; background-color: var(--button-bg-color) !important; color: var(--text-color);">Show Answer</button> <!-- Add this -->
         </div>
