@@ -34,11 +34,6 @@ function sanitizeAnswerHTML(html) {
   temp.querySelectorAll('button').forEach(el => el.remove());
   temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
-  // Remove artifact spans containing «C1» | «C» | … 
-  temp.querySelectorAll('span').forEach(span => {
-    if (span.textContent.includes('«')) span.remove();
-  });
-
   const answersContainer = document.createElement('div');
   answersContainer.classList.add('answers-container');
 
@@ -46,24 +41,19 @@ function sanitizeAnswerHTML(html) {
   const ul = temp.querySelector('ul');
   if (ul) {
     ul.querySelectorAll('li').forEach((li) => {
-      const text = li.textContent.trim();
-      if (!text) return; // skip empty li
-
       const button = document.createElement('button');
       button.classList.add('answer-option');
 
       // Check if this LI contains the correct answer marker
       const correctEl = li.querySelector('[id^="correctAnswer"]');
-      button.dataset.correct = correctEl ? 'true' : 'false';
+      if (correctEl) button.dataset.correct = 'true';
+      else button.dataset.correct = 'false';
 
-      // Keep all visible content
+      // Keep **all visible content**, including marker text if any
       button.innerHTML = li.innerHTML.trim();
 
       // Apply text color to all inner elements
       button.querySelectorAll('*').forEach(el => el.style.color = 'var(--text-color)');
-
-      // Also apply color to button itself (in case text is direct child)
-      button.style.color = 'var(--text-color)';
 
       answersContainer.appendChild(button);
     });
