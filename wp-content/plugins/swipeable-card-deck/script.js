@@ -126,22 +126,17 @@ const db = firebase.firestore();
 
 
 function startDrag(e) {
-    const $target = $(e.target);
-
-    // If user tapped a button or link, do NOT start swipe
-    if ($target.closest('button, .show-answer-btn, a').length) return;
-
     const card = $(this);
     if (isSwiping || isModalOpen) return;
 
-    isSwiping = true;
-
-    const startX = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
-    const startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
-    const startTime = Date.now();
+    let startX = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
+    let startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
     let moved = false;
+    const startTime = Date.now();
 
     if (e.type === 'touchstart') e.preventDefault();
+
+    $('body').css('overflow-x', 'hidden');
 
     $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
 
@@ -151,38 +146,42 @@ function startDrag(e) {
         const offsetX = currentX - startX;
         const offsetY = currentY - startY;
 
-        if (Math.abs(offsetX) > 5) moved = true; // only trigger swipe after 5px horizontal movement
+        if (Math.abs(offsetX) > 5) moved = true; // Start swipe after small movement
 
-        card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
-        $swipeIndicator.text(offsetX > 0 ? 'למשרה הבאה' : 'להגשת מועמדות');
-        $swipeIndicator.show();
+        if (moved) {
+            card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
+            $swipeIndicator.text(offsetX > 0 ? 'למשרה הבאה' : 'להגשת מועמדות').show();
+        }
     }
 
-    function onEnd() {
+    function onEnd(e) {
         $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
         $swipeIndicator.fadeOut(200, function () { $(this).remove(); });
         $('body').css('overflow-x', 'auto');
 
-        const offsetX = card.position().left;
+        const endX = e.type === 'mouseup' ? e.pageX : e.originalEvent.changedTouches[0].pageX;
+        const offsetX = endX - startX;
         const swipeSpeed = Math.abs(offsetX) / (Date.now() - startTime);
         const threshold = 25;
         const fastSwipeThreshold = 0.5;
 
-        if (moved) { // Only perform swipe if user actually dragged
-            if (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold) {
-                if (offsetX < 0 && !isModalOpen) {
-                    setTimeout(() => openModal(card), 50);
-                } else if (offsetX > 0) {
-                    card.fadeOut(300, function () {
-                        card.remove();
-                        phoneButtonClickCount = {};
-                        resetCards();
-                        if ($cardDeck.find('.card').length < 3) loadTheoryQuestions();
-                    });
-                }
-            } else {
-                card.css('transform', 'translate(0,0) rotate(0)');
+        if (moved && (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold)) {
+            // Perform swipe
+            if (offsetX < 0 && !isModalOpen) {
+                setTimeout(() => openModal(card), 50);
+            } else if (offsetX > 0) {
+                card.fadeOut(300, function () {
+                    card.remove();
+                    phoneButtonClickCount = {};
+                    resetCards();
+                    if ($cardDeck.find('.card').length < 3) loadTheoryQuestions();
+                });
             }
+        } else if (!moved) {
+            // If no swipe, let click events fire normally (buttons will work)
+        } else {
+            // Swipe too short → reset
+            card.css('transform', 'translate(0,0) rotate(0)');
         }
 
         isSwiping = false;
