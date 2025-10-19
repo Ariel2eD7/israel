@@ -139,12 +139,6 @@ function startDrag(e) {
     $('body').css('overflow-x', 'hidden');
 
     $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
-$swipeIndicator.css({
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-});
-
 
     function onMove(e) {
         const currentX = e.type === 'mousemove' ? e.pageX : e.originalEvent.touches[0].pageX;
