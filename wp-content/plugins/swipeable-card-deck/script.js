@@ -270,7 +270,7 @@ function createTheoryCard(data) {
                     </div>
                     <div class="question-answers">${sanitizedAnswer}</div>
                 </div>
-                <div class="card-footer" style="text-align: center; font-size: 14px; color: #555; padding: 8px 10px; border-top: 1px solid #ccc; flex-shrink: 0;">
+                <div class="card-footer" style="text-align: center; font-size: 14px; color: var(--text-color); padding: 8px 10px; border-top: 1px solid #ccc; flex-shrink: 0;">
                     ${codes}
                 </div>
             </div>
