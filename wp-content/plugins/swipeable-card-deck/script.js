@@ -40,20 +40,25 @@ function sanitizeAnswerHTML(html) {
   // Extract the UL (list of answers)
   const ul = temp.querySelector('ul');
   if (ul) {
-    ul.querySelectorAll('li').forEach(li => {
+    ul.querySelectorAll('li').forEach((li, index) => {
       const button = document.createElement('button');
       button.classList.add('answer-option');
 
-      // Clone LI content first
+      // Clone LI content
       const clonedLi = li.cloneNode(true);
 
-      // Remove hidden correct answer markers inside cloned LI
+      // Remove correct answer marker inside cloned LI (but keep text/images)
       clonedLi.querySelectorAll('[id^="correctAnswer"]').forEach(el => el.remove());
 
-      // Use innerHTML even if text is empty (preserves images)
-      button.innerHTML = clonedLi.innerHTML.trim() || '&nbsp;';
+      // Use innerHTML, if empty put a placeholder to avoid empty button
+      let content = clonedLi.innerHTML.trim();
+      if (!content) {
+        content = `תשובה ${index + 1}`; // "Answer 1", "Answer 2", etc.
+      }
 
-      // Ensure text inside button has proper color
+      button.innerHTML = content;
+
+      // Apply text color to everything inside the button
       button.querySelectorAll('*').forEach(el => el.style.color = 'var(--text-color)');
 
       // Mark correct/incorrect
