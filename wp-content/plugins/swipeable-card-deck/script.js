@@ -30,24 +30,26 @@ function sanitizeAnswerHTML(html) {
   const temp = document.createElement('div');
   temp.innerHTML = html;
 
-  // remove inline onclicks and original buttons
+  // Remove inline onclicks and original buttons
   temp.querySelectorAll('button').forEach(el => el.remove());
   temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
   const answersContainer = document.createElement('div');
   answersContainer.classList.add('answers-container');
 
-  // Extract the UL (the list of answers)
+  // Extract the UL (list of answers)
   const ul = temp.querySelector('ul');
   if (ul) {
     ul.querySelectorAll('li').forEach(li => {
       const button = document.createElement('button');
       button.classList.add('answer-option');
 
-      // put the entire LI content inside the button
-      button.innerHTML = li.innerHTML.trim();
+      // Include only visible text and images inside <li>
+      const clonedLi = li.cloneNode(true);
+      clonedLi.querySelectorAll('[id^="correctAnswer"]').forEach(el => el.remove());
+      button.innerHTML = clonedLi.innerHTML.trim();
 
-      // check if it contains the correct answer marker
+      // Set correct/incorrect marker
       if (li.querySelector('[id^="correctAnswer"]')) {
         button.dataset.correct = 'true';
       } else {
@@ -59,15 +61,26 @@ function sanitizeAnswerHTML(html) {
     ul.remove(); // remove original list to avoid duplicates
   }
 
-  // Keep remaining elements outside the list only ONCE
+  // Keep remaining elements outside the list only ONCE (images, extra text, etc.)
   const extrasContainer = document.createElement('div');
   temp.childNodes.forEach(node => {
     if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
-      extrasContainer.appendChild(node.cloneNode(true));
+      const clonedNode = node.cloneNode(true);
+
+      // Apply color: var(--text-color) to any leftover text nodes
+      clonedNode.style.color = 'var(--text-color)';
+
+      extrasContainer.appendChild(clonedNode);
+    } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+      // Wrap plain text in a span with correct color
+      const span = document.createElement('span');
+      span.textContent = node.textContent.trim();
+      span.style.color = 'var(--text-color)';
+      extrasContainer.appendChild(span);
     }
   });
 
-  // final structure: extras (e.g., image or footer), then answers
+  // Wrap everything together: extras first, then answers
   const wrapper = document.createElement('div');
   wrapper.appendChild(extrasContainer);
   wrapper.appendChild(answersContainer);
