@@ -34,6 +34,11 @@ function sanitizeAnswerHTML(html) {
   temp.querySelectorAll('button').forEach(el => el.remove());
   temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
 
+  // Remove the unwanted span with «C1» | «C» | … 
+  temp.querySelectorAll('span').forEach(span => {
+    if (span.textContent.includes('«')) span.remove();
+  });
+
   const answersContainer = document.createElement('div');
   answersContainer.classList.add('answers-container');
 
