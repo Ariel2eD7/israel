@@ -188,7 +188,7 @@ function startDrag(e) {
             card.css('transform', 'translate(0,0) rotate(0)');
         }
 
-        isSwiping = false;
+        isSwiping = false; 
     }
 
     $(document).on('mousemove touchmove', onMove).on('mouseup touchend', onEnd);
