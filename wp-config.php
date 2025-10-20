@@ -99,7 +99,7 @@ define( 'WP_DEBUG_LOG', true );
 @ini_set( 'display_errors', 1 );
 }
 
-define( 'DISALLOW_FILE_EDIT', false );
+define( 'DISALLOW_FILE_EDIT', false ); 
 define( 'WP_MEMORY_LIMIT', '256M' );
 /* That's all, stop editing! Happy publishing. */
 
