@@ -8,19 +8,19 @@
  */
 
 // Enqueue necessary styles and scripts
-function scd_enqueue_scripts() {
+function scd_enqueue_scripts2() {
     wp_enqueue_style( 'scd-style', plugin_dir_url( __FILE__ ) . 'style.css' );
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'scd-swipe', plugin_dir_url( __FILE__ ) . 'script.js', ['jquery'], '', true );
     wp_localize_script('scd-swipe', 'ajaxurl', admin_url('admin-ajax.php'));
 
 }
-add_action( 'wp_enqueue_scripts', 'scd_enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'scd_enqueue_scripts2' );
 
 // Shortcode to display the swipeable card deck
 function scd_display_card_deck() {
     // Job data for the card deck
-    $job_offers = get_option('scd_job_list', []);
+    $job_offers = get_option('scd_job_list2', []);
 
     ob_start();
     echo '<div class="card-deck">';
@@ -117,16 +117,16 @@ function scd_add_admin_menu() {
         20
     );
 }
-add_action('admin_menu2', 'scd_add_admin_menu');
+add_action('admin_menu', 'scd_add_admin_menu');
 function scd_render_admin_page() {
     // Handle job removal
 if (isset($_POST['remove_job_index'])) {
     $index = intval($_POST['remove_job_index']);
-    $jobs = get_option('scd_job_list', []);
+    $jobs = get_option('scd_job_list2', []);
     if (isset($jobs[$index])) {
         unset($jobs[$index]);
         $jobs = array_values($jobs); // Re-index the array
-        update_option('scd_job_list', $jobs);
+        update_option('scd_job_list2', $jobs);
         echo '<div class="updated"><p>המשרה נמחקה בהצלחה.</p></div>';
     }
 }
@@ -155,9 +155,9 @@ if (isset($_POST['remove_job_index'])) {
             $user_email // no more need for POSTed email
         ];
     
-        $jobs = get_option('scd_job_list', []);
+        $jobs = get_option('scd_job_list2', []);
         $jobs[] = $new_job;
-        update_option('scd_job_list', $jobs);
+        update_option('scd_job_list2', $jobs);
     
         echo '<div class="updated"><p>המשרה נוספה בהצלחה!</p></div>';
     }
@@ -202,7 +202,7 @@ if (isset($_POST['remove_job_index'])) {
     </thead>
     <tbody>
         <?php
-$existing_jobs = get_option('scd_job_list', []);
+$existing_jobs = get_option('scd_job_list2', []);
 foreach ($existing_jobs as $index => $job) {
             echo '<tr>';
             echo '<td>' . esc_html($job[0]) . '</td>';
@@ -228,7 +228,7 @@ foreach ($existing_jobs as $index => $job) {
 }
 
 
-add_action('wp_ajax_scd_send_application2', 'scd_send_application');
+add_action('wp_ajax_scd_send_application', 'scd_send_application');
 
 function scd_send_application() {
     if (!isset($_FILES['resume']) || !isset($_POST['email'])) {
@@ -302,9 +302,9 @@ $default_phone = get_user_meta($current_user->ID, 'phone', true);
         ];
 
         // Add the new job to the options
-        $jobs = get_option('scd_job_list', []);
+        $jobs = get_option('scd_job_list2', []);
         $jobs[] = $new_job;
-        update_option('scd_job_list', $jobs);
+        update_option('scd_job_list2', $jobs);
 
         // Send email to the logged-in user with the job details
         wp_mail($user_email, 'New Job Posted', 'Job Title: ' . $job_field . "\nDescription: " . $job_description);
