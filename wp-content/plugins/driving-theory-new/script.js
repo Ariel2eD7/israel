@@ -107,21 +107,11 @@ let loading = false;
 
 // Initialize Firebase
 
-if (typeof window.firebase !== 'undefined') {
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-        console.log('Firebase initialized by this script.');
-    } else {
-        firebase.app(); // Use existing initialized app
-        console.log('Firebase already initialized by another plugin.');
-    }
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 } else {
-    console.error("Firebase SDK not loaded. Please ensure the Firebase SDK is included before this script.");
+    firebase.app(); // Use existing initialized app
 }
-
-
-
-
 
 const db = firebase.firestore();
 
