@@ -24,9 +24,6 @@ function scd_enqueue_scripts() {
         'ajax_url' => admin_url('admin-ajax.php')
     ));
 
-
-
-
 }
 add_action( 'wp_enqueue_scripts', 'scd_enqueue_scripts' );
 
@@ -81,27 +78,6 @@ function scd_display_card_deck() {
                 <button id="applyButton" >שלח</button>
             </div>
           </div>';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
     return ob_get_clean();
 }
 add_shortcode( 'card_swipe', 'scd_display_card_deck' );
@@ -339,7 +315,3 @@ $default_phone = get_user_meta($current_user->ID, 'phone', true);
     return ob_get_clean();
 }
 add_shortcode('submit_job', 'scd_frontend_job_submission');
-
-
-
-

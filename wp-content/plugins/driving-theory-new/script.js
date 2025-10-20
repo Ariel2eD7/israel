@@ -107,11 +107,21 @@ let loading = false;
 
 // Initialize Firebase
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+if (typeof window.firebase !== 'undefined') {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        console.log('Firebase initialized by this script.');
+    } else {
+        firebase.app(); // Use existing initialized app
+        console.log('Firebase already initialized by another plugin.');
+    }
 } else {
-    firebase.app(); // Use existing initialized app
+    console.error("Firebase SDK not loaded. Please ensure the Firebase SDK is included before this script.");
 }
+
+
+
+
 
 const db = firebase.firestore();
 
@@ -193,12 +203,6 @@ function startDrag(e) {
 
     $(document).on('mousemove touchmove', onMove).on('mouseup touchend', onEnd);
 }
-
-
-
-
-
-
 
 
     // Handle answer button clicks
