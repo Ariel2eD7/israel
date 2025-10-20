@@ -1,9 +1,4 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 define( 'WP_CACHE', true );
 /**
  * The base configuration for WordPress
@@ -79,6 +74,9 @@ $table_prefix = 'gmf_';
 
 /* Add any custom values between this line and the "stop editing" line. */
 
+define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
+
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_DISPLAY', true );
 define( 'WP_DEBUG_LOG', true );
@@ -104,7 +102,7 @@ define( 'WP_DEBUG_LOG', true );
 @ini_set( 'display_errors', 1 );
 }
 
-define( 'DISALLOW_FILE_EDIT', false ); 
+define( 'DISALLOW_FILE_EDIT', false );
 define( 'WP_MEMORY_LIMIT', '256M' );
 /* That's all, stop editing! Happy publishing. */
 
