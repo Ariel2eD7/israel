@@ -102,7 +102,7 @@ if ( is_user_logged_in() ) {
 
     return ob_get_clean();
 }
-add_shortcode( 'card_swipe', 'scd_display_card_deck' );
+add_shortcode( 'card_swipe2', 'scd_display_card_deck' );
 
 
 // Admin menu page for managing job entries
@@ -117,7 +117,7 @@ function scd_add_admin_menu() {
         20
     );
 }
-add_action('admin_menu', 'scd_add_admin_menu');
+add_action('admin_menu2', 'scd_add_admin_menu');
 function scd_render_admin_page() {
     // Handle job removal
 if (isset($_POST['remove_job_index'])) {
@@ -228,7 +228,7 @@ foreach ($existing_jobs as $index => $job) {
 }
 
 
-add_action('wp_ajax_scd_send_application', 'scd_send_application');
+add_action('wp_ajax_scd_send_application2', 'scd_send_application');
 
 function scd_send_application() {
     if (!isset($_FILES['resume']) || !isset($_POST['email'])) {
@@ -336,7 +336,7 @@ $default_phone = get_user_meta($current_user->ID, 'phone', true);
 
     return ob_get_clean();
 }
-add_shortcode('submit_job', 'scd_frontend_job_submission');
+add_shortcode('submit_job2', 'scd_frontend_job_submission');
 
 
 
