@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Lecha Dodi",
+    "text": "לְכָה דוֹדִי לִקְרַאת כַּלָּה, פְּנֵי שַׁבָּת נְקַבְּלָה.",
+    "audio": "https://example.com/audio/lecha-dodi.mp3"
+  },
+  {
+    "title": "Mizmor Shir LeYom HaShabbat",
+    "text": "מִזְמוֹר שִׁיר לְיוֹם הַשַּׁבָּת.",
+    "audio": ""
+  },
+  {
+    "title": "Hashkiveinu",
+    "text": "הַשְׁכִּיבֵנוּ יְיָ אֱלֹהֵינוּ לְשָׁלוֹם...",
+    "audio": "https://example.com/audio/hashkiveinu.mp3"
+  }
+]
