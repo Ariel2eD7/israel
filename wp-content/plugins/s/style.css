@@ -12,7 +12,7 @@
 
 .s-toggle {
   background: #b58900;
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   width: 100%;
   text-align: right;
@@ -23,7 +23,7 @@
 }
 
 .s-toggle:hover {
-  background: #cb9e1d;
+  background: #b9e4d3;
 }
 
 .s-content {
