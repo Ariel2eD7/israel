@@ -2,7 +2,7 @@
   font-family: "Noto Sans Hebrew", sans-serif;
   direction: rtl;
   background: #faf7f0;
-  color: rgb(0, 0, 0);
+  color: #048b55;
   padding: 20px;
   border-radius: 8px;
 }
@@ -13,8 +13,9 @@
 }
 
 .s-toggle {
-  background: #b9e4d3;
-  color: rgb(0, 0, 0);
+  background: #ffffff;
+   color: #048b55;
+
   border: none;
   width: 100%;
   text-align: right;
@@ -25,16 +26,17 @@
 }
 
 .s-toggle:hover {
-  background: #b9e4d3;
+  background: #ffffff;
 }
 
 .s-content {
   display: none;
-  background: #fffaf0;
+  background: #ffffff;
   padding: 10px;
   border: 1px solid #e0d4b7;
   border-radius: 5px;
-  color: rgb(0, 0, 0);
+  color: #048b55;
+
   margin-top: 5px;
 }
 
