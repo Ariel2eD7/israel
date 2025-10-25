@@ -27,7 +27,76 @@ $(document).on('click', '.show-answer-btn', function() {
 
 
 function sanitizeAnswerHTML(html) {
-    return html.replace(/onclick="[^"]*"/g, '');
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    // Remove original buttons and onclicks
+    temp.querySelectorAll('button').forEach(el => el.remove());
+    temp.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
+
+    const answersContainer = document.createElement('div');
+    answersContainer.classList.add('answers-container');
+
+    // Extract the UL (list of answers)
+    const ul = temp.querySelector('ul');
+    if (ul) {
+        ul.querySelectorAll('li').forEach((li) => {
+            const button = document.createElement('button');
+            button.classList.add('answer-option');
+
+            // Check if this LI contains the correct answer marker
+            const correctEl = li.querySelector('[id^="correctAnswer"]');
+            if (correctEl) button.dataset.correct = 'true';
+            else button.dataset.correct = 'false';
+
+            // Keep all visible content
+            button.innerHTML = li.innerHTML.trim();
+
+            // Apply text color to all inner elements
+            button.querySelectorAll('*').forEach(el => el.style.color = 'var(--text-color)');
+
+            answersContainer.appendChild(button);
+        });
+        ul.remove(); // remove original list
+    }
+
+    // Handle extra elements outside the list (images, text)
+    const extrasContainer = document.createElement('div');
+    temp.childNodes.forEach(node => {
+        if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'UL') {
+            const clonedNode = node.cloneNode(true);
+
+            // Remove padding, empty spans, <br>
+            clonedNode.style.paddingTop = '0';
+            clonedNode.style.paddingBottom = '0';
+            clonedNode.querySelectorAll('span').forEach(span => {
+                if (!span.textContent.trim()) span.remove();
+            });
+            clonedNode.querySelectorAll('br').forEach(br => br.remove());
+
+            clonedNode.style.color = 'var(--text-color)';
+
+            // Remove extra space for images
+            if (clonedNode.tagName === 'IMG') {
+                clonedNode.style.marginTop = '0';
+                clonedNode.style.marginBottom = '0';
+                clonedNode.style.display = 'block';
+            }
+
+            extrasContainer.appendChild(clonedNode);
+        } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+            const span = document.createElement('span');
+            span.textContent = node.textContent.trim();
+            span.style.color = 'var(--text-color)';
+            extrasContainer.appendChild(span);
+        }
+    });
+
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(extrasContainer);
+    wrapper.appendChild(answersContainer);
+
+    return wrapper.innerHTML.trim();
 }
 
 
@@ -57,118 +126,103 @@ const db = firebase.firestore();
 
 
 function startDrag(e) {
-    // Skip swipe if the user is tapping a button or link
-    const isButtonTap = $(e.target).closest('button, .show-answer-btn, a').length > 0;
-    if (isButtonTap) return;
-
+    const card = $(this);
     if (isSwiping || isModalOpen) return;
-    isSwiping = true;
-    // Prevent default touch behavior (no horizontal scroll on mobile)
 
+    let startX = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
+    let startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
+    let moved = false;
+    const startTime = Date.now();
 
-    
-        if (e.type === 'touchstart') {
-            e.preventDefault();
+    if (e.type === 'touchstart') e.preventDefault();
+
+    $('body').css('overflow-x', 'hidden');
+
+    $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
+
+    function onMove(e) {
+        const currentX = e.type === 'mousemove' ? e.pageX : e.originalEvent.touches[0].pageX;
+        const currentY = e.type === 'mousemove' ? e.pageY : e.originalEvent.touches[0].pageY;
+        const offsetX = currentX - startX;
+        const offsetY = currentY - startY;
+
+        if (Math.abs(offsetX) > 5 || Math.abs(offsetY) > 5) moved = true;
+
+        if (moved) {
+            card.css('transform', `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX / 10}deg)`);
+            $swipeIndicator.text(offsetX > 0 ? 'לשאלה הבאה' : 'להגשת מועמדות').show();
         }
-    
-        const startPos = e.type === 'mousedown' ? e.pageX : e.originalEvent.touches[0].pageX;
-        const card = $(this);
-        const cardStartPos = card.position().left || 0;
-    
+    }
 
-        const startY = e.type === 'mousedown' ? e.pageY : e.originalEvent.touches[0].pageY;
-        // Store the start time for swipe speed calculation
-        const startTime = Date.now();
-    
-        // Prevent horizontal scrolling on the body during swipe
-        $('body').css('overflow-x', 'hidden');
-    
-        // Create the circular indicator and append it to the body to be centered on screen
-        $swipeIndicator = $('<div class="swipe-indicator"></div>').appendTo('body');
-    
-        // Handle the swipe movement
-        function onMove(e) {
-            if (e.type === 'touchmove') {
-                e.preventDefault(); // Prevent the page from scrolling horizontally
+    function onEnd(e) {
+        $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
+        $swipeIndicator.fadeOut(200, function () { $(this).remove(); });
+        $('body').css('overflow-x', 'auto');
+
+        const endX = e.type === 'mouseup' ? e.pageX : e.originalEvent.changedTouches[0].pageX;
+        const offsetX = endX - startX;
+        const swipeSpeed = Math.abs(offsetX) / (Date.now() - startTime);
+        const threshold = 25;
+        const fastSwipeThreshold = 0.5;
+
+        if (moved && (Math.abs(offsetX) > threshold || swipeSpeed > fastSwipeThreshold)) {
+            // Perform swipe
+            if (offsetX < 0 && !isModalOpen) {
+                setTimeout(() => openModal(card), 50);
+            } else if (offsetX > 0) {
+                card.fadeOut(300, function () {
+                    card.remove();
+                    phoneButtonClickCount = {};
+                    resetCards();
+                    if ($cardDeck.find('.card').length < 3) loadTheoryQuestions();
+                });
             }
-            const movePos = e.type === 'mousemove' ? e.pageX : e.originalEvent.touches[0].pageX;
-            const offset = movePos - startPos;
-            const moveY = e.type === 'mousemove' ? e.pageY : e.originalEvent.touches[0].pageY;
-            const offsetY = moveY - startY; // Track vertical movement too
+        } else if (!moved) {
+            // If no swipe, trigger a click manually on the element under pointer
+            let target;
+            if (e.type === 'mouseup') target = document.elementFromPoint(e.clientX, e.clientY);
+            else target = document.elementFromPoint(e.originalEvent.changedTouches[0].clientX, e.originalEvent.changedTouches[0].clientY);
             
-            card.css('transform', `translate(${offset}px, ${offsetY}px) rotate(${offset / 10}deg)`);
-                
-            // Show and update the circular window based on swipe direction
-            if (offset > 0) {
-                $swipeIndicator.text('למשרה הבאה'); // Right swipe: "למשרה הבאה"
-            } else {
-                $swipeIndicator.text('להגשת מועמדות'); // Left swipe: "להגשת מועמדות"
-            }
-            $swipeIndicator.show(); // Make it visible during swipe
+            if (target) $(target).trigger('click');
+        } else {
+            card.css('transform', 'translate(0,0) rotate(0)');
         }
-    
-        // End swipe detection
-        function onEnd() {
-            $(document).off('mousemove touchmove', onMove).off('mouseup touchend', onEnd);
-            
-            // Calculate the swipe distance
-            const offset = card.position().left;
-    
-            // Calculate swipe speed
-            const swipeSpeed = Math.abs(offset) / (Date.now() - startTime); // Time-based speed (distance/time)
-    
-            // If the swipe speed is fast enough (based on some threshold), treat it like a completed swipe
-            const fastSwipeThreshold = 0.5; // Adjust this based on testing for how fast the swipe needs to be
-            const swipeThreshold = 25; // Distance threshold
-    
-            // If the card is swiped beyond the threshold or is fast enough, perform the action
-            if (Math.abs(offset) > swipeThreshold || swipeSpeed > fastSwipeThreshold) {
-                if (offset < 0 && !isModalOpen) {
-                    setTimeout(() => {
-                        openModal(card);
-                    }, 50); // Slight delay lets the swipe complete before modal opens
-                } else if (offset > 0) {
-                    // Right swipe case: remove the card if swiped right
-               card.fadeOut(300, function() {
-    card.remove();   
-    phoneButtonClickCount = {};
-    resetCards();
 
-    const remainingCards = $cardDeck.find('.card').length;
-    if (remainingCards < 3) { // Threshold can be adjusted
-        loadTheoryQuestions();
+        isSwiping = false; 
+    }
+
+    $(document).on('mousemove touchmove', onMove).on('mouseup touchend', onEnd);
+}
+
+
+    // Handle answer button clicks
+$(document).on('click', '.answer-option', function () {
+    const $btn = $(this);
+    const isCorrect = $btn.data('correct') === true || $btn.data('correct') === 'true';
+    const $all = $btn.closest('.answers-container').find('.answer-option');
+
+    // Disable all after first click
+    $all.prop('disabled', true);
+
+    if (isCorrect) {
+        $btn.addClass('correct-answer');
+    } else {
+        $btn.addClass('wrong-answer');
+        // highlight the correct one too
+        $all.filter('[data-correct="true"]').addClass('correct-answer');
     }
 });
 
-                }
-            } else {
-                // If swipe didn't reach the threshold, reset the card
-                card.css('transform', 'translate(0, 0) rotate(0)');
-            }
-    
-            // Hide the circular window after swipe ends
-            $swipeIndicator.fadeOut(200, function() {
-                $swipeIndicator.remove(); // Remove the indicator after fading out
-            });
-    
-            // Allow scrolling again after swipe ends
-            $('body').css('overflow-x', 'auto');
-    
-            isSwiping = false;
-        }
-    
-        $(document).on('mousemove touchmove', onMove).on('mouseup touchend', onEnd);
-    }
             function updateSecondCardContent() {
         const cards = $cardDeck.find('.card');
         const topCardIndex = cards.index(cards.first()); // Find the index of the top card
-        const secondCard = cards.eq(1); // The second card in the deck
+        const secondCard = cards.eq(1); // The second card in the deck 
 
         // Check if there is a second card and update its content
         if (secondCard.length) {
             const nextCard = cards.eq(topCardIndex + 1); // Get the next card in the deck
 
-            if (nextCard.length) {
+            if (nextCard.length) { 
                 // Extract the content from the next card
                 const jobField = nextCard.find('.job-field').text();
                 const jobDate = nextCard.find('.job-date').text();
@@ -185,23 +239,40 @@ function startDrag(e) {
     }
 
 function createTheoryCard(data) {
-  const sanitizedAnswer = sanitizeAnswerHTML(data.answer);
-  const card = $(`
-    <div class="card swipe-card">
-      <div class="card-inner">
-        <div class="card-content">
-          <div class="card-top"></div>
-          <div class="job-position question-title">${data.question}</div>
-          <div class="job-description category">${data.category}</div>
-          <div class="question-answer">${sanitizedAnswer}</div>
-          <button class="show-answer-btn">Show Answer</button> <!-- Add this -->
-        </div>
-      </div>
-    </div>
-  `);
-  return card;
-}
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data.answer;
 
+    // Extract the span with the codes at the bottom
+    const codeSpan = tempDiv.querySelector('span[style*="float: left"]');
+    let codes = "";
+    if (codeSpan) {
+        codes = codeSpan.innerText.trim();
+        codeSpan.remove(); // Remove from main answer content
+    }
+
+    const sanitizedAnswer = sanitizeAnswerHTML(tempDiv.innerHTML);
+
+    const card = $(`
+        <div class="card swipe-card" style="background-color: var(--bg-color); border-color: var(--text-color); display: flex; flex-direction: column;">
+            <div class="card-inner" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="card-content" style="flex: 1; overflow-y: auto;">
+                    <div class="card-top">
+                        <div class="job-description category" style="color: var(--text-color);">${data.category}</div>
+                    </div>
+                    <div class="question-title" style="font-weight: bold; color: var(--text-color); padding-bottom: 10px;">
+                        ${data.question}
+                    </div>
+                    <div class="question-answers">${sanitizedAnswer}</div>
+                </div>
+                <div class="card-footer" style="text-align: center; font-size: 14px; color: var(--text-color); padding: 8px 10px; border-top: 1px solid #ccc; flex-shrink: 0;">
+                    ${codes}
+                </div>
+            </div>
+        </div>
+    `);
+
+    return card;
+}
 
 
 function loadTheoryQuestions() {

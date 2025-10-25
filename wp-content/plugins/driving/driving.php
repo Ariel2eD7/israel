@@ -1,34 +1,28 @@
 <?php
 /**
- * Plugin Name: Swipeable Card Deck
+ * Plugin Name: driving
  * Description: A swipeable card deck where the top card is swipeable and the cards are displayed at an angle.
- * Version: 1.0
- * Author: Your Name
- * License: GPL2
- */
+ * Version: 1.0 
+ * Author: Your Name  
+ * License: GPL2  
+ */ 
 
-// Enqueue necessary styles and scripts
+// Enqueue necessary styles and scripts 
 function scd_enqueue_scripts() {
     wp_enqueue_style('scd-style', plugin_dir_url(__FILE__) . 'style.css');
     wp_enqueue_script('jquery');
 
-    // ✅ Enqueue Firebase SDKs
-    wp_enqueue_script('firebase-app', 'https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js', [], null, true);
-    wp_enqueue_script('firebase-firestore', 'https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore-compat.js', ['firebase-app'], null, true);
+    // ❌ REMOVE firebase enqueueing here!
+    // ✅ Firebase already loaded globally in theory plugin.
 
-    // ✅ Your main script (must come AFTER Firebase scripts)
-    wp_enqueue_script('scd-swipe', plugin_dir_url(__FILE__) . 'script.js', ['jquery', 'firebase-app', 'firebase-firestore'], null, true);
+    // Load your script, it will use the global firebase object
+    wp_enqueue_script('scd-swipe', plugin_dir_url(__FILE__) . 'script.js', ['jquery'], null, true);
 
-    // Localize script (optional for AJAX)
     wp_localize_script('scd-swipe', 'scd_ajax', array(
         'ajax_url' => admin_url('admin-ajax.php')
     ));
-
-
-
-
 }
-add_action( 'wp_enqueue_scripts', 'scd_enqueue_scripts' );
+add_action('wp_enqueue_scripts', 'scd_enqueue_scripts');
 
 // Shortcode to display the swipeable card deck
 function scd_display_card_deck() {
@@ -81,27 +75,6 @@ function scd_display_card_deck() {
                 <button id="applyButton" >שלח</button>
             </div>
           </div>';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
     return ob_get_clean();
 }
 add_shortcode( 'card_swipe', 'scd_display_card_deck' );
@@ -339,7 +312,3 @@ $default_phone = get_user_meta($current_user->ID, 'phone', true);
     return ob_get_clean();
 }
 add_shortcode('submit_job', 'scd_frontend_job_submission');
-
-
-
-
