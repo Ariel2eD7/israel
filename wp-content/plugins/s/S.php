@@ -48,62 +48,102 @@ jQuery(document).ready(function($){
         }
     }
 
-    function openModal(sectionIndex, autoPlayIndex=null){
-        const audios = JSON.parse($('#s-audio-'+sectionIndex).text());
-        modalList.empty();
+function openModal(sectionIndex, autoPlayIndex = null) {
+    const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
+    modalList.empty();
 
-        audios.forEach(function(url,i){
-            let id = 'player_'+sectionIndex+'_'+i;
+    audios.forEach(function(url, i) {
+        let id = 'yt_' + sectionIndex + '_' + i;
 
-            if(url.includes('youtube.com') || url.includes('youtu.be')){
-                let videoId = '';
-                if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
-                else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+        if(url.includes('youtube.com') || url.includes('youtu.be')) {
+            let videoId = url.includes('watch?v=') ? url.split('watch?v=')[1].split('&')[0] : url.split('youtu.be/')[1].split('?')[0];
 
-                let rowHtml = '<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
-                rowHtml += '<button class="s-play-yt" data-id="'+id+'" data-video="'+videoId+'">▶️ Play</button>';
-                rowHtml += '<div class="s-video-title" style="flex:1;">Loading...</div>';
-                rowHtml += '<a href="https://israel.ussl.co/s?share='+sectionIndex+'_'+i+'" target="_blank" class="s-share-yt">🔗 Share</a>';
-                rowHtml += '<div id="'+id+'" style="display:none;"></div>';
-                rowHtml += '</div>';
-                modalList.append(rowHtml);
+            // Row HTML with custom controls
+            let rowHtml = `
+                <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                    <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
+                    <div class="s-video-title" style="flex:1;">Loading...</div>
+                    <div class="s-progress-container" style="flex:2;">
+                        <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="${id}">
+                        <span class="s-time" data-id="${id}">0:00 / 0:00</span>
+                    </div>
+                    <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
+                    <div id="${id}" style="display:none;"></div>
+                </div>
+            `;
+            modalList.append(rowHtml);
 
-                $.getJSON('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v='+videoId+'&format=json', function(data){
-                    rowHtml = $('#'+id).siblings('.s-video-title');
-                    if(rowHtml.length) rowHtml.text(data.title);
-                });
+            // Get YouTube title
+            $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`, function(data){
+                rowHtml = $('#'+id).siblings('.s-video-title');
+                if(rowHtml.length) rowHtml.text(data.title);
+            });
 
-                // Wait until YouTube API is ready
-                var checkYT = setInterval(function(){
-                    if(ytReady){
-                        clearInterval(checkYT);
-                        ytPlayers[videoId] = {
-                            player: new YT.Player(id,{
-                                height:'0',
-                                width:'0',
-                                videoId:videoId,
-                                playerVars:{controls:0,modestbranding:1,rel:0},
-                                events:{onStateChange:function(){ updateProgress(videoId); }}
-                            }),
-                            progressBar: null,
-                            playButton: $('button[data-id="'+id+'"]')
-                        };
-                        if(autoPlayIndex!==null && autoPlayIndex==i){
-                            ytPlayers[videoId].player.playVideo();
-                            ytPlayers[videoId].playButton.text('▶️ Playing...');
+            // Wait for YT API
+            var checkYT = setInterval(function() {
+                if(ytReady) {
+                    clearInterval(checkYT);
+                    const player = new YT.Player(id, {
+                        height: '0',
+                        width: '0',
+                        videoId: videoId,
+                        playerVars: {controls:0, modestbranding:1, rel:0},
+                    });
+
+                    // Play/pause button
+                    $('button[data-id="'+id+'"]').click(function() {
+                        const btn = $(this);
+                        const state = player.getPlayerState();
+                        if(state === YT.PlayerState.PLAYING) {
+                            player.pauseVideo();
+                            btn.text('▶️ Play');
+                        } else {
+                            player.playVideo();
+                            btn.text('⏸ Pause');
                         }
+                    });
+
+                    // Progress updater
+                    const progressBar = $('.s-progress-bar[data-id="'+id+'"]');
+                    const timeSpan = $('.s-time[data-id="'+id+'"]');
+                    setInterval(function() {
+                        const duration = player.getDuration();
+                        const current = player.getCurrentTime();
+                        if(!isNaN(duration) && !isNaN(current)){
+                            progressBar.val(current);
+                            progressBar.attr('max', duration);
+                            let minC = Math.floor(current/60);
+                            let secC = Math.floor(current%60);
+                            let minD = Math.floor(duration/60);
+                            let secD = Math.floor(duration%60);
+                            if(secC<10) secC='0'+secC;
+                            if(secD<10) secD='0'+secD;
+                            timeSpan.text(minC+':'+secC+' / '+minD+':'+secD);
+                        }
+                    }, 500);
+
+                    // Seek
+                    progressBar.on('input', function(){
+                        player.seekTo(this.value);
+                    });
+
+                    // Auto-play
+                    if(autoPlayIndex !== null && autoPlayIndex === i){
+                        player.playVideo();
+                        $('button[data-id="'+id+'"]').text('⏸ Pause');
                     }
-                }, 200);
+                }
+            }, 200);
 
-            } else {
-                let rowHtml = '<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
-                rowHtml += '<audio controls src="'+url+'"></audio></div>';
-                modalList.append(rowHtml);
-            }
-        });
+        } else {
+            // Regular audio
+            let rowHtml = `<div class="s-audio-row"><audio controls src="${url}"></audio></div>`;
+            modalList.append(rowHtml);
+        }
+    });
 
-        modal.show();
-    }
+    modal.show();
+}
 
     $(document).on('click','.s-open-modal',function(){
         const sectionIndex = $(this).data('section');
