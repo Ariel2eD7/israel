@@ -49,8 +49,25 @@ function s_display_siddur() {
         $output .= "<p dir='rtl' class='hebrew'>{$text}</p>";
 
         if ($audio) {
-            $output .= "<audio controls src='{$audio}'></audio>";
-        }
+    if (strpos($audio, 'youtube.com') !== false || strpos($audio, 'youtu.be') !== false) {
+        // Convert YouTube link to embed form
+        $embed_url = preg_replace(
+            ['#https?://www\.youtube\.com/watch\?v=#', '#https?://youtu\.be/#'],
+            'https://www.youtube.com/embed/',
+            $audio
+        );
+
+        $output .= "<iframe
+            src='{$embed_url}?autoplay=0&controls=0'
+            style='width:0;height:0;border:0;visibility:hidden;'
+            allow='autoplay'>
+        </iframe>";
+    } else {
+        // Normal audio file (mp3)
+        $output .= "<audio controls src='{$audio}'></audio>";
+    }
+}
+
 
         $output .= "</div></div>";
     }
