@@ -41,10 +41,11 @@ jQuery(document).ready(function($) {
     const id = 'yt_' + section + '_' + i;
 
     playerHtml = `
-        <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
-        <a href="https://israel.ussl.co/s#s-section-${section}" target="_blank" class="s-share-yt">🔗 Share</a>
-        <div id="${id}"></div>
-    `;
+    <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
+    <a href="https://israel.ussl.co/s#${encodeURIComponent('s-section-' + section)}" target="_blank" class="s-share-yt">🔗 Share</a>
+    <div id="${id}"></div>
+`;
+
 }
  else {
         playerHtml = `<audio controls src="${url}"></audio>`;
