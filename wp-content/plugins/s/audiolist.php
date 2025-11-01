@@ -6,19 +6,7 @@
 
 if (!defined('ABSPATH')) exit;
 
-// Output the modal HTML (the actual structure can also be in audiolist.html if you prefer)
-?>
-<div id="s-audio-modal" class="s-modal" style="display:none;">
-    <div class="s-modal-content">
-        <span class="s-close">&times;</span>
-        <h3>השמעות</h3>
-        <div id="s-audio-list"></div>
-    </div>
-</div>
-
-
-<?php
-// Load modal HTML into the page
+// Load modal HTML from audiolist.html into the page footer
 function s_include_modal_html() {
     $html_file = plugin_dir_path(__FILE__) . 'audiolist.html';
     if(file_exists($html_file)) {
@@ -27,15 +15,15 @@ function s_include_modal_html() {
 }
 add_action('wp_footer', 's_include_modal_html');
 
-// Inline JS for the modal
-$inline_js = <<<JS
+// Inline JS for modal functionality
+function s_enqueue_modal_js() {
+    $inline_js = <<<JS
 jQuery(document).ready(function($){
 
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
     const ytPlayers = {}; // store YouTube players
 
-    // Load YouTube IFrame API if not present
     if(!window.YT){
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -59,13 +47,11 @@ jQuery(document).ready(function($){
             const id = 'yt_' + sectionIndex + '_' + i;
 
             if(url.includes('youtube.com') || url.includes('youtu.be')){
-                // Extract videoId safely
                 let videoId = '';
                 if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
                 else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
                 if(!videoId) return;
 
-                // Row HTML for YouTube
                 let rowHtml = `
                     <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
                         <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
@@ -80,7 +66,6 @@ jQuery(document).ready(function($){
                 `;
                 modalList.append(rowHtml);
 
-                // Get YouTube title
                 $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=\${videoId}&format=json`)
                     .done(function(data){
                         $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text(data.title);
@@ -89,22 +74,14 @@ jQuery(document).ready(function($){
                         $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
                     });
 
-                // Wait until YT API loaded
                 const checkYT = setInterval(function(){
                     if(window.YT && YT.Player){
                         clearInterval(checkYT);
-                        const player = new YT.Player(id,{
-                            height:'0', width:'0', videoId:videoId,
-                            playerVars:{controls:0, modestbranding:1, rel:0}
-                        });
-
+                        const player = new YT.Player(id,{height:'0', width:'0', videoId:videoId, playerVars:{controls:0, modestbranding:1, rel:0}});
                         const progressBar = $('.s-progress-bar[data-id="'+id+'"]');
                         const timeDisplay = $('.s-time[data-id="'+id+'"]');
-
-                        // Store player
                         ytPlayers[videoId] = {player, progressBar, timeDisplay};
 
-                        // Update progress every 500ms
                         setInterval(function(){
                             const duration = player.getDuration();
                             const current = player.getCurrentTime();
@@ -115,7 +92,6 @@ jQuery(document).ready(function($){
                             }
                         },500);
 
-                        // Play/pause button
                         $('button[data-id="'+id+'"]').off('click').on('click',function(){
                             if(player.getPlayerState() === YT.PlayerState.PLAYING){
                                 player.pauseVideo();
@@ -126,21 +102,18 @@ jQuery(document).ready(function($){
                             }
                         });
 
-                        // Seek
                         progressBar.off('input').on('input',function(){
                             player.seekTo(this.value,true);
                         });
 
-                        // Auto-play if needed
                         if(autoPlayIndex !== null && autoPlayIndex === i){
                             player.playVideo();
                             $('button[data-id="'+id+'"]').text('⏸ Pause');
                         }
                     }
-                }, 200);
+                },200);
 
             } else {
-                // Regular audio
                 modalList.append(`<div class="s-audio-row"><audio controls src="\${url}"></audio></div>`);
             }
         });
@@ -148,19 +121,16 @@ jQuery(document).ready(function($){
         modal.show();
     }
 
-    // Button to open modal
     $(document).on('click','.s-open-modal',function(){
         const sectionIndex = $(this).data('section');
         openModal(sectionIndex);
     });
 
-    // Close modal
     $(document).on('click','.s-close',function(){
         modal.hide();
         modalList.empty();
     });
 
-    // Auto-open modal from share URL
     const urlParams = new URLSearchParams(window.location.search);
     const shareParam = urlParams.get('share');
     if(shareParam){
@@ -173,8 +143,10 @@ jQuery(document).ready(function($){
             $('html,body').animate({scrollTop:sectionEl.offset().top},500);
         }
     }
+
 });
 JS;
 
-// Add inline script safely
-wp_add_inline_script('jquery', $inline_js);
+    wp_add_inline_script('jquery', $inline_js);
+}
+add_action('wp_enqueue_scripts', 's_enqueue_modal_js');
