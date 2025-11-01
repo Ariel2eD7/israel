@@ -2,7 +2,7 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 0.9
+ * Version: 1.0
  * Author: You
  */
 
@@ -21,9 +21,8 @@ jQuery(document).ready(function($){
 
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
-    const ytPlayers = {}; // store all YouTube players
+    const ytPlayers = {};
 
-    // Load YouTube IFrame API if not present
     if(!window.YT){
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -47,40 +46,34 @@ jQuery(document).ready(function($){
             const id = 'yt_' + sectionIndex + '_' + i;
 
             if(url.includes('youtube.com') || url.includes('youtu.be')){
-                // Extract videoId safely
                 let videoId = '';
                 if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
                 else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
-                if(!videoId) return; 
+                if(!videoId) return;
 
-                // Row HTML for YouTube
-let rowHtml = `
-    <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-        <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
-<div class="s-video-title" style="flex:1;">Loading...</div>
-<div class="s-progress-container" style="flex:2;">
-    <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="\${id}">
-    <span class="s-time" data-id="\${id}">0:00 / 0:00</span>
-</div>
-<a href="https://israel.ussl.co/s?share=\${sectionIndex}_\${i}" target="_blank">🔗 Share</a>
-<div id="\${id}" style="display:none;"></div>
-
-    </div>
-`;
-
+                const rowHtml = `
+                    <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                        <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
+                        <div class="s-video-title" style="flex:1;">Loading...</div>
+                        <div class="s-progress-container" style="flex:2;">
+                            <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="\${id}">
+                            <span class="s-time" data-id="\${id}">0:00 / 0:00</span>
+                        </div>
+                        <a href="https://israel.ussl.co/s?share=\${sectionIndex}_\${i}" target="_blank">🔗 Share</a>
+                        <div id="\${id}" style="display:none;"></div>
+                    </div>
+                `;
                 modalList.append(rowHtml);
 
-                // Get YouTube title
+                // Fetch YouTube title
                 $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=\${videoId}&format=json`)
-    .done(function(data){
-        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text(data.title);
-    })
-    .fail(function(){
-        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
-    });
+                    .done(function(data){
+                        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text(data.title);
+                    })
+                    .fail(function(){
+                        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
+                    });
 
-
-                // Wait until YT API loaded
                 const checkYT = setInterval(function(){
                     if(window.YT && YT.Player){
                         clearInterval(checkYT);
@@ -92,10 +85,8 @@ let rowHtml = `
                         const progressBar = $('.s-progress-bar[data-id="'+id+'"]');
                         const timeDisplay = $('.s-time[data-id="'+id+'"]');
 
-                        // Store player
                         ytPlayers[videoId] = {player, progressBar, timeDisplay};
 
-                        // Update progress every 500ms
                         setInterval(function(){
                             const duration = player.getDuration();
                             const current = player.getCurrentTime();
@@ -106,7 +97,6 @@ let rowHtml = `
                             }
                         },500);
 
-                        // Play/pause button
                         $('button[data-id="'+id+'"]').off('click').on('click',function(){
                             if(player.getPlayerState() === YT.PlayerState.PLAYING){
                                 player.pauseVideo();
@@ -117,12 +107,10 @@ let rowHtml = `
                             }
                         });
 
-                        // Seek
                         progressBar.off('input').on('input',function(){
                             player.seekTo(this.value,true);
                         });
 
-                        // Auto-play if needed
                         if(autoPlayIndex !== null && autoPlayIndex === i){
                             player.playVideo();
                             $('button[data-id="'+id+'"]').text('⏸ Pause');
@@ -131,8 +119,7 @@ let rowHtml = `
                 }, 200);
 
             } else {
-                // Regular audio
-                modalList.append(`<div class="s-audio-row"><audio controls src="${url}"></audio></div>`);
+                modalList.append(`<div class="s-audio-row"><audio controls src="\${url}"></audio></div>`);
             }
         });
 
@@ -149,7 +136,6 @@ let rowHtml = `
         modalList.empty();
     });
 
-    // auto-open modal from share
     const urlParams = new URLSearchParams(window.location.search);
     const shareParam = urlParams.get('share');
     if(shareParam){
@@ -162,12 +148,14 @@ let rowHtml = `
             $('html,body').animate({scrollTop:sectionEl.offset().top},500);
         }
     }
+
 });
 JS;
 
     wp_add_inline_script('jquery', $inline_js);
 }
 add_action('wp_enqueue_scripts','s_enqueue_assets');
+
 
 // Display siddur
 function s_display_siddur(){
@@ -176,7 +164,7 @@ function s_display_siddur(){
     $tefillot = json_decode($json_data,true);
     if(!$tefillot) return '<p>Could not load tefillot data.</p>';
 
-    $output = '<div class="s-siddur"><h2>Arvit Shabbat (Moroccan)</h2>';
+    $output = '<div class="s-siddur"><h2>ערבית של שבת</h2>';
 
     foreach($tefillot as $index=>$section){
         $title = esc_html($section['title']);
@@ -194,15 +182,12 @@ function s_display_siddur(){
             $output .= "<button class='s-open-modal' data-section='{$index}'>🎧 שמע</button>";
             $output .= "<div class='s-audio-data' id='s-audio-{$index}' style='display:none;'>".json_encode($audios)."</div>";
         }
+
         $output .= "</div></div>";
     }
 
-    $output .= '<div id="s-audio-modal" class="s-modal" style="display:none;">
-        <div class="s-modal-content">
-        <span class="s-close">&times;</span>
-        <h3>השמעות</h3>
-        <div id="s-audio-list"></div>
-        </div></div>';
+    // Include modal from separate file
+    include plugin_dir_path(__FILE__) . 'audiolist.php';
 
     $output .= '</div>';
     return $output;
