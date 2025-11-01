@@ -2,13 +2,13 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 1.1
+ * Version: 1.3
  * Author: You
  */
 
 if (!defined('ABSPATH')) exit;
 
-// Enqueue main style only
+// Enqueue main style
 function s_enqueue_assets() {
     wp_enqueue_style('s-style', plugin_dir_url(__FILE__) . 'style.css');
 }
@@ -36,19 +36,18 @@ function s_display_siddur() {
         $output .= "<p dir='rtl' class='hebrew'>{$text}</p>";
 
         if (!empty($audios)) {
-            // Button to open modal
             $output .= "<button class='s-open-modal' data-section='{$index}'>🎧 שמע</button>";
-            // Hidden JSON data for the modal
             $output .= "<div class='s-audio-data' id='s-audio-{$index}' style='display:none;'>"
-                . json_encode($audios) . "</div>";
+                        . json_encode($audios) . "</div>";
         }
 
         $output .= "</div></div>";
     }
 
     $output .= '</div>';
-
-    // Modal and JS now loaded via hooks, not inside the shortcode
     return $output;
 }
 add_shortcode('s_siddur', 's_display_siddur');
+
+// Include modal loader (HTML + JS)
+include plugin_dir_path(__FILE__) . 'audiolist.php';
