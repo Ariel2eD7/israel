@@ -45,7 +45,10 @@ jQuery(document).ready(function($) {
 
                 // Auto-play only the requested one
                 if(autoPlayIndex !== null && autoPlayIndex == i){
-                    $('#' + id).html("<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>");
+                    // trigger the play button automatically
+                    setTimeout(function() {
+                        $('#' + id).prev('.s-play-yt').trigger('click');
+                    }, 100); // slight delay to ensure modal content is in DOM
                 }
 
             } else {
@@ -93,6 +96,7 @@ jQuery(document).ready(function($) {
         }
     }
 });
+
 JS;
 
     wp_add_inline_script('jquery', $inline_js);
