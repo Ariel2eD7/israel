@@ -13,13 +13,25 @@ function s_enqueue_assets() {
     wp_enqueue_style('s-style', plugin_dir_url(__FILE__) . 'style.css');
     
     // Inline JS for toggling sections
-    $inline_js = <<<JS
+   $inline_js = <<<JS
 jQuery(document).ready(function($) {
     $('.s-toggle').click(function() {
         $(this).next('.s-content').slideToggle();
     });
+
+    // Handle YouTube play button
+    $(document).on('click', '.s-play-yt', function() {
+        var btn = $(this);
+        var embed = btn.data('yt');
+        var id = btn.data('id');
+        $('#' + id).html(
+            '<iframe src="' + embed + '?autoplay=1&controls=0" ' +
+            'style="width:0;height:0;border:0;visibility:hidden;" allow="autoplay"></iframe>'
+        );
+    });
 });
 JS;
+
 
     wp_add_inline_script('jquery', $inline_js); // Attach to jQuery
 }
@@ -57,13 +69,16 @@ function s_display_siddur() {
             $audio
         );
 
-        $output .= "<iframe
-            src='{$embed_url}?autoplay=0&controls=0'
-            style='width:0;height:0;border:0;visibility:hidden;'
-            allow='autoplay'>
-        </iframe>";
+        // Add play button
+        $unique_id = uniqid('yt_');
+        $output .= "
+            <button class='s-play-yt' data-yt='{$embed_url}' data-id='{$unique_id}'>
+                ▶️ Play Audio
+            </button>
+            <div id='{$unique_id}'></div>
+        ";
     } else {
-        // Normal audio file (mp3)
+        // Normal MP3
         $output .= "<audio controls src='{$audio}'></audio>";
     }
 }
