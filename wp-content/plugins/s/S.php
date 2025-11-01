@@ -35,64 +35,56 @@ jQuery(document).ready(function($) {
         modalList.empty();
 
         audios.forEach(function(url, i) {
-            let rowHtml = '';
             if(url.includes('youtube.com') || url.includes('youtu.be')) {
                 let videoId = '';
                 if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
                 else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
 
                 const playerDivId = 'player_' + sectionIndex + '_' + i;
+                const progressId = 'progress_' + sectionIndex + '_' + i;
 
-                // Fetch title from oEmbed
                 $.getJSON('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + videoId + '&format=json')
                     .done(function(data){
                         const title = data.title || 'YouTube Video';
-                        rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                            <button class="s-play-yt" data-video="${videoId}" data-id="${playerDivId}">▶️ Play</button>
-                            <div class="s-video-title" style="flex:1;">${title}</div>
-                            <div class="s-share-container">
-                                <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
+                        const rowHtml = `
+                        <div class="s-audio-row" style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <button class="s-play-yt" data-video="${videoId}" data-id="${playerDivId}">▶️ Play</button>
+                                <div class="s-video-title" style="flex:1;">${title}</div>
+                                <div class="s-share-container">
+                                    <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
+                                </div>
+                            </div>
+                            <div class="s-progress-bar" id="${progressId}" style="width:100%;height:6px;background:#ddd;cursor:pointer;position:relative;">
+                                <div class="s-progress-fill" style="width:0%;height:100%;background:#4caf50;"></div>
                             </div>
                             <div id="${playerDivId}" style="display:none;"></div>
                         </div>`;
                         modalList.append(rowHtml);
 
-                        // Create YT player after appending
+                        // Create YT player
                         ytPlayers[videoId] = new YT.Player(playerDivId, {
                             height: '0',
                             width: '0',
                             videoId: videoId,
                             playerVars: { 'controls': 0, 'modestbranding': 1, 'rel': 0 },
+                            events: {
+                                onStateChange: function(event){
+                                    updateProgress(videoId);
+                                }
+                            }
                         });
 
-                        // Auto-play if needed
+                        // Auto-play if requested
                         if(autoPlayIndex !== null && autoPlayIndex == i){
                             ytPlayers[videoId].playVideo();
                             $(`button[data-id='${playerDivId}']`).text('⏸ Pause');
                         }
-                    })
-                    .fail(function(){
-                        // Fallback title if oEmbed fails
-                        const title = 'YouTube Video';
-                        rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                            <button class="s-play-yt" data-video="${videoId}" data-id="${playerDivId}">▶️ Play</button>
-                            <div class="s-video-title" style="flex:1;">${title}</div>
-                            <div class="s-share-container">
-                                <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
-                            </div>
-                            <div id="${playerDivId}" style="display:none;"></div>
-                        </div>`;
-                        modalList.append(rowHtml);
-                        ytPlayers[videoId] = new YT.Player(playerDivId, {
-                            height: '0',
-                            width: '0',
-                            videoId: videoId,
-                            playerVars: { 'controls': 0, 'modestbranding': 1, 'rel': 0 },
-                        });
                     });
             } else {
                 // Normal audio
-                rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                const rowHtml = `
+                <div class="s-audio-row" style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
                     <audio controls src="${url}"></audio>
                 </div>`;
                 modalList.append(rowHtml);
@@ -122,6 +114,42 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Update progress bar
+    function updateProgress(videoId){
+        const player = ytPlayers[videoId];
+        if(player && player.getDuration){
+            const duration = player.getDuration();
+            const current = player.getCurrentTime();
+            const percent = (current/duration)*100;
+            const progressFill = $(`#progress_${videoId.split('_')[1]}_${videoId.split('_')[2]} .s-progress-fill`);
+            progressFill.css('width', percent+'%');
+
+            // Repeat every 500ms
+            if(player.getPlayerState() === YT.PlayerState.PLAYING){
+                setTimeout(function(){ updateProgress(videoId); }, 500);
+            }
+        }
+    }
+
+    // Click progress bar to seek
+    $(document).on('click', '.s-progress-bar', function(e){
+        const bar = $(this);
+        const fill = bar.find('.s-progress-fill');
+        const rect = bar[0].getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const percent = clickX / rect.width;
+
+        const videoId = bar.siblings('div[id^="player_"]').attr('id').split('_')[1]+'_'+bar.siblings('div[id^="player_"]').attr('id').split('_')[2];
+        for(let vid in ytPlayers){
+            if(vid.includes(videoId)){
+                const player = ytPlayers[vid];
+                const seekTo = player.getDuration()*percent;
+                player.seekTo(seekTo, true);
+                fill.css('width', percent*100+'%');
+            }
+        }
+    });
+
     // Open modal
     $(document).on('click', '.s-open-modal', function() {
         const sectionIndex = $(this).data('section');
@@ -145,8 +173,8 @@ jQuery(document).ready(function($) {
         const sectionEl = $('#s-section-' + sectionIndex);
         if(sectionEl.length) $('html, body').animate({ scrollTop: sectionEl.offset().top }, 500);
     }
-
 });
+
 JS;
 
     wp_add_inline_script('jquery', $inline_js);
