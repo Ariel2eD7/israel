@@ -1,33 +1,35 @@
 <?php
-/**
- * Audiolist Modal Loader for S Plugin
- * Handles modal HTML and JS for audio playback
- */
-
 if (!defined('ABSPATH')) exit;
 
-// Load modal HTML from audiolist.html
+// Load modal HTML
 function s_include_modal_html() {
     $html_file = plugin_dir_path(__FILE__) . 'audiolist.html';
     if(file_exists($html_file)) {
         echo file_get_contents($html_file);
+    } else {
+        echo '<div id="s-audio-modal" class="s-modal" style="display:none;">
+                <div class="s-modal-content">
+                    <span class="s-close">&times;</span>
+                    <h3>השמעות</h3>
+                    <div id="s-audio-list"></div>
+                </div>
+              </div>';
     }
 }
 add_action('wp_footer', 's_include_modal_html');
 
-// Enqueue JS for modal functionality
+// Enqueue JS
 function s_enqueue_modal_js() {
     wp_enqueue_script('jquery');
 
-    $inline_js = <<<JS
+    $inline_js = <<< 'JS'
 jQuery(document).ready(function($){
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
     const ytPlayers = {};
 
-    // Load YouTube API if needed
     if(!window.YT){
-        let tag = document.createElement('script');
+        var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
     }
@@ -46,6 +48,7 @@ jQuery(document).ready(function($){
 
         audios.forEach(function(url,i){
             const id = 'yt_' + sectionIndex + '_' + i;
+            let rowHtml = '';
 
             if(url.includes('youtube.com') || url.includes('youtu.be')){
                 let videoId = '';
@@ -53,7 +56,7 @@ jQuery(document).ready(function($){
                 else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
                 if(!videoId) return;
 
-const rowHtml = `
+                rowHtml = `
 <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
     <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
     <div class="s-video-title" style="flex:1;">Loading...</div>
@@ -64,37 +67,75 @@ const rowHtml = `
     <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
     <div id="${id}" style="display:none;"></div>
 </div>`;
-
-                modalList.append(rowHtml);
-
-                // Get video title
-                $.getJSON('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + videoId + '&format=json')
-                .done(function(data){
-                    $('#'+id).closest('.s-audio-row').find('.s-video-title').text(data.title);
-                }).fail(function(){
-                    $('#'+id).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
-                });
             } else {
-                modalList.append('<div class="s-audio-row"><audio controls src="'+url+'"></audio></div>');
+                rowHtml = `<div class="s-audio-row"><audio controls src="${url}"></audio></div>`;
+            }
+
+            modalList.append(rowHtml);
+
+            if(url.includes('youtube.com') || url.includes('youtu.be')){
+                $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+                    .done(function(data){
+                        $('#' + id).closest('.s-audio-row').find('.s-video-title').text(data.title);
+                    })
+                    .fail(function(){
+                        $('#' + id).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
+                    });
+
+                const checkYT = setInterval(function(){
+                    if(window.YT && YT.Player){
+                        clearInterval(checkYT);
+                        const player = new YT.Player(id,{height:'0', width:'0', videoId:videoId, playerVars:{controls:0, modestbranding:1, rel:0}});
+                        const progressBar = $('.s-progress-bar[data-id="'+id+'"]');
+                        const timeDisplay = $('.s-time[data-id="'+id+'"]');
+                        ytPlayers[videoId] = {player, progressBar, timeDisplay};
+
+                        setInterval(function(){
+                            const duration = player.getDuration();
+                            const current = player.getCurrentTime();
+                            if(!isNaN(duration) && !isNaN(current)){
+                                progressBar.val(current);
+                                progressBar.attr('max',duration);
+                                timeDisplay.text(formatTime(current)+' / '+formatTime(duration));
+                            }
+                        },500);
+
+                        $('button[data-id="'+id+'"]').off('click').on('click',function(){
+                            if(player.getPlayerState() === YT.PlayerState.PLAYING){
+                                player.pauseVideo();
+                                $(this).text('▶️ Play');
+                            } else {
+                                player.playVideo();
+                                $(this).text('⏸ Pause');
+                            }
+                        });
+
+                        progressBar.off('input').on('input',function(){
+                            player.seekTo(this.value,true);
+                        });
+
+                        if(autoPlayIndex !== null && autoPlayIndex === i){
+                            player.playVideo();
+                            $('button[data-id="'+id+'"]').text('⏸ Pause');
+                        }
+                    }
+                },200);
             }
         });
 
         modal.show();
     }
 
-    // Open modal button
     $(document).on('click','.s-open-modal',function(){
         const sectionIndex = $(this).data('section');
         openModal(sectionIndex);
     });
 
-    // Close modal
     $(document).on('click','.s-close',function(){
         modal.hide();
         modalList.empty();
     });
 
-    // Auto-open from share URL
     const urlParams = new URLSearchParams(window.location.search);
     const shareParam = urlParams.get('share');
     if(shareParam){
