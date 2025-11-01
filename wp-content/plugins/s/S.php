@@ -39,14 +39,16 @@ function openModal(sectionIndex, autoPlayIndex = null) {
                 videoId = url.split('youtu.be/')[1].split('?')[0];
             }
 
-            // If this is the one to autoplay, directly inject iframe
             if(autoPlayIndex !== null && autoPlayIndex == i){
+                // Directly inject iframe for autoplay
                 playerHtml += "<div id='" + id + "'>";
                 playerHtml += "<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>";
                 playerHtml += "</div>";
+                // Show "Playing..." text
+                playerHtml += "<button class='s-play-yt' data-id='" + id + "' data-video='" + videoId + "'>▶️ Playing...</button>";
             } else {
-                playerHtml += '<button class="s-play-yt" data-id="' + id + '" data-video="' + videoId + '">▶️ Play</button>';
-                playerHtml += '<div id="' + id + '"></div>';
+                playerHtml += "<button class='s-play-yt' data-id='" + id + "' data-video='" + videoId + "'>▶️ Play</button>";
+                playerHtml += "<div id='" + id + "'></div>";
             }
 
             playerHtml += '<a href="https://israel.ussl.co/s?share=' + sectionIndex + '_' + i + '" target="_blank" class="s-share-yt">🔗 Share</a>';
