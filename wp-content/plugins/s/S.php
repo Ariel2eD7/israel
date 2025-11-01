@@ -2,7 +2,7 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 1.0
+ * Version: 1.1
  * Author: You
  */
 
@@ -46,12 +46,9 @@ function s_display_siddur() {
         $output .= "</div></div>";
     }
 
-    // Include the modal HTML and JS from audiolist.php
-    ob_start();
-    include plugin_dir_path(__FILE__) . 'audiolist.php';
-    $output .= ob_get_clean();
-
     $output .= '</div>';
+
+    // Modal and JS now loaded via hooks, not inside the shortcode
     return $output;
 }
 add_shortcode('s_siddur', 's_display_siddur');
