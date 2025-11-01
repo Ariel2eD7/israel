@@ -80,11 +80,17 @@ $(document).on('click', '.s-play-yt', function() {
     const id = btn.data('id');
 
     // Inject iframe INSIDE the div, do not replace the button
+    // Inside openModal, for auto-play:
+if(autoPlayIndex !== null && autoPlayIndex == i){
+    // Inject iframe directly into the div (do not trigger click)
     const iframeHtml = "<iframe src='https://www.youtube.com/embed/" + videoId +
                        "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>";
-
-    // Append iframe to the div (do not overwrite)
     $('#' + id).html(iframeHtml);
+
+    // Update the button text
+    $('#' + id).prev('.s-play-yt').text('▶️ Playing...');
+}
+
 
     // Optional: indicate playing
     btn.text('▶️ Playing...');
