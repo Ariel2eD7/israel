@@ -54,52 +54,48 @@ jQuery(document).ready(function($){
 
         audios.forEach(function(url,i){
             let id = 'player_'+sectionIndex+'_'+i;
+
             if(url.includes('youtube.com') || url.includes('youtu.be')){
                 let videoId = '';
                 if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
                 else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
 
-                // create row
-                const progressId = 'progress_'+sectionIndex+'_'+i;
                 let rowHtml = '<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
                 rowHtml += '<button class="s-play-yt" data-id="'+id+'" data-video="'+videoId+'">▶️ Play</button>';
                 rowHtml += '<div class="s-video-title" style="flex:1;">Loading...</div>';
                 rowHtml += '<a href="https://israel.ussl.co/s?share='+sectionIndex+'_'+i+'" target="_blank" class="s-share-yt">🔗 Share</a>';
                 rowHtml += '<div id="'+id+'" style="display:none;"></div>';
-                rowHtml += '<div class="s-progress-bar" id="'+progressId+'" style="position:relative;background:#ccc;height:8px;flex:1;margin-top:4px;cursor:pointer;">';
-                rowHtml += '<div class="s-progress-fill" style="background:#4caf50;width:0;height:100%;"></div>';
-                rowHtml += '<div class="s-time-display" style="position:absolute;right:2px;top:-18px;font-size:12px;">0:00 / 0:00</div></div>';
                 rowHtml += '</div>';
                 modalList.append(rowHtml);
 
-                // fetch title
                 $.getJSON('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v='+videoId+'&format=json', function(data){
                     rowHtml = $('#'+id).siblings('.s-video-title');
                     if(rowHtml.length) rowHtml.text(data.title);
                 });
 
-                // create YT player object
-                ytPlayers[videoId] = {
-                    player: new YT.Player(id,{
-                        height:'0',
-                        width:'0',
-                        videoId:videoId,
-                        playerVars:{controls:0,modestbranding:1,rel:0},
-                        events:{
-                            onStateChange:function(e){updateProgress(videoId);}
+                // Wait until YouTube API is ready
+                var checkYT = setInterval(function(){
+                    if(ytReady){
+                        clearInterval(checkYT);
+                        ytPlayers[videoId] = {
+                            player: new YT.Player(id,{
+                                height:'0',
+                                width:'0',
+                                videoId:videoId,
+                                playerVars:{controls:0,modestbranding:1,rel:0},
+                                events:{onStateChange:function(){ updateProgress(videoId); }}
+                            }),
+                            progressBar: null,
+                            playButton: $('button[data-id="'+id+'"]')
+                        };
+                        if(autoPlayIndex!==null && autoPlayIndex==i){
+                            ytPlayers[videoId].player.playVideo();
+                            ytPlayers[videoId].playButton.text('▶️ Playing...');
                         }
-                    }),
-                    progressBar: $('#'+progressId),
-                    playButton: $('button[data-id="'+id+'"]')
-                };
-
-                if(autoPlayIndex!==null && autoPlayIndex==i){
-                    ytPlayers[videoId].player.playVideo();
-                    ytPlayers[videoId].playButton.text('▶️ Playing...');
-                }
+                    }
+                }, 200);
 
             } else {
-                // normal audio
                 let rowHtml = '<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
                 rowHtml += '<audio controls src="'+url+'"></audio></div>';
                 modalList.append(rowHtml);
