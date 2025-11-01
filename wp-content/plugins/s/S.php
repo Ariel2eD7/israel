@@ -30,6 +30,7 @@ function openModal(sectionIndex, autoPlayIndex = null) {
     audios.forEach(function(url, i) {
         let playerHtml = '';
         let id = 'yt_' + sectionIndex + '_' + i;
+        let title = '';
 
         if(url.includes('youtube.com') || url.includes('youtu.be')) {
             let videoId = '';
@@ -39,24 +40,37 @@ function openModal(sectionIndex, autoPlayIndex = null) {
                 videoId = url.split('youtu.be/')[1].split('?')[0];
             }
 
-            if(autoPlayIndex !== null && autoPlayIndex == i){
-                // Directly inject iframe for autoplay
-                playerHtml += "<div id='" + id + "'>";
-                playerHtml += "<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>";
-                playerHtml += "</div>";
-                // Show "Playing..." text
-                playerHtml += "<button class='s-play-yt' data-id='" + id + "' data-video='" + videoId + "'>▶️ Playing...</button>";
-            } else {
-                playerHtml += "<button class='s-play-yt' data-id='" + id + "' data-video='" + videoId + "'>▶️ Play</button>";
-                playerHtml += "<div id='" + id + "'></div>";
-            }
+            // Fetch video title via oEmbed
+            $.getJSON("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=" + videoId + "&format=json", function(data){
+                title = data.title || 'YouTube Video';
 
-            playerHtml += '<a href="https://israel.ussl.co/s?share=' + sectionIndex + '_' + i + '" target="_blank" class="s-share-yt">🔗 Share</a>';
-            modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
+                let rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                    <div class="s-play-container">`;
+                
+                // If auto-play, inject iframe
+                if(autoPlayIndex !== null && autoPlayIndex == i){
+                    rowHtml += `<iframe src='https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>`;
+                    rowHtml += `<button class='s-play-yt' data-id='${id}' data-video='${videoId}'>▶️ Playing...</button>`;
+                } else {
+                    rowHtml += `<button class='s-play-yt' data-id='${id}' data-video='${videoId}'>▶️ Play</button>`;
+                }
 
+                rowHtml += `</div>
+                    <div class="s-video-title" style="flex:1;">${title}</div>
+                    <div class="s-share-container">
+                        <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank" class="s-share-yt">🔗 Share</a>
+                    </div>
+                    <div id="${id}"></div>
+                </div>`;
+
+                modalList.append(rowHtml);
+            });
         } else {
-            playerHtml = '<audio controls src="' + url + '"></audio>';
-            modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
+            // Non-YouTube audio
+            playerHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <audio controls src="${url}"></audio>
+            </div>`;
+            modalList.append(playerHtml);
         }
     });
 
