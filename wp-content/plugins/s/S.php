@@ -2,7 +2,7 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 0.3
+ * Version: 0.4
  * Author: You
  */
 
@@ -30,27 +30,23 @@ jQuery(document).ready(function($) {
 
         audios.forEach(function(url, i) {
             let playerHtml = '';
+            const id = 'audio_' + section + '_' + i;
 
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                // Extract video ID
                 let videoId = '';
                 if(url.includes('watch?v=')){
                     videoId = url.split('watch?v=')[1].split('&')[0];
                 } else if(url.includes('youtu.be/')) {
                     videoId = url.split('youtu.be/')[1].split('?')[0];
                 }
-                const id = 'yt_' + section + '_' + i;
 
-                playerHtml = `
-                    <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
-                    <div id="${id}"></div>
-                `;
+                playerHtml = "<button class='s-play-yt' data-id='" + id + "' data-video='" + videoId + "'>▶️ Play</button>";
+                playerHtml += "<div id='" + id + "'></div>";
             } else {
-                // Regular audio file
-                playerHtml = `<audio controls src="${url}"></audio>`;
+                playerHtml = "<audio controls src='" + url + "'></audio>";
             }
 
-            modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
+            modalList.append("<div class='s-audio-item'>" + playerHtml + "</div>");
         });
 
         modal.show();
@@ -62,20 +58,17 @@ jQuery(document).ready(function($) {
     });
 
     // YouTube audio-only player
-$(document).on('click', '.s-play-yt', function() {
-    const btn = $(this);
-    const embed = btn.data('yt');
-    const id = btn.data('id');
+    $(document).on('click', '.s-play-yt', function() {
+        const btn = $(this);
+        const videoId = btn.data('video');
+        const id = btn.data('id');
 
-    // Use minimal size but not zero
-    $('#' + id).html(`
-        <iframe src="${embed}?autoplay=1&controls=0"
-                width="1" height="1" 
-                style="border:0;position:absolute;left:-9999px;" 
-                allow="autoplay"></iframe>
-    `);
-});
+        const embedUrl = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0";
 
+        $('#' + id).html(
+            "<iframe src='" + embedUrl + "' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>"
+        );
+    });
 });
 JS;
 
@@ -101,9 +94,7 @@ function s_display_siddur() {
         $text = nl2br(esc_html($section['text']));
         $audios = $section['audio'] ?? [];
 
-        if (!is_array($audios)) {
-            $audios = [$audios];
-        }
+        if (!is_array($audios)) $audios = [$audios];
 
         $output .= "<div class='s-section'>";
         $output .= "<button class='s-toggle'>{$title}</button>";
