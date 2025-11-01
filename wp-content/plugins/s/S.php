@@ -13,24 +13,56 @@ function s_enqueue_assets() {
     wp_enqueue_style('s-style', plugin_dir_url(__FILE__) . 'style.css');
     
     // Inline JS for toggling sections
-   $inline_js = <<<JS
+$inline_js = <<<JS
 jQuery(document).ready(function($) {
     $('.s-toggle').click(function() {
         $(this).next('.s-content').slideToggle();
     });
 
-    // Handle YouTube play button
+    // --- Modal logic ---
+    const modal = $('#s-audio-modal');
+    const modalList = $('#s-audio-list');
+
+    $(document).on('click', '.s-open-modal', function() {
+        const section = $(this).data('section');
+        const audios = JSON.parse($('#s-audio-' + section).text());
+        modalList.empty();
+
+        audios.forEach(function(url, i) {
+            let playerHtml = '';
+
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                const embed = url.replace('watch?v=', 'embed/');
+                const id = 'yt_' + section + '_' + i;
+                playerHtml = `
+                    <button class="s-play-yt" data-yt="${embed}" data-id="${id}">▶️ Play</button>
+                    <div id="${id}"></div>
+                `;
+            } else {
+                playerHtml = `<audio controls src="${url}"></audio>`;
+            }
+
+            modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
+        });
+
+        modal.show();
+    });
+
+    $(document).on('click', '.s-close', function() {
+        modal.hide();
+        modalList.empty();
+    });
+
+    // --- YouTube player logic ---
     $(document).on('click', '.s-play-yt', function() {
-        var btn = $(this);
-        var embed = btn.data('yt');
-        var id = btn.data('id');
-        $('#' + id).html(
-            '<iframe src="' + embed + '?autoplay=1&controls=0" ' +
-            'style="width:0;height:0;border:0;visibility:hidden;" allow="autoplay"></iframe>'
-        );
+        const btn = $(this);
+        const embed = btn.data('yt');
+        const id = btn.data('id');
+        $('#' + id).html('<iframe src="' + embed + '?autoplay=1&controls=0" style="width:0;height:0;border:0;visibility:hidden;" allow="autoplay"></iframe>');
     });
 });
 JS;
+
 
 
     wp_add_inline_script('jquery', $inline_js); // Attach to jQuery
@@ -50,42 +82,40 @@ function s_display_siddur() {
     $output = '<div class="s-siddur">';
     $output .= '<h2>Arvit Shabbat (Moroccan)</h2>';
 
-    foreach ($tefillot as $section) {
+    foreach ($tefillot as $index => $section) {
         $title = esc_html($section['title']);
         $text = nl2br(esc_html($section['text']));
-        $audio = isset($section['audio']) ? esc_url($section['audio']) : '';
+        $audios = $section['audio'] ?? [];
 
-        $output .= '<div class="s-section">';
+        // Make sure $audios is an array
+        if (!is_array($audios)) {
+            $audios = [$audios];
+        }
+
+        $output .= "<div class='s-section'>";
         $output .= "<button class='s-toggle'>{$title}</button>";
-        $output .= "<div class='s-content' style='display:block;'>"; // open by default
+        $output .= "<div class='s-content' style='display:block;'>";
         $output .= "<p dir='rtl' class='hebrew'>{$text}</p>";
 
-        if ($audio) {
-    if (strpos($audio, 'youtube.com') !== false || strpos($audio, 'youtu.be') !== false) {
-        // Convert YouTube link to embed form
-        $embed_url = preg_replace(
-            ['#https?://www\.youtube\.com/watch\?v=#', '#https?://youtu\.be/#'],
-            'https://www.youtube.com/embed/',
-            $audio
-        );
+        if (!empty($audios)) {
+            $output .= "<button class='s-open-modal' data-section='{$index}'>🎧 שמע</button>";
 
-        // Add play button
-        $unique_id = uniqid('yt_');
-        $output .= "
-            <button class='s-play-yt' data-yt='{$embed_url}' data-id='{$unique_id}'>
-                ▶️ Play Audio
-            </button>
-            <div id='{$unique_id}'></div>
-        ";
-    } else {
-        // Normal MP3
-        $output .= "<audio controls src='{$audio}'></audio>";
-    }
-}
-
+            // Store audio data in hidden div for JS
+            $output .= "<div class='s-audio-data' id='s-audio-{$index}' style='display:none;'>" . json_encode($audios) . "</div>";
+        }
 
         $output .= "</div></div>";
     }
+
+    // Modal HTML
+    $output .= '
+    <div id="s-audio-modal" class="s-modal" style="display:none;">
+        <div class="s-modal-content">
+            <span class="s-close">&times;</span>
+            <h3>השמעות</h3>
+            <div id="s-audio-list"></div>
+        </div>
+    </div>';
 
     $output .= '</div>';
     return $output;
