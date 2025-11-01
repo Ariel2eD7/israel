@@ -2,7 +2,7 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 0.8
+ * Version: 0.9
  * Author: You
  */
 
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) exit;
 function s_enqueue_assets() {
     wp_enqueue_style('s-style', plugin_dir_url(__FILE__) . 'style.css');
 
-$inline_js = <<<JS
+    $inline_js = <<<JS
 jQuery(document).ready(function($){
 
     $('.s-toggle').click(function(){
@@ -22,11 +22,6 @@ jQuery(document).ready(function($){
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
     const ytPlayers = {}; // store all YouTube players
-
-    // Global YouTube API ready function
-    window.onYouTubeIframeAPIReady = function(){
-        console.log("YT API ready");
-    }
 
     // Load YouTube IFrame API if not present
     if(!window.YT){
@@ -43,11 +38,13 @@ jQuery(document).ready(function($){
     }
 
     function openModal(sectionIndex, autoPlayIndex = null){
-        const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
+        const audiosData = $('#s-audio-' + sectionIndex);
+        if(!audiosData.length) return;
+        const audios = JSON.parse(audiosData.text());
         modalList.empty();
 
         audios.forEach(function(url,i){
-            let id = 'yt_'+sectionIndex+'_'+i;
+            const id = 'yt_' + sectionIndex + '_' + i;
 
             if(url.includes('youtube.com') || url.includes('youtu.be')){
                 // Extract videoId safely
@@ -59,19 +56,19 @@ jQuery(document).ready(function($){
                 // Row HTML
                 let rowHtml = `
                     <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                        <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
+                        <button class="s-play-yt" data-id="{$id}" data-video="{$videoId}">▶️ Play</button>
                         <div class="s-video-title" style="flex:1;">Loading...</div>
                         <div class="s-progress-container" style="flex:2;">
-                            <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="${id}">
-                            <span class="s-time" data-id="${id}">0:00 / 0:00</span>
+                            <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="{$id}">
+                            <span class="s-time" data-id="{$id}">0:00 / 0:00</span>
                         </div>
-                        <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
-                        <div id="${id}" style="display:none;"></div>
+                        <a href="https://israel.ussl.co/s?share={$sectionIndex}_{$i}" target="_blank">🔗 Share</a>
+                        <div id="{$id}" style="display:none;"></div>
                     </div>
                 `;
                 modalList.append(rowHtml);
 
-                // Get video title
+                // Get YouTube title
                 $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
                     .done(function(data){
                         $(`#${id}`).siblings('.s-video-title').text(data.title);
@@ -81,7 +78,7 @@ jQuery(document).ready(function($){
                     });
 
                 // Wait until YT API loaded
-                let checkYT = setInterval(function(){
+                const checkYT = setInterval(function(){
                     if(window.YT && YT.Player){
                         clearInterval(checkYT);
                         const player = new YT.Player(id,{
@@ -95,7 +92,7 @@ jQuery(document).ready(function($){
                         // Store player
                         ytPlayers[videoId] = {player, progressBar, timeDisplay};
 
-                        // Update progress
+                        // Update progress every 500ms
                         setInterval(function(){
                             const duration = player.getDuration();
                             const current = player.getCurrentTime();
@@ -127,14 +124,12 @@ jQuery(document).ready(function($){
                             player.playVideo();
                             $('button[data-id="'+id+'"]').text('⏸ Pause');
                         }
-
                     }
                 }, 200);
 
             } else {
                 // Regular audio
-                let rowHtml = `<div class="s-audio-row"><audio controls src="${url}"></audio></div>`;
-                modalList.append(rowHtml);
+                modalList.append(`<div class="s-audio-row"><audio controls src="${url}"></audio></div>`);
             }
         });
 
@@ -149,43 +144,6 @@ jQuery(document).ready(function($){
     $(document).on('click','.s-close',function(){
         modal.hide();
         modalList.empty();
-    });
-
-    $(document).on('click','.s-play-yt',function(){
-        const btn = $(this);
-        const videoId = btn.data('video');
-        const obj = ytPlayers[videoId];
-        if(!obj) return;
-        const player = obj.player;
-
-        if(player.getPlayerState()===YT.PlayerState.PLAYING){
-            player.pauseVideo();
-            btn.text('▶️ Play');
-        } else {
-            player.playVideo();
-            btn.text('▶️ Playing...');
-            updateProgress(videoId);
-        }
-    });
-
-    // click progress bar
-    $(document).on('click','.s-progress-bar',function(e){
-        const bar = $(this);
-        const barId = bar.attr('id');
-        let targetPlayer = null;
-        for(let vid in ytPlayers){
-            if(ytPlayers[vid].progressBar.attr('id')===barId){
-                targetPlayer = ytPlayers[vid].player;
-                break;
-            }
-        }
-        if(!targetPlayer) return;
-        const rect = bar[0].getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const percent = clickX / rect.width;
-        const seekTo = targetPlayer.getDuration()*percent;
-        targetPlayer.seekTo(seekTo,true);
-        bar.find('.s-progress-fill').css('width',percent*100+'%');
     });
 
     // auto-open modal from share
@@ -208,6 +166,7 @@ JS;
 }
 add_action('wp_enqueue_scripts','s_enqueue_assets');
 
+// Display siddur
 function s_display_siddur(){
     $json_file = plugin_dir_path(__FILE__).'siddur-data.json';
     $json_data = file_get_contents($json_file);
