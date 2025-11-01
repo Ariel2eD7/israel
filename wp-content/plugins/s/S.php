@@ -54,28 +54,32 @@ jQuery(document).ready(function($){
                 if(!videoId) return;
 
                 // Row HTML
-                let rowHtml = `
-                    <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                        <button class="s-play-yt" data-id="{$id}" data-video="{$videoId}">▶️ Play</button>
-                        <div class="s-video-title" style="flex:1;">Loading...</div>
-                        <div class="s-progress-container" style="flex:2;">
-                            <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="{$id}">
-                            <span class="s-time" data-id="{$id}">0:00 / 0:00</span>
-                        </div>
-                        <a href="https://israel.ussl.co/s?share={$sectionIndex}_{$i}" target="_blank">🔗 Share</a>
-                        <div id="{$id}" style="display:none;"></div>
-                    </div>
-                `;
+                // Row HTML for YouTube
+let rowHtml = `
+    <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+       <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
+<div class="s-video-title" style="flex:1;">Loading...</div>
+<div class="s-progress-container" style="flex:2;">
+    <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="\${id}">
+    <span class="s-time" data-id="\${id}">0:00 / 0:00</span>
+</div>
+<a href="https://israel.ussl.co/s?share=\${sectionIndex}_\${i}" target="_blank">🔗 Share</a>
+<div id="\${id}" style="display:none;"></div>
+
+    </div>
+`;
+
                 modalList.append(rowHtml);
 
                 // Get YouTube title
-                $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
-                    .done(function(data){
-                        $(`#${id}`).siblings('.s-video-title').text(data.title);
-                    })
-                    .fail(function(){
-                        $(`#${id}`).siblings('.s-video-title').text('YouTube Video');
-                    });
+             $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=\${videoId}&format=json`)
+    .done(function(data){
+        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text(data.title);
+    })
+    .fail(function(){
+        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
+    });
+
 
                 // Wait until YT API loaded
                 const checkYT = setInterval(function(){
