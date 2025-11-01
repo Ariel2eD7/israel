@@ -2,7 +2,7 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 0.2
+ * Version: 0.3
  * Author: You
  */
 
@@ -11,15 +11,15 @@ if (!defined('ABSPATH')) exit;
 // Enqueue styles and scripts
 function s_enqueue_assets() {
     wp_enqueue_style('s-style', plugin_dir_url(__FILE__) . 'style.css');
-    
-    // Inline JS for toggling sections
-$inline_js = <<<JS
+
+    $inline_js = <<<JS
 jQuery(document).ready(function($) {
+    // Toggle sections
     $('.s-toggle').click(function() {
         $(this).next('.s-content').slideToggle();
     });
 
-    // --- Modal logic ---
+    // Modal logic
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
 
@@ -32,13 +32,21 @@ jQuery(document).ready(function($) {
             let playerHtml = '';
 
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                const embed = url.replace('watch?v=', 'embed/');
+                // Extract video ID
+                let videoId = '';
+                if(url.includes('watch?v=')){
+                    videoId = url.split('watch?v=')[1].split('&')[0];
+                } else if(url.includes('youtu.be/')) {
+                    videoId = url.split('youtu.be/')[1].split('?')[0];
+                }
                 const id = 'yt_' + section + '_' + i;
+
                 playerHtml = `
-                    <button class="s-play-yt" data-yt="${embed}" data-id="${id}">▶️ Play</button>
+                    <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
                     <div id="${id}"></div>
                 `;
             } else {
+                // Regular audio file
                 playerHtml = `<audio controls src="${url}"></audio>`;
             }
 
@@ -53,19 +61,24 @@ jQuery(document).ready(function($) {
         modalList.empty();
     });
 
-    // --- YouTube player logic ---
+    // YouTube audio-only player
     $(document).on('click', '.s-play-yt', function() {
         const btn = $(this);
-        const embed = btn.data('yt');
+        const videoId = btn.data('video');
         const id = btn.data('id');
-        $('#' + id).html('<iframe src="' + embed + '?autoplay=1&controls=0" style="width:0;height:0;border:0;visibility:hidden;" allow="autoplay"></iframe>');
+
+        const iframeHtml = `<iframe 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&loop=1&playlist=${videoId}" 
+            style="width:0;height:0;border:0;visibility:hidden;" 
+            allow="autoplay">
+            </iframe>`;
+
+        $('#' + id).html(iframeHtml);
     });
 });
 JS;
 
-
-
-    wp_add_inline_script('jquery', $inline_js); // Attach to jQuery
+    wp_add_inline_script('jquery', $inline_js);
 }
 add_action('wp_enqueue_scripts', 's_enqueue_assets');
 
@@ -87,7 +100,6 @@ function s_display_siddur() {
         $text = nl2br(esc_html($section['text']));
         $audios = $section['audio'] ?? [];
 
-        // Make sure $audios is an array
         if (!is_array($audios)) {
             $audios = [$audios];
         }
@@ -99,8 +111,6 @@ function s_display_siddur() {
 
         if (!empty($audios)) {
             $output .= "<button class='s-open-modal' data-section='{$index}'>🎧 שמע</button>";
-
-            // Store audio data in hidden div for JS
             $output .= "<div class='s-audio-data' id='s-audio-{$index}' style='display:none;'>" . json_encode($audios) . "</div>";
         }
 
