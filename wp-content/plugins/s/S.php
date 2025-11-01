@@ -73,13 +73,23 @@ function openModal(sectionIndex, autoPlayIndex = null) {
     });
 
     // YouTube audio-only player
-    $(document).on('click', '.s-play-yt', function() {
-        const btn = $(this);
-        const videoId = btn.data('video');
-        const id = btn.data('id');
+    // YouTube audio-only player
+$(document).on('click', '.s-play-yt', function() {
+    const btn = $(this);
+    const videoId = btn.data('video');
+    const id = btn.data('id');
 
-        $('#' + id).html("<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>");
-    });
+    // Inject iframe INSIDE the div, do not replace the button
+    const iframeHtml = "<iframe src='https://www.youtube.com/embed/" + videoId +
+                       "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>";
+
+    // Append iframe to the div (do not overwrite)
+    $('#' + id).html(iframeHtml);
+
+    // Optional: indicate playing
+    btn.text('▶️ Playing...');
+});
+
 
     // Check URL parameter to auto-open modal
     const urlParams = new URLSearchParams(window.location.search);
