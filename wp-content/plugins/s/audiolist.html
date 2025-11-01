@@ -1,3 +1,4 @@
+<!-- audiolist.html -->
 <div id="s-audio-modal" class="s-modal" style="display:none;">
     <div class="s-modal-content">
         <span class="s-close">&times;</span>
@@ -7,6 +8,7 @@
 </div>
 
 <style>
+/* Modal overlay */
 .s-modal {
     position: fixed;
     z-index: 9999;
@@ -15,30 +17,38 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.6);
+    display: none;
 }
 
+/* Modal content box */
 .s-modal-content {
     background-color: #fefefe;
-    margin: 10% auto;
+    margin: 5% auto;
     padding: 20px;
     border-radius: 8px;
     width: 90%;
     max-width: 600px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    direction: rtl;
 }
 
+/* Close button */
 .s-close {
     color: #aaa;
-    float: right;
+    float: left;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
 }
 
-.s-close:hover {
-    color: #000;
+.s-close:hover,
+.s-close:focus {
+    color: black;
+    text-decoration: none;
 }
 
+/* Each audio row */
 .s-audio-row {
     display: flex;
     align-items: center;
@@ -46,13 +56,27 @@
     margin-bottom: 10px;
 }
 
+/* Video title */
+.s-video-title {
+    flex: 1;
+    font-weight: bold;
+}
+
+/* Progress bar container */
 .s-progress-container {
+    flex: 2;
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-.s-video-title { 
+/* Range input (progress bar) */
+.s-progress-bar {
     flex: 1;
+}
+
+/* Audio element fallback */
+audio {
+    width: 100%;
 }
 </style>
