@@ -43,19 +43,20 @@ jQuery(document).ready(function($) {
                 playerHtml += '<a href="https://israel.ussl.co/s?share=' + sectionIndex + '_' + i + '" target="_blank" class="s-share-yt">🔗 Share</a>';
                 playerHtml += '<div id="' + id + '"></div>';
 
-                // Auto-play only the requested one
+                // Append first, then autoplay if needed
+                modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
+
                 if(autoPlayIndex !== null && autoPlayIndex == i){
-                    // trigger the play button automatically
+                    // Trigger click AFTER a tiny delay
                     setTimeout(function() {
-                        $('#' + id).prev('.s-play-yt').trigger('click');
-                    }, 100); // slight delay to ensure modal content is in DOM
+                        $('#'+id).prev('.s-play-yt').trigger('click');
+                    }, 100);
                 }
 
             } else {
                 playerHtml = '<audio controls src="' + url + '"></audio>';
+                modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
             }
-
-            modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
         });
 
         modal.show();
