@@ -27,6 +27,9 @@ add_action('wp_footer', 's_include_modal_html');
 
 // Enqueue JS for modal functionality
 function s_enqueue_modal_js() {
+    // Ensure jQuery is loaded
+    wp_enqueue_script('jquery');
+
     $inline_js = <<<JS
 jQuery(document).ready(function($){
     const modal = $('#s-audio-modal');
@@ -62,31 +65,30 @@ jQuery(document).ready(function($){
                 if(!videoId) return;
 
                 const rowHtml = `
-    <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-        <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
-        <div class="s-video-title" style="flex:1;">Loading...</div>
-        <div class="s-progress-container" style="flex:2;">
-            <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="${id}">
-            <span class="s-time" data-id="${id}">0:00 / 0:00</span>
-        </div>
-        <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
-        <div id="${id}" style="display:none;"></div>
+<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
+    <div class="s-video-title" style="flex:1;">Loading...</div>
+    <div class="s-progress-container" style="flex:2;">
+        <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="${id}">
+        <span class="s-time" data-id="${id}">0:00 / 0:00</span>
     </div>
+    <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
+    <div id="${id}" style="display:none;"></div>
+</div>
 `;
-
 
                 modalList.append(rowHtml);
 
-              // Get video title
-$.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
-    .done(function(data){
-        $('#' + id).closest('.s-audio-row').find('.s-video-title').text(data.title);
-    })
-    .fail(function(){
-        $('#' + id).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
-    });
+                // Get YouTube title
+                $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+                    .done(function(data){
+                        $('#'+id).closest('.s-audio-row').find('.s-video-title').text(data.title);
+                    })
+                    .fail(function(){
+                        $('#'+id).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
+                    });
 
-                // Wait for YouTube API to initialize
+                // Wait for YT API
                 const checkYT = setInterval(function(){
                     if(window.YT && YT.Player){
                         clearInterval(checkYT);
@@ -95,7 +97,6 @@ $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${
                         const timeDisplay = $('.s-time[data-id="'+id+'"]');
                         ytPlayers[videoId] = {player, progressBar, timeDisplay};
 
-                        // Update progress
                         setInterval(function(){
                             const duration = player.getDuration();
                             const current = player.getCurrentTime();
@@ -106,7 +107,6 @@ $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${
                             }
                         },500);
 
-                        // Play/pause
                         $('button[data-id="'+id+'"]').off('click').on('click',function(){
                             if(player.getPlayerState() === YT.PlayerState.PLAYING){
                                 player.pauseVideo();
@@ -117,12 +117,10 @@ $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${
                             }
                         });
 
-                        // Seek
                         progressBar.off('input').on('input',function(){
                             player.seekTo(this.value,true);
                         });
 
-                        // Auto-play
                         if(autoPlayIndex !== null && autoPlayIndex === i){
                             player.playVideo();
                             $('button[data-id="'+id+'"]').text('⏸ Pause');
@@ -138,7 +136,7 @@ $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${
         modal.show();
     }
 
-    // Open modal
+    // Open modal button
     $(document).on('click','.s-open-modal',function(){
         const sectionIndex = $(this).data('section');
         openModal(sectionIndex);
