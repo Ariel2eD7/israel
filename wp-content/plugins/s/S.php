@@ -27,38 +27,50 @@ function openModal(sectionIndex, autoPlayIndex = null) {
     const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
     modalList.empty();
 
-    audios.forEach(function(audio, i) {
+    audios.forEach(function(url, i) {
         let id = 'yt_' + sectionIndex + '_' + i;
-        let rowHtml = '<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">';
 
-        if(audio.includes('youtube.com') || audio.includes('youtu.be')) {
+        if(url.includes('youtube.com') || url.includes('youtu.be')) {
             let videoId = '';
-            if(audio.includes('watch?v=')) videoId = audio.split('watch?v=')[1].split('&')[0];
-            else if(audio.includes('youtu.be/')) videoId = audio.split('youtu.be/')[1].split('?')[0];
+            if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
+            else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
 
-            // Use default title from JSON instead of fetching via oEmbed
-            let title = 'YouTube Video';
+            // Create row first with placeholder title
+            let rowHtml = `
+                <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                    <div class="s-play-container">
+                        <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
+                    </div>
+                    <div class="s-video-title" style="flex:1;">Loading title...</div>
+                    <div class="s-share-container">
+                        <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank" class="s-share-yt">🔗 Share</a>
+                    </div>
+                    <div id="${id}"></div>
+                </div>`;
+            modalList.append(rowHtml);
 
-            rowHtml += '<div class="s-play-container">';
+            // Fetch actual YouTube title
+            $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+                .done(function(data) {
+                    $(`#${id}`).closest('.s-audio-row').find('.s-video-title').text(data.title);
+                })
+                .fail(function() {
+                    $(`#${id}`).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
+                });
+
+            // Auto-play if needed
             if(autoPlayIndex !== null && autoPlayIndex == i){
-                rowHtml += "<iframe src='https://www.youtube.com/embed/"+videoId+"?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>";
-                rowHtml += '<button class="s-play-yt" data-id="'+id+'" data-video="'+videoId+'">▶️ Playing...</button>';
-            } else {
-                rowHtml += '<button class="s-play-yt" data-id="'+id+'" data-video="'+videoId+'">▶️ Play</button>';
+                $(`#${id}`).html(`<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0" width="1" height="1" style="border:0;position:absolute;left:-9999px;" allow="autoplay"></iframe>`);
+                $(`#${id}`).prev('.s-play-yt').text('▶️ Playing...');
             }
-            rowHtml += '</div>';
-
-            rowHtml += '<div class="s-video-title" style="flex:1;">'+title+'</div>';
-            rowHtml += '<div class="s-share-container"><a href="https://israel.ussl.co/s?share='+sectionIndex+'_'+i+'" target="_blank" class="s-share-yt">🔗 Share</a></div>';
-            rowHtml += '<div id="'+id+'"></div>';
 
         } else {
             // Non-YouTube audio
-            rowHtml += '<audio controls src="'+audio+'"></audio>';
+            let rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <audio controls src="${url}"></audio>
+            </div>`;
+            modalList.append(rowHtml);
         }
-
-        rowHtml += '</div>';
-        modalList.append(rowHtml);
     });
 
     modal.show();
