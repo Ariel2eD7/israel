@@ -32,21 +32,21 @@ jQuery(document).ready(function($) {
     let playerHtml = '';
 
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        // Extract video ID
-        let videoId = '';
-        if(url.includes('watch?v=')){
-            videoId = url.split('watch?v=')[1].split('&')[0];
-        } else if(url.includes('youtu.be/')) {
-            videoId = url.split('youtu.be/')[1].split('?')[0];
-        }
-        const id = 'yt_' + section + '_' + i;
+    let videoId = '';
+    if(url.includes('watch?v=')){
+        videoId = url.split('watch?v=')[1].split('&')[0];
+    } else if(url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+    }
+    const id = 'yt_' + section + '_' + i;
 
-        playerHtml = `
-            <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
-            <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="s-share-yt">🔗 Share</a>
-            <div id="${id}"></div>
-        `;
-    } else {
+    playerHtml = `
+        <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
+        <a href="https://israel.ussl.co/s#s-section-${section}" target="_blank" class="s-share-yt">🔗 Share</a>
+        <div id="${id}"></div>
+    `;
+}
+ else {
         playerHtml = `<audio controls src="${url}"></audio>`;
     }
 
@@ -101,7 +101,9 @@ function s_display_siddur() {
 
         if (!is_array($audios)) $audios = [$audios];
 
-        $output .= "<div class='s-section'>";
+        $section_id = 's-section-' . $index;
+$output .= "<div class='s-section' id='{$section_id}'>";
+
         $output .= "<button class='s-toggle'>{$title}</button>";
         $output .= "<div class='s-content' style='display:block;'>";
         $output .= "<p dir='rtl' class='hebrew'>{$text}</p>";
