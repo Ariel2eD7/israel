@@ -11,24 +11,33 @@ function s_include_modal_html() {
     $html_file = plugin_dir_path(__FILE__) . 'audiolist.html';
     if(file_exists($html_file)) {
         echo file_get_contents($html_file);
+    } else {
+        // Fallback if audiolist.html missing
+        echo '<div id="s-audio-modal" class="s-modal" style="display:none;">
+                <div class="s-modal-content">
+                    <span class="s-close">&times;</span>
+                    <h3>השמעות</h3>
+                    <div id="s-audio-list"></div>
+                </div>
+              </div>';
     }
 }
 add_action('wp_footer', 's_include_modal_html');
 
-// Inline JS for modal functionality
+
+// Enqueue JS for modal functionality
 function s_enqueue_modal_js() {
     $inline_js = <<<JS
 jQuery(document).ready(function($){
-
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
-    const ytPlayers = {}; // store YouTube players
+    const ytPlayers = {};
 
+    // Load YouTube IFrame API if not present
     if(!window.YT){
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        document.head.appendChild(tag);
     }
 
     function formatTime(sec){
@@ -52,28 +61,32 @@ jQuery(document).ready(function($){
                 else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
                 if(!videoId) return;
 
-                let rowHtml = `
-                    <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                        <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
-                        <div class="s-video-title" style="flex:1;">Loading...</div>
-                        <div class="s-progress-container" style="flex:2;">
-                            <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="\${id}">
-                            <span class="s-time" data-id="\${id}">0:00 / 0:00</span>
-                        </div>
-                        <a href="https://israel.ussl.co/s?share=\${sectionIndex}_\${i}" target="_blank">🔗 Share</a>
-                        <div id="\${id}" style="display:none;"></div>
-                    </div>
-                `;
+                const rowHtml = `
+    <div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
+        <div class="s-video-title" style="flex:1;">Loading...</div>
+        <div class="s-progress-container" style="flex:2;">
+            <input type="range" min="0" value="0" step="0.1" class="s-progress-bar" data-id="${id}">
+            <span class="s-time" data-id="${id}">0:00 / 0:00</span>
+        </div>
+        <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
+        <div id="${id}" style="display:none;"></div>
+    </div>
+`;
+
+
                 modalList.append(rowHtml);
 
-                $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=\${videoId}&format=json`)
-                    .done(function(data){
-                        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text(data.title);
-                    })
-                    .fail(function(){
-                        $(`#\${id}`).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
-                    });
+              // Get video title
+$.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+    .done(function(data){
+        $('#' + id).closest('.s-audio-row').find('.s-video-title').text(data.title);
+    })
+    .fail(function(){
+        $('#' + id).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
+    });
 
+                // Wait for YouTube API to initialize
                 const checkYT = setInterval(function(){
                     if(window.YT && YT.Player){
                         clearInterval(checkYT);
@@ -82,6 +95,7 @@ jQuery(document).ready(function($){
                         const timeDisplay = $('.s-time[data-id="'+id+'"]');
                         ytPlayers[videoId] = {player, progressBar, timeDisplay};
 
+                        // Update progress
                         setInterval(function(){
                             const duration = player.getDuration();
                             const current = player.getCurrentTime();
@@ -92,6 +106,7 @@ jQuery(document).ready(function($){
                             }
                         },500);
 
+                        // Play/pause
                         $('button[data-id="'+id+'"]').off('click').on('click',function(){
                             if(player.getPlayerState() === YT.PlayerState.PLAYING){
                                 player.pauseVideo();
@@ -102,10 +117,12 @@ jQuery(document).ready(function($){
                             }
                         });
 
+                        // Seek
                         progressBar.off('input').on('input',function(){
                             player.seekTo(this.value,true);
                         });
 
+                        // Auto-play
                         if(autoPlayIndex !== null && autoPlayIndex === i){
                             player.playVideo();
                             $('button[data-id="'+id+'"]').text('⏸ Pause');
@@ -114,23 +131,26 @@ jQuery(document).ready(function($){
                 },200);
 
             } else {
-                modalList.append(`<div class="s-audio-row"><audio controls src="\${url}"></audio></div>`);
+                modalList.append('<div class="s-audio-row"><audio controls src="'+url+'"></audio></div>');
             }
         });
 
         modal.show();
     }
 
+    // Open modal
     $(document).on('click','.s-open-modal',function(){
         const sectionIndex = $(this).data('section');
         openModal(sectionIndex);
     });
 
+    // Close modal
     $(document).on('click','.s-close',function(){
         modal.hide();
         modalList.empty();
     });
 
+    // Auto-open from share URL
     const urlParams = new URLSearchParams(window.location.search);
     const shareParam = urlParams.get('share');
     if(shareParam){
