@@ -113,7 +113,7 @@ function openModal(sectionIndex, autoPlayIndex = null) {
         }
     }
 });
-JS;
+JS; 
 
     wp_add_inline_script('jquery', $inline_js);
 }
