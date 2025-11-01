@@ -1,5 +1,5 @@
 <!-- audiolist.html -->
-<div id="s-audio-modal" class="s-modal" style="display:none;">
+<div id="s-audio-modal" class="s-modal">
     <div class="s-modal-content">
         <span class="s-close">&times;</span>
         <h3>השמעות</h3>
@@ -8,7 +8,6 @@
 </div>
 
 <style>
-/* Modal overlay */
 .s-modal {
     position: fixed;
     z-index: 9999;
@@ -18,10 +17,9 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.6);
-    display: none;
+    display: none; /* keep hidden initially */
 }
 
-/* Modal content box */
 .s-modal-content {
     background-color: #fefefe;
     margin: 5% auto;
@@ -33,7 +31,6 @@
     direction: rtl;
 }
 
-/* Close button */
 .s-close {
     color: #aaa;
     float: left;
@@ -48,7 +45,6 @@
     text-decoration: none;
 }
 
-/* Each audio row */
 .s-audio-row {
     display: flex;
     align-items: center;
@@ -56,13 +52,11 @@
     margin-bottom: 10px;
 }
 
-/* Video title */
 .s-video-title {
     flex: 1;
     font-weight: bold;
 }
 
-/* Progress bar container */
 .s-progress-container {
     flex: 2;
     display: flex;
@@ -70,12 +64,10 @@
     gap: 5px;
 }
 
-/* Range input (progress bar) */
 .s-progress-bar {
     flex: 1;
 }
 
-/* Audio element fallback */
 audio {
     width: 100%;
 }
