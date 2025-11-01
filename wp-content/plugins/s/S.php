@@ -43,7 +43,8 @@ jQuery(document).ready(function($) {
 
                 playerHtml = `
                     <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
-                    <a href="https://israel.ussl.co/s#s-section-\${section}" target="_blank" class="s-share-yt">🔗 Share</a>
+                    <a href="https://israel.ussl.co/s?share=${section}_${i}" target="_blank" class="s-share-yt">🔗 Share</a>
+
                     <div id="\${id}"></div>
                 `;
             } else {
@@ -60,6 +61,65 @@ jQuery(document).ready(function($) {
         modal.hide();
         modalList.empty();
     });
+
+
+
+     // Check URL parameter on page load
+const urlParams = new URLSearchParams(window.location.search);
+const shareParam = urlParams.get('share');
+
+if(shareParam){
+    const parts = shareParam.split('_');
+    const sectionIndex = parts[0];
+    const audioIndex = parts[1];
+
+    // Open the modal
+    const modal = $('#s-audio-modal');
+    const modalList = $('#s-audio-list');
+
+    const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
+    modalList.empty();
+
+    audios.forEach(function(url, i) {
+        let playerHtml = '';
+
+        if(url.includes('youtube.com') || url.includes('youtu.be')) {
+            let videoId = '';
+            if(url.includes('watch?v=')){
+                videoId = url.split('watch?v=')[1].split('&')[0];
+            } else if(url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1].split('?')[0];
+            }
+            const id = 'yt_' + sectionIndex + '_' + i;
+
+            playerHtml = `
+                <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
+                <div id="\${id}"></div>
+            `;
+
+            // Auto-play only the specific audio
+            if(i == audioIndex){
+                $('#' + id).html("<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>");
+            }
+
+        } else {
+            playerHtml = '<audio controls src="' + url + '"></audio>';
+        }
+
+        modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
+    });
+
+    modal.show();
+
+    // Scroll to the section
+    const sectionEl = $('#s-section-' + sectionIndex);
+    if(sectionEl.length){
+        $('html, body').animate({ scrollTop: sectionEl.offset().top }, 500);
+    }
+}
+
+
+
 
     // YouTube audio-only player
     $(document).on('click', '.s-play-yt', function() {
