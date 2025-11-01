@@ -16,7 +16,17 @@ if (!defined('ABSPATH')) exit;
     </div>
 </div>
 
+
 <?php
+// Load modal HTML into the page
+function s_include_modal_html() {
+    $html_file = plugin_dir_path(__FILE__) . 'audiolist.html';
+    if(file_exists($html_file)) {
+        echo file_get_contents($html_file);
+    }
+}
+add_action('wp_footer', 's_include_modal_html');
+
 // Inline JS for the modal
 $inline_js = <<<JS
 jQuery(document).ready(function($){
