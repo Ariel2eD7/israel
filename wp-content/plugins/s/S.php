@@ -12,7 +12,8 @@ if (!defined('ABSPATH')) exit;
 function s_enqueue_assets() {
     wp_enqueue_style('s-style', plugin_dir_url(__FILE__) . 'style.css');
 
-    $inline_js = <<<JS
+    $inline_js = <<<'JS' 
+
 jQuery(document).ready(function($) {
     // Toggle sections
     $('.s-toggle').click(function() {
