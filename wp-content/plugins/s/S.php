@@ -2,7 +2,7 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 0.5
+ * Version: 0.6
  * Author: You
  */
 
@@ -23,30 +23,31 @@ jQuery(document).ready(function($) {
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
 
-    $(document).on('click', '.s-open-modal', function() {
-        const section = $(this).data('section');
-        const audios = JSON.parse($('#s-audio-' + section).text());
+    function openModal(sectionIndex, autoPlayIndex = null) {
+        const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
         modalList.empty();
 
         audios.forEach(function(url, i) {
             let playerHtml = '';
 
             if(url.includes('youtube.com') || url.includes('youtu.be')) {
-                // Extract video ID
                 let videoId = '';
                 if(url.includes('watch?v=')){
                     videoId = url.split('watch?v=')[1].split('&')[0];
                 } else if(url.includes('youtu.be/')) {
                     videoId = url.split('youtu.be/')[1].split('?')[0];
                 }
-                const id = 'yt_' + section + '_' + i;
+                const id = 'yt_' + sectionIndex + '_' + i;
 
-                playerHtml = `
-                    <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
-                    <a href="https://israel.ussl.co/s?share=${section}_${i}" target="_blank" class="s-share-yt">🔗 Share</a>
+                playerHtml = '<button class="s-play-yt" data-id="' + id + '" data-video="' + videoId + '">▶️ Play</button>';
+                playerHtml += '<a href="https://israel.ussl.co/s?share=' + sectionIndex + '_' + i + '" target="_blank" class="s-share-yt">🔗 Share</a>';
+                playerHtml += '<div id="' + id + '"></div>';
 
-                    <div id="\${id}"></div>
-                `;
+                // Auto-play only the requested one
+                if(autoPlayIndex !== null && autoPlayIndex == i){
+                    $('#' + id).html("<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>");
+                }
+
             } else {
                 playerHtml = '<audio controls src="' + url + '"></audio>';
             }
@@ -55,6 +56,11 @@ jQuery(document).ready(function($) {
         });
 
         modal.show();
+    }
+
+    $(document).on('click', '.s-open-modal', function() {
+        const sectionIndex = $(this).data('section');
+        openModal(sectionIndex);
     });
 
     $(document).on('click', '.s-close', function() {
@@ -62,77 +68,30 @@ jQuery(document).ready(function($) {
         modalList.empty();
     });
 
-
-
-     // Check URL parameter on page load
-const urlParams = new URLSearchParams(window.location.search);
-const shareParam = urlParams.get('share');
-
-if(shareParam){
-    const parts = shareParam.split('_');
-    const sectionIndex = parts[0];
-    const audioIndex = parts[1];
-
-    // Open the modal
-    const modal = $('#s-audio-modal');
-    const modalList = $('#s-audio-list');
-
-    const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
-    modalList.empty();
-
-    audios.forEach(function(url, i) {
-        let playerHtml = '';
-
-        if(url.includes('youtube.com') || url.includes('youtu.be')) {
-            let videoId = '';
-            if(url.includes('watch?v=')){
-                videoId = url.split('watch?v=')[1].split('&')[0];
-            } else if(url.includes('youtu.be/')) {
-                videoId = url.split('youtu.be/')[1].split('?')[0];
-            }
-            const id = 'yt_' + sectionIndex + '_' + i;
-
-            playerHtml = `
-                <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
-                <div id="\${id}"></div>
-            `;
-
-            // Auto-play only the specific audio
-            if(i == audioIndex){
-                $('#' + id).html("<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>");
-            }
-
-        } else {
-            playerHtml = '<audio controls src="' + url + '"></audio>';
-        }
-
-        modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
-    });
-
-    modal.show();
-
-    // Scroll to the section
-    const sectionEl = $('#s-section-' + sectionIndex);
-    if(sectionEl.length){
-        $('html, body').animate({ scrollTop: sectionEl.offset().top }, 500);
-    }
-}
-
-
-
-
     // YouTube audio-only player
     $(document).on('click', '.s-play-yt', function() {
         const btn = $(this);
         const videoId = btn.data('video');
         const id = btn.data('id');
 
-        const embedUrl = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0";
-
-        $('#' + id).html(
-            "<iframe src='" + embedUrl + "' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>"
-        );
+        $('#' + id).html("<iframe src='https://www.youtube.com/embed/" + videoId + "?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>");
     });
+
+    // Check URL parameter to auto-open modal
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareParam = urlParams.get('share');
+    if(shareParam){
+        const parts = shareParam.split('_');
+        const sectionIndex = parts[0];
+        const audioIndex = parts[1];
+
+        openModal(sectionIndex, audioIndex);
+
+        const sectionEl = $('#s-section-' + sectionIndex);
+        if(sectionEl.length){
+            $('html, body').animate({ scrollTop: sectionEl.offset().top }, 500);
+        }
+    }
 });
 JS;
 
@@ -146,9 +105,7 @@ function s_display_siddur() {
     $json_data = file_get_contents($json_file);
     $tefillot = json_decode($json_data, true);
 
-    if (!$tefillot) {
-        return '<p>Could not load tefillot data.</p>';
-    }
+    if (!$tefillot) return '<p>Could not load tefillot data.</p>';
 
     $output = '<div class="s-siddur">';
     $output .= '<h2>Arvit Shabbat (Moroccan)</h2>';
@@ -174,7 +131,7 @@ function s_display_siddur() {
         $output .= "</div></div>";
     }
 
-    // Modal HTML 
+    // Modal HTML
     $output .= '
     <div id="s-audio-modal" class="s-modal" style="display:none;">
         <div class="s-modal-content">
