@@ -128,7 +128,7 @@ function s_display_siddur() {
     if (!$tefillot) return '<p>Could not load tefillot data.</p>';
 
     $output = '<div class="s-siddur">';
-    $output .= '<h2>Arvit Shabbat (Moroccan)</h2>';
+    $output .= '<h2>ערבית של שבת</h2>';
 
     foreach ($tefillot as $index => $section) {
         $title = esc_html($section['title']);
