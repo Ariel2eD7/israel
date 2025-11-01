@@ -62,19 +62,20 @@ jQuery(document).ready(function($) {
     });
 
     // YouTube audio-only player
-    $(document).on('click', '.s-play-yt', function() {
-        const btn = $(this);
-        const videoId = btn.data('video');
-        const id = btn.data('id');
+$(document).on('click', '.s-play-yt', function() {
+    const btn = $(this);
+    const embed = btn.data('yt');
+    const id = btn.data('id');
 
-        const iframeHtml = `<iframe 
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&loop=1&playlist=${videoId}" 
-            style="width:0;height:0;border:0;visibility:hidden;" 
-            allow="autoplay">
-            </iframe>`;
+    // Use minimal size but not zero
+    $('#' + id).html(`
+        <iframe src="${embed}?autoplay=1&controls=0"
+                width="1" height="1" 
+                style="border:0;position:absolute;left:-9999px;" 
+                allow="autoplay"></iframe>
+    `);
+});
 
-        $('#' + id).html(iframeHtml);
-    });
 });
 JS;
 
