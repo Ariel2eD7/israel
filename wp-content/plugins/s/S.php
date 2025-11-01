@@ -2,7 +2,7 @@
 /**
  * Plugin Name: S (Online Siddur)
  * Description: Displays Moroccan Arvit for Shabbat with collapsible sections and optional audio.
- * Version: 0.4
+ * Version: 0.5
  * Author: You
  */
 
@@ -29,31 +29,29 @@ jQuery(document).ready(function($) {
         modalList.empty();
 
         audios.forEach(function(url, i) {
-    let playerHtml = '';
+            let playerHtml = '';
 
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    let videoId = '';
-    if(url.includes('watch?v=')){
-        videoId = url.split('watch?v=')[1].split('&')[0];
-    } else if(url.includes('youtu.be/')) {
-        videoId = url.split('youtu.be/')[1].split('?')[0];
-    }
-    const id = 'yt_' + section + '_' + i;
+            if(url.includes('youtube.com') || url.includes('youtu.be')) {
+                // Extract video ID
+                let videoId = '';
+                if(url.includes('watch?v=')){
+                    videoId = url.split('watch?v=')[1].split('&')[0];
+                } else if(url.includes('youtu.be/')) {
+                    videoId = url.split('youtu.be/')[1].split('?')[0];
+                }
+                const id = 'yt_' + section + '_' + i;
 
-    playerHtml = `
-    <button class="s-play-yt" data-id="${id}" data-video="${videoId}">▶️ Play</button>
-    <a href="https://israel.ussl.co/s#${encodeURIComponent('s-section-' + section)}" target="_blank" class="s-share-yt">🔗 Share</a>
-    <div id="${id}"></div>
-`;
+                playerHtml = `
+                    <button class="s-play-yt" data-id="\${id}" data-video="\${videoId}">▶️ Play</button>
+                    <a href="https://israel.ussl.co/s#s-section-\${section}" target="_blank" class="s-share-yt">🔗 Share</a>
+                    <div id="\${id}"></div>
+                `;
+            } else {
+                playerHtml = '<audio controls src="' + url + '"></audio>';
+            }
 
-}
- else {
-        playerHtml = `<audio controls src="${url}"></audio>`;
-    }
-
-    modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
-});
-
+            modalList.append('<div class="s-audio-item">' + playerHtml + '</div>');
+        });
 
         modal.show();
     });
@@ -103,21 +101,20 @@ function s_display_siddur() {
         if (!is_array($audios)) $audios = [$audios];
 
         $section_id = 's-section-' . $index;
-$output .= "<div class='s-section' id='{$section_id}'>";
-
+        $output .= "<div class='s-section' id='{$section_id}'>";
         $output .= "<button class='s-toggle'>{$title}</button>";
         $output .= "<div class='s-content' style='display:block;'>";
         $output .= "<p dir='rtl' class='hebrew'>{$text}</p>";
 
         if (!empty($audios)) {
-    $output .= "<button class='s-open-modal' data-section='{$index}'>🎧 שמע</button>";
-    $output .= "<div class='s-audio-data' id='s-audio-{$index}' style='display:none;'>" . json_encode($audios) . "</div>";
-}
+            $output .= "<button class='s-open-modal' data-section='{$index}'>🎧 שמע</button>";
+            $output .= "<div class='s-audio-data' id='s-audio-{$index}' style='display:none;'>" . json_encode($audios) . "</div>";
+        }
 
         $output .= "</div></div>";
     }
 
-    // Modal HTML
+    // Modal HTML 
     $output .= '
     <div id="s-audio-modal" class="s-modal" style="display:none;">
         <div class="s-modal-content">
