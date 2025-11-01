@@ -14,7 +14,6 @@ function s_enqueue_assets() {
 
     $inline_js = <<<'JS'
 jQuery(document).ready(function($) {
-
     // Toggle sections
     $('.s-toggle').click(function() {
         $(this).next('.s-content').slideToggle();
@@ -23,65 +22,107 @@ jQuery(document).ready(function($) {
     const modal = $('#s-audio-modal');
     const modalList = $('#s-audio-list');
 
-function openModal(sectionIndex, autoPlayIndex = null) {
-    const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
-    modalList.empty();
+    // Load YouTube IFrame API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    audios.forEach(function(url, i) {
-        let id = 'yt_' + sectionIndex + '_' + i;
+    var ytPlayers = {};
 
-        if(url.includes('youtube.com') || url.includes('youtu.be')) {
-            let videoId = '';
-            if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
-            else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+    function openModal(sectionIndex, autoPlayIndex = null) {
+        const audios = JSON.parse($('#s-audio-' + sectionIndex).text());
+        modalList.empty();
 
-            // Placeholder row
-            let rowHtml = `
-                <div class="s-audio-row" style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;border-bottom:1px solid #ddd;padding-bottom:5px;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <div class="s-video-title" style="flex:1;">Loading title...</div>
-                        <div class="s-share-container">
-                            <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank" class="s-share-yt">🔗 Share</a>
-                        </div>
-                    </div>
-                    <div id="${id}"></div>
+        audios.forEach(function(url, i) {
+            let rowHtml = '';
+            if(url.includes('youtube.com') || url.includes('youtu.be')) {
+                let videoId = '';
+                if(url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
+                else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+
+                const playerDivId = 'player_' + sectionIndex + '_' + i;
+
+                // Fetch title from oEmbed
+                $.getJSON('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + videoId + '&format=json')
+                    .done(function(data){
+                        const title = data.title || 'YouTube Video';
+                        rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                            <button class="s-play-yt" data-video="${videoId}" data-id="${playerDivId}">▶️ Play</button>
+                            <div class="s-video-title" style="flex:1;">${title}</div>
+                            <div class="s-share-container">
+                                <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
+                            </div>
+                            <div id="${playerDivId}" style="display:none;"></div>
+                        </div>`;
+                        modalList.append(rowHtml);
+
+                        // Create YT player after appending
+                        ytPlayers[videoId] = new YT.Player(playerDivId, {
+                            height: '0',
+                            width: '0',
+                            videoId: videoId,
+                            playerVars: { 'controls': 0, 'modestbranding': 1, 'rel': 0 },
+                        });
+
+                        // Auto-play if needed
+                        if(autoPlayIndex !== null && autoPlayIndex == i){
+                            ytPlayers[videoId].playVideo();
+                            $(`button[data-id='${playerDivId}']`).text('⏸ Pause');
+                        }
+                    })
+                    .fail(function(){
+                        // Fallback title if oEmbed fails
+                        const title = 'YouTube Video';
+                        rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                            <button class="s-play-yt" data-video="${videoId}" data-id="${playerDivId}">▶️ Play</button>
+                            <div class="s-video-title" style="flex:1;">${title}</div>
+                            <div class="s-share-container">
+                                <a href="https://israel.ussl.co/s?share=${sectionIndex}_${i}" target="_blank">🔗 Share</a>
+                            </div>
+                            <div id="${playerDivId}" style="display:none;"></div>
+                        </div>`;
+                        modalList.append(rowHtml);
+                        ytPlayers[videoId] = new YT.Player(playerDivId, {
+                            height: '0',
+                            width: '0',
+                            videoId: videoId,
+                            playerVars: { 'controls': 0, 'modestbranding': 1, 'rel': 0 },
+                        });
+                    });
+            } else {
+                // Normal audio
+                rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                    <audio controls src="${url}"></audio>
                 </div>`;
-            modalList.append(rowHtml);
-
-            // Fetch YouTube title
-            $.getJSON(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
-                .done(function(data) {
-                    $(`#${id}`).closest('.s-audio-row').find('.s-video-title').text(data.title);
-                })
-                .fail(function() {
-                    $(`#${id}`).closest('.s-audio-row').find('.s-video-title').text('YouTube Video');
-                });
-
-            // Embed YouTube iframe as player
-            let iframeHtml = `<iframe width="100%" height="60" src="https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0" 
-                                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            
-            // Auto-play if needed
-            if(autoPlayIndex !== null && autoPlayIndex == i){
-                iframeHtml = `<iframe width="100%" height="60" src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&modestbranding=1&rel=0" 
-                                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                modalList.append(rowHtml);
             }
+        });
 
-            $(`#${id}`).html(iframeHtml);
+        modal.show();
+    }
 
+    // Play/pause YouTube
+    $(document).on('click', '.s-play-yt', function(){
+        const btn = $(this);
+        const videoId = btn.data('video');
+        const player = ytPlayers[videoId];
+
+        // Pause other YT players
+        for(let vid in ytPlayers){
+            if(vid !== videoId) ytPlayers[vid].pauseVideo();
+        }
+
+        if(player.getPlayerState() === YT.PlayerState.PLAYING){
+            player.pauseVideo();
+            btn.text('▶️ Play');
         } else {
-            // Non-YouTube audio
-            let rowHtml = `<div class="s-audio-row" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <audio controls src="${url}"></audio>
-            </div>`;
-            modalList.append(rowHtml);
+            player.playVideo();
+            btn.text('⏸ Pause');
         }
     });
 
-    modal.show();
-}
-
-    // Open modal on button click
+    // Open modal
     $(document).on('click', '.s-open-modal', function() {
         const sectionIndex = $(this).data('section');
         openModal(sectionIndex);
@@ -93,32 +134,20 @@ function openModal(sectionIndex, autoPlayIndex = null) {
         modalList.empty();
     });
 
-    // Play YouTube on button click
-    $(document).on('click', '.s-play-yt', function() {
-        const btn = $(this);
-        const videoId = btn.data('video');
-        const id = btn.data('id');
-        $('#'+id).html("<iframe src='https://www.youtube.com/embed/"+videoId+"?autoplay=1&controls=0&modestbranding=1&rel=0' width='1' height='1' style='border:0;position:absolute;left:-9999px;' allow='autoplay'></iframe>");
-        btn.text('▶️ Playing...');
-    });
-
-    // Auto-open modal if share link
+    // Auto-open if share param
     const urlParams = new URLSearchParams(window.location.search);
     const shareParam = urlParams.get('share');
     if(shareParam){
         const parts = shareParam.split('_');
         const sectionIndex = parts[0];
         const audioIndex = parts[1];
-
         openModal(sectionIndex, audioIndex);
-
         const sectionEl = $('#s-section-' + sectionIndex);
-        if(sectionEl.length){
-            $('html, body').animate({ scrollTop: sectionEl.offset().top }, 500);
-        }
+        if(sectionEl.length) $('html, body').animate({ scrollTop: sectionEl.offset().top }, 500);
     }
+
 });
-JS; 
+JS;
 
     wp_add_inline_script('jquery', $inline_js);
 }
