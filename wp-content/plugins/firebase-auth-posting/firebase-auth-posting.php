@@ -8,7 +8,7 @@
 
   defined('ABSPATH') || exit;
 
-function fap_enqueue_scripts() 
+function fap_enqueue_scripts()    
 { 
   
     wp_enqueue_script('firebase-app', 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js', [], null, true);
