@@ -72,7 +72,7 @@ function bwu_admin_page() {
                 if ($content) {
                     $title = pathinfo($name, PATHINFO_FILENAME);
                     $post_id = wp_insert_post([
-                        'post_title'   => $title,
+                        'post_title'   => $title, 
                         'post_content' => $content,
                         'post_status'  => 'publish'
                     ]);
