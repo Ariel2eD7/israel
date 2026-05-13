@@ -9,6 +9,9 @@ function display_video_admin() {
     }
 
     ob_start();
+        // Output the common page layout/header (adjust shortcode name if needed)
+    echo do_shortcode('[firebase_layout_page]');
+
 ?>
 
 <section style="
