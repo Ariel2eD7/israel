@@ -106,19 +106,14 @@ Save Course
 
 <script>
 
-// Wait for Firebase
-async function waitForFirebase() {
-    return new Promise(resolve => {
-        const check = () => {
-            if (window.fapFirebase && window.fapFirebase.db) {
-                resolve(window.fapFirebase);
-            } else {
-                setTimeout(check, 100);
-            }
-        };
-        check();
-    });
+    function getFirebase() {
+    if (typeof firebase === 'undefined') {
+        throw new Error("Firebase is not loaded. Check [firebase_layout_page].");
+    }
+    return firebase;
 }
+
+
 
 const lessonsContainer =
     document.getElementById('lessons-container');
@@ -192,16 +187,11 @@ document.getElementById('add-lesson-btn')
 document.getElementById('save-course-btn')
 .addEventListener('click', async () => {
 
-    const firebaseObj = await waitForFirebase();
-
-    const status =
-        document.getElementById('status');
+    const status = document.getElementById('status');
 
     try {
 
         status.innerHTML = 'Saving course...';
-
-        // COURSE DATA
 
         const courseName =
             document.getElementById('course-name').value;
@@ -212,20 +202,17 @@ document.getElementById('save-course-btn')
         const courseThumbnail =
             document.getElementById('course-thumbnail').value;
 
-        // CREATE COURSE
+        const fb = getFirebase();
 
-        const courseRef =
-            await firebaseObj.db
-                .collection('courses')
-                .add({
-                    name: courseName,
-                    description:்கे courseDescription,
-                    thumbnail:ourseThumbnail,
-                    createdAt:new Date()
-                });
+// CREATE COURSE
+const courseRef = await fb.firestore().collection('courses').add({
+    name: courseName,
+    description: courseDescription,
+    thumbnail: courseThumbnail,
+    createdAt: fb.firestore.FieldValue.serverTimestamp()
+});
 
-        // LESSONS
-
+        // CREATE LESSONS
         const lessonRows =
             document.querySelectorAll('#lessons-container > div');
 
@@ -240,37 +227,24 @@ document.getElementById('save-course-btn')
                 row.querySelector('.lesson-url').value;
 
             const duration =
-                parseInt(
-                    row.querySelector('.lesson-duration').value
-                ) || 0;
+                parseInt(row.querySelector('.lesson-duration').value) || 0;
 
-            await firebaseObj.db
-                .collection('lessons')
-                .add({
-                    courseId:courseRef.id,
-                    title:title,
-                    videoUrl:url,
-                    duration:duration,
-                    order:order++
-                });
-
+            await fb.firestore().collection('lessons').add({
+                courseId: courseRef.id,
+                title: title,
+                videoUrl: url,
+                duration: duration,
+                order: order++
+            });
         }
 
-        status.innerHTML = `
-            <div style="color:green;font-weight:bold;">
-                Course saved successfully!
-            </div>
-        `;
+        status.innerHTML =
+            '<div style="color:green;font-weight:bold;">Course saved successfully!</div>';
 
-    } catch(err) {
-
+    } catch (err) {
         console.error(err);
-
-        status.innerHTML = `
-            <div style="color:red;font-weight:bold;">
-                Error saving course.
-            </div>
-        `;
+        status.innerHTML =
+            '<div style="color:red;font-weight:bold;">Error: ' + err.message + '</div>';
     }
 
 });
