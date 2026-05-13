@@ -3,100 +3,48 @@ if (!defined('ABSPATH')) exit;
 
 function display_video_admin() {
 
-    // Only admins can access
     if (!current_user_can('administrator')) {
         return '<p>Access denied.</p>';
     }
 
     ob_start();
-        // Output the common page layout/header (adjust shortcode name if needed)
-    echo do_shortcode('[firebase_layout_page]');
 
+    echo do_shortcode('[firebase_layout_page]');
 ?>
 
-<section style="
-    max-width:700px;
-    margin:40px auto;
-    padding:20px;
-    font-family:Arial,sans-serif;
-">
+<section style="max-width:800px;margin:40px auto;padding:20px;font-family:Arial,sans-serif;">
 
-<h2 style="margin-bottom:20px;">Create New Course</h2>
+<h2>Courses Admin</h2>
 
-<!-- COURSE INFO -->
+<!-- COURSE LIST -->
+<div id="courses-list" style="margin-bottom:30px;"></div>
 
-<input
-    id="course-name"
-    type="text"
-    placeholder="Course Name"
-    style="
-        width:100%;
-        padding:12px;
-        margin-bottom:12px;
-        border-radius:8px;
-        border:1px solid #ccc;
-    "
->
+<hr>
 
-<textarea
-    id="course-description"
-    placeholder="Course Description"
-    style="
-        width:100%;
-        padding:12px;
-        margin-bottom:12px;
-        border-radius:8px;
-        border:1px solid #ccc;
-        min-height:100px;
-    "
-></textarea>
+<h2>Create / Edit Course</h2>
 
-<input
-    id="course-thumbnail"
-    type="text"
-    placeholder="Thumbnail URL"
-    style="
-        width:100%;
-        padding:12px;
-        margin-bottom:24px;
-        border-radius:8px;
-        border:1px solid #ccc;
-    "
->
+<input id="course-name" type="text" placeholder="Course Name"
+style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;">
 
-<h3 style="margin-bottom:16px;">Lessons</h3>
+<textarea id="course-description" placeholder="Course Description"
+style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;min-height:100px;"></textarea>
+
+<input id="course-thumbnail" type="text" placeholder="Thumbnail URL"
+style="width:100%;padding:12px;margin-bottom:24px;border:1px solid #ccc;border-radius:8px;">
+
+<h3>Lessons</h3>
 
 <div id="lessons-container"></div>
 
-<button
-    id="add-lesson-btn"
-    style="
-        padding:10px 16px;
-        border:none;
-        border-radius:8px;
-        background:#268AFF;
-        color:white;
-        cursor:pointer;
-        margin-bottom:24px;
-    "
->
+<button id="add-lesson-btn"
+style="padding:10px 16px;background:#268AFF;color:white;border:none;border-radius:8px;margin-bottom:20px;">
 + Add Lesson
 </button>
 
 <br>
 
-<button
-    id="save-course-btn"
-    style="
-        padding:14px 20px;
-        border:none;
-        border-radius:8px;
-        background:green;
-        color:white;
-        font-size:16px;
-        cursor:pointer;
-    "
->
+<button id="save-course-btn"
+style="padding:14px 20px;background:green;color:white;border:none;border-radius:8px;font-size:16px;">
 Save Course
 </button>
 
@@ -106,152 +54,197 @@ Save Course
 
 <script>
 
-    function getFirebase() {
+function getFirebase() {
     if (typeof firebase === 'undefined') {
-        throw new Error("Firebase is not loaded. Check [firebase_layout_page].");
+        throw new Error("Firebase not loaded");
     }
     return firebase;
 }
 
+let editingCourseId = null;
 
+/* ---------------- LOAD COURSES ---------------- */
+async function loadCourses() {
+    const fb = getFirebase();
+    const container = document.getElementById('courses-list');
 
-const lessonsContainer =
-    document.getElementById('lessons-container');
+    const snap = await fb.firestore().collection('courses').orderBy('createdAt','desc').get();
 
-// Add lesson row
-function addLessonRow() {
+    container.innerHTML = '';
 
-    const row = document.createElement('div');
+    snap.forEach(doc => {
+        const c = doc.data();
 
-    row.style.cssText = `
-        border:1px solid #ddd;
-        border-radius:8px;
-        padding:16px;
-        margin-bottom:16px;
-        background:#f9f9f9;
-    `;
+        const div = document.createElement('div');
+        div.style.cssText = "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;";
 
-    row.innerHTML = `
+        div.innerHTML = `
+            <div>
+                <b>${c.name}</b><br>
+                <small>${c.description || ''}</small>
+            </div>
+            <div>
+                <button onclick="editCourse('${doc.id}')">Edit</button>
+                <button onclick="deleteCourse('${doc.id}')" style="background:red;color:white;">Delete</button>
+            </div>
+        `;
 
-        <input
-            class="lesson-title"
-            type="text"
-            placeholder="Lesson Title"
-            style="
-                width:100%;
-                padding:10px;
-                margin-bottom:10px;
-                border-radius:6px;
-                border:1px solid #ccc;
-            "
-        >
-
-        <input
-            class="lesson-url"
-            type="text"
-            placeholder="YouTube Video URL"
-            style="
-                width:100%;
-                padding:10px;
-                margin-bottom:10px;
-                border-radius:6px;
-                border:1px solid #ccc;
-            "
-        >
-
-        <input
-            class="lesson-duration"
-            type="number"
-            placeholder="Duration in seconds"
-            style="
-                width:100%;
-                padding:10px;
-                border-radius:6px;
-                border:1px solid #ccc;
-            "
-        >
-
-    `;
-
-    lessonsContainer.appendChild(row);
+        container.appendChild(div);
+    });
 }
 
-// Add first lesson automatically
+/* ---------------- EDIT COURSE ---------------- */
+window.editCourse = async function(id) {
+
+    const fb = getFirebase();
+    editingCourseId = id;
+
+    const doc = await fb.firestore().collection('courses').doc(id).get();
+    const c = doc.data();
+
+    document.getElementById('course-name').value = c.name || '';
+    document.getElementById('course-description').value = c.description || '';
+    document.getElementById('course-thumbnail').value = c.thumbnail || '';
+
+    const lessonsSnap = await fb.firestore()
+        .collection('lessons')
+        .where('courseId','==',id)
+        .orderBy('order')
+        .get();
+
+    const container = document.getElementById('lessons-container');
+    container.innerHTML = '';
+
+    lessonsSnap.forEach(l => {
+        const d = l.data();
+
+        const row = document.createElement('div');
+        row.style.cssText = "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
+
+        row.innerHTML = `
+            <input class="lesson-title" value="${d.title || ''}" style="width:100%;margin-bottom:6px;">
+            <input class="lesson-url" value="${d.videoUrl || ''}" style="width:100%;margin-bottom:6px;">
+            <input class="lesson-duration" value="${d.duration || 0}" style="width:100%;margin-bottom:6px;">
+
+            <button onclick="deleteLesson('${l.id}')" style="background:red;color:white;">
+                Delete Lesson
+            </button>
+        `;
+
+        container.appendChild(row);
+    });
+};
+
+/* ---------------- DELETE COURSE ---------------- */
+window.deleteCourse = async function(id) {
+
+    if (!confirm('Delete course?')) return;
+
+    const fb = getFirebase();
+
+    await fb.firestore().collection('courses').doc(id).delete();
+
+    const lessons = await fb.firestore().collection('lessons')
+        .where('courseId','==',id).get();
+
+    const batch = fb.firestore().batch();
+    lessons.forEach(d => batch.delete(d.ref));
+    await batch.commit();
+
+    loadCourses();
+};
+
+/* ---------------- DELETE LESSON ---------------- */
+window.deleteLesson = async function(id) {
+
+    const fb = getFirebase();
+    await fb.firestore().collection('lessons').doc(id).delete();
+};
+
+/* ---------------- ADD LESSON ---------------- */
+function addLessonRow(title='', url='', duration=0) {
+
+    const row = document.createElement('div');
+    row.style.cssText = "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
+
+    row.innerHTML = `
+        <input class="lesson-title" placeholder="Title" value="${title}" style="width:100%;margin-bottom:6px;">
+        <input class="lesson-url" placeholder="Video URL" value="${url}" style="width:100%;margin-bottom:6px;">
+        <input class="lesson-duration" type="number" value="${duration}" style="width:100%;">
+    `;
+
+    document.getElementById('lessons-container').appendChild(row);
+}
+
+document.getElementById('add-lesson-btn').addEventListener('click', () => addLessonRow());
+
 addLessonRow();
 
-// Add lesson button
-document.getElementById('add-lesson-btn')
-.addEventListener('click', addLessonRow);
+/* ---------------- SAVE COURSE (CREATE OR UPDATE) ---------------- */
+document.getElementById('save-course-btn').addEventListener('click', async () => {
 
-// Save course
-document.getElementById('save-course-btn')
-.addEventListener('click', async () => {
-
+    const fb = getFirebase();
     const status = document.getElementById('status');
 
     try {
 
-        status.innerHTML = 'Saving course...';
+        status.innerHTML = "Saving...";
 
-        const courseName =
-            document.getElementById('course-name').value;
+        const data = {
+            name: document.getElementById('course-name').value,
+            description: document.getElementById('course-description').value,
+            thumbnail: document.getElementById('course-thumbnail').value,
+            createdAt: fb.firestore.FieldValue.serverTimestamp()
+        };
 
-        const courseDescription =
-            document.getElementById('course-description').value;
+        let courseId = editingCourseId;
 
-        const courseThumbnail =
-            document.getElementById('course-thumbnail').value;
+        if (courseId) {
+            await fb.firestore().collection('courses').doc(courseId).update(data);
+        } else {
+            const ref = await fb.firestore().collection('courses').add(data);
+            courseId = ref.id;
+            editingCourseId = courseId;
+        }
 
-        const fb = getFirebase();
+        // delete old lessons
+        const old = await fb.firestore().collection('lessons')
+            .where('courseId','==',courseId).get();
 
-// CREATE COURSE
-const courseRef = await fb.firestore().collection('courses').add({
-    name: courseName,
-    description: courseDescription,
-    thumbnail: courseThumbnail,
-    createdAt: fb.firestore.FieldValue.serverTimestamp()
-});
+        const batch = fb.firestore().batch();
+        old.forEach(d => batch.delete(d.ref));
+        await batch.commit();
 
-        // CREATE LESSONS
-        const lessonRows =
-            document.querySelectorAll('#lessons-container > div');
-
+        // add new lessons
+        const rows = document.querySelectorAll('#lessons-container > div');
         let order = 1;
 
-        for (const row of lessonRows) {
-
-            const title =
-                row.querySelector('.lesson-title').value;
-
-            const url =
-                row.querySelector('.lesson-url').value;
-
-            const duration =
-                parseInt(row.querySelector('.lesson-duration').value) || 0;
-
+        for (const row of rows) {
             await fb.firestore().collection('lessons').add({
-                courseId: courseRef.id,
-                title: title,
-                videoUrl: url,
-                duration: duration,
+                courseId,
+                title: row.querySelector('.lesson-title').value,
+                videoUrl: row.querySelector('.lesson-url').value,
+                duration: parseInt(row.querySelector('.lesson-duration').value) || 0,
                 order: order++
             });
         }
 
-        status.innerHTML =
-            '<div style="color:green;font-weight:bold;">Course saved successfully!</div>';
+        status.innerHTML = "✅ Saved!";
+        loadCourses();
 
-    } catch (err) {
-        console.error(err);
-        status.innerHTML =
-            '<div style="color:red;font-weight:bold;">Error: ' + err.message + '</div>';
+    } catch (e) {
+        console.error(e);
+        status.innerHTML = "❌ " + e.message;
     }
-
 });
+
+/* INIT */
+document.addEventListener('DOMContentLoaded', loadCourses);
+
 </script>
 
 <?php
-    return ob_get_clean();
+return ob_get_clean();
 }
 
 add_shortcode('video_admin', 'display_video_admin');
