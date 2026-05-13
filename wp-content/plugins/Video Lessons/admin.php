@@ -63,24 +63,42 @@ function getFirebase() {
 
 let editingCourseId = null;
 
+/* ---------------- RESET FORM ---------------- */
+function resetForm() {
+    editingCourseId = null;
+
+    document.getElementById('course-name').value = '';
+    document.getElementById('course-description').value = '';
+    document.getElementById('course-thumbnail').value = '';
+    document.getElementById('lessons-container').innerHTML = '';
+
+    addLessonRow();
+}
+
 /* ---------------- LOAD COURSES ---------------- */
 async function loadCourses() {
+
     const fb = getFirebase();
     const container = document.getElementById('courses-list');
 
-    const snap = await fb.firestore().collection('courses').orderBy('createdAt','desc').get();
+    const snap = await fb.firestore()
+        .collection('courses')
+        .orderBy('createdAt','desc')
+        .get();
 
     container.innerHTML = '';
 
     snap.forEach(doc => {
+
         const c = doc.data();
 
         const div = document.createElement('div');
-        div.style.cssText = "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;";
+        div.style.cssText =
+            "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;";
 
         div.innerHTML = `
             <div>
-                <b>${c.name}</b><br>
+                <b>${c.name || ''}</b><br>
                 <small>${c.description || ''}</small>
             </div>
             <div>
@@ -106,32 +124,20 @@ window.editCourse = async function(id) {
     document.getElementById('course-description').value = c.description || '';
     document.getElementById('course-thumbnail').value = c.thumbnail || '';
 
+    const container = document.getElementById('lessons-container');
+    container.innerHTML = '';
+
     const lessonsSnap = await fb.firestore()
         .collection('lessons')
         .where('courseId','==',id)
         .orderBy('order')
         .get();
 
-    const container = document.getElementById('lessons-container');
-    container.innerHTML = '';
-
     lessonsSnap.forEach(l => {
+
         const d = l.data();
 
-        const row = document.createElement('div');
-        row.style.cssText = "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
-
-        row.innerHTML = `
-            <input class="lesson-title" value="${d.title || ''}" style="width:100%;margin-bottom:6px;">
-            <input class="lesson-url" value="${d.videoUrl || ''}" style="width:100%;margin-bottom:6px;">
-            <input class="lesson-duration" value="${d.duration || 0}" style="width:100%;margin-bottom:6px;">
-
-            <button onclick="deleteLesson('${l.id}')" style="background:red;color:white;">
-                Delete Lesson
-            </button>
-        `;
-
-        container.appendChild(row);
+        addLessonRow(d.title, d.videoUrl, d.duration, l.id);
     });
 };
 
@@ -144,8 +150,10 @@ window.deleteCourse = async function(id) {
 
     await fb.firestore().collection('courses').doc(id).delete();
 
-    const lessons = await fb.firestore().collection('lessons')
-        .where('courseId','==',id).get();
+    const lessons = await fb.firestore()
+        .collection('lessons')
+        .where('courseId','==',id)
+        .get();
 
     const batch = fb.firestore().batch();
     lessons.forEach(d => batch.delete(d.ref));
@@ -154,33 +162,45 @@ window.deleteCourse = async function(id) {
     loadCourses();
 };
 
-/* ---------------- DELETE LESSON ---------------- */
-window.deleteLesson = async function(id) {
-
-    const fb = getFirebase();
-    await fb.firestore().collection('lessons').doc(id).delete();
-};
-
-/* ---------------- ADD LESSON ---------------- */
-function addLessonRow(title='', url='', duration=0) {
+/* ---------------- ADD LESSON ROW ---------------- */
+function addLessonRow(title='', url='', duration=0, lessonId=null) {
 
     const row = document.createElement('div');
-    row.style.cssText = "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
+
+    row.dataset.lessonId = lessonId || '';
+
+    row.style.cssText =
+        "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
 
     row.innerHTML = `
         <input class="lesson-title" placeholder="Title" value="${title}" style="width:100%;margin-bottom:6px;">
         <input class="lesson-url" placeholder="Video URL" value="${url}" style="width:100%;margin-bottom:6px;">
-        <input class="lesson-duration" type="number" value="${duration}" style="width:100%;">
+        <input class="lesson-duration" type="number" value="${duration}" style="width:100%;margin-bottom:6px;">
+        <button class="delete-lesson" style="background:red;color:white;border:none;padding:6px 10px;margin-top:6px;border-radius:6px;">
+            Delete Lesson
+        </button>
     `;
+
+    row.querySelector('.delete-lesson').onclick = async () => {
+
+        const fb = getFirebase();
+
+        const id = row.dataset.lessonId;
+
+        if (id) {
+            await fb.firestore().collection('lessons').doc(id).delete();
+        }
+
+        row.remove();
+    };
 
     document.getElementById('lessons-container').appendChild(row);
 }
 
-document.getElementById('add-lesson-btn').addEventListener('click', () => addLessonRow());
+document.getElementById('add-lesson-btn')
+.addEventListener('click', () => addLessonRow());
 
-addLessonRow();
-
-/* ---------------- SAVE COURSE (CREATE OR UPDATE) ---------------- */
+/* ---------------- SAVE COURSE (CREATE / UPDATE) ---------------- */
 document.getElementById('save-course-btn').addEventListener('click', async () => {
 
     const fb = getFirebase();
@@ -190,36 +210,42 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
 
         status.innerHTML = "Saving...";
 
-        const data = {
+        const courseData = {
             name: document.getElementById('course-name').value,
             description: document.getElementById('course-description').value,
             thumbnail: document.getElementById('course-thumbnail').value,
-            createdAt: fb.firestore.FieldValue.serverTimestamp()
+            updatedAt: fb.firestore.FieldValue.serverTimestamp()
         };
 
         let courseId = editingCourseId;
 
+        // CREATE or UPDATE COURSE
         if (courseId) {
-            await fb.firestore().collection('courses').doc(courseId).update(data);
+            await fb.firestore().collection('courses').doc(courseId).update(courseData);
         } else {
-            const ref = await fb.firestore().collection('courses').add(data);
+            courseData.createdAt = fb.firestore.FieldValue.serverTimestamp();
+            const ref = await fb.firestore().collection('courses').add(courseData);
             courseId = ref.id;
             editingCourseId = courseId;
         }
 
-        // delete old lessons
-        const old = await fb.firestore().collection('lessons')
-            .where('courseId','==',courseId).get();
+        // DELETE OLD LESSONS
+        const oldLessons = await fb.firestore()
+            .collection('lessons')
+            .where('courseId','==',courseId)
+            .get();
 
         const batch = fb.firestore().batch();
-        old.forEach(d => batch.delete(d.ref));
+        oldLessons.forEach(d => batch.delete(d.ref));
         await batch.commit();
 
-        // add new lessons
+        // ADD NEW LESSONS
         const rows = document.querySelectorAll('#lessons-container > div');
+
         let order = 1;
 
         for (const row of rows) {
+
             await fb.firestore().collection('lessons').add({
                 courseId,
                 title: row.querySelector('.lesson-title').value,
@@ -229,7 +255,7 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
             });
         }
 
-        status.innerHTML = "✅ Saved!";
+        status.innerHTML = "✅ Saved successfully!";
         loadCourses();
 
     } catch (e) {
@@ -238,8 +264,11 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
     }
 });
 
-/* INIT */
-document.addEventListener('DOMContentLoaded', loadCourses);
+/* ---------------- INIT ---------------- */
+document.addEventListener('DOMContentLoaded', () => {
+    loadCourses();
+    addLessonRow();
+});
 
 </script>
 
