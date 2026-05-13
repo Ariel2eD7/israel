@@ -9,6 +9,8 @@
 if (!defined('ABSPATH')) exit;
 
 include_once plugin_dir_path(__FILE__) . 'course.php';
+include_once plugin_dir_path(__FILE__) . 'admin.php';
+
 
 
 function display_video_dashboard() {
