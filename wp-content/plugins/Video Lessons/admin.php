@@ -285,100 +285,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     console.log('🚀 DOM loaded');
 
-    try {
+    await waitForFirebase();
 
-        console.log('⏳ Waiting for Firebase...');
-        await waitForFirebase();
+    console.log('✅ Firebase ready');
 
-        console.log('✅ Firebase ready');
-        console.log('firebase object:', firebase);
+    firebase.auth().onAuthStateChanged(async (user) => {
 
-        // wait for auth state properly
-        firebase.auth().onAuthStateChanged(async (user) => {
+        console.log('👤 Auth state changed');
+        console.log('User:', user);
 
-            console.log('👤 Auth state changed');
-            console.log('User object:', user);
+        if (!user) {
 
-            if (!user) {
-                console.error('❌ No logged in user');
+            console.log('❌ User not logged in');
 
-                document.body.innerHTML = `
-                    <h1 style="padding:40px;text-align:center;color:red;">
-                        Access denied — no firebase user
-                    </h1>
-                `;
-                return;
-            }
+            document.body.innerHTML = `
+                <h1 style="padding:40px;text-align:center;color:red;">
+                    Access denied
+                </h1>
+            `;
 
-            console.log('✅ Logged in user UID:', user.uid);
-            console.log('📧 Email:', user.email);
+            return;
+        }
 
-            try {
+        console.log('✅ User logged in:', user.email);
 
-                console.log('⏳ Fetching Firestore user document...');
-
-                const adminDoc = await firebase.firestore()
-                    .collection('users')
-                    .doc(user.uid)
-                    .get();
-
-                console.log('📄 Firestore document exists:', adminDoc.exists);
-
-                if (adminDoc.exists) {
-                    console.log('📦 User document data:', adminDoc.data());
-                }
-
-                if (!adminDoc.exists) {
-
-                    console.error('❌ User document does not exist');
-
-                    document.body.innerHTML = `
-                        <h1 style="padding:40px;text-align:center;color:red;">
-                            User document not found
-                        </h1>
-                    `;
-                    return;
-                }
-
-                if (!adminDoc.data().isAdmin) {
-
-                    console.error('❌ isAdmin missing or false');
-
-                    document.body.innerHTML = `
-                        <h1 style="padding:40px;text-align:center;color:red;">
-                            Admin permission missing
-                        </h1>
-                    `;
-                    return;
-                }
-
-                console.log('✅ Admin verified');
-
-                loadCourses();
-                addLessonRow();
-
-            } catch (err) {
-
-                console.error('🔥 Firestore admin check failed:', err);
-
-                document.body.innerHTML = `
-                    <h1 style="padding:40px;text-align:center;color:red;">
-                        Firestore error
-                    </h1>
-                `;
-            }
-        });
-
-    } catch (e) {
-
-        console.error('🔥 Initialization failed:', e);
-
-        document.body.innerHTML = `
-            <h1 style="padding:40px;text-align:center;color:red;">
-                Firebase init failed
-            </h1>
-        `;
-    }
+        loadCourses();
+        addLessonRow();
+    });
 });
 
 </script>
