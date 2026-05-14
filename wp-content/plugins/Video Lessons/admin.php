@@ -288,7 +288,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = firebase.auth().currentUser;
 
     if (!user) {
-        document.body.innerHTML = '<h2 style="padding:40px;text-align:center;">Access denied</h2>';
+        document.body.innerHTML = 'Access denied';
+        return;
+    }
+
+    const adminDoc = await firebase.firestore()
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (!adminDoc.exists || !adminDoc.data().isAdmin) {
+        document.body.innerHTML = 'Admins only';
         return;
     }
 
