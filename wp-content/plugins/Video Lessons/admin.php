@@ -282,104 +282,51 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
 
 /* ---------------- INIT ---------------- */
 document.addEventListener('DOMContentLoaded', async () => {
-document.addEventListener('DOMContentLoaded', async () => {
 
-    console.log('🚀 DOM loaded');
+    await waitForFirebase();
 
-    try {
+    firebase.auth().onAuthStateChanged(async (user) => {
 
-        console.log('⏳ Waiting for Firebase...');
-        await waitForFirebase();
+        if (!user) {
+            document.body.innerHTML = `
+                <h1 style="padding:40px;text-align:center;color:red;">
+                    Access denied
+                </h1>
+            `;
+            return;
+        }
 
-        console.log('✅ Firebase ready');
-        console.log('firebase object:', firebase);
+        try {
 
-        // wait for auth state properly
-        firebase.auth().onAuthStateChanged(async (user) => {
+            const adminDoc = await firebase.firestore()
+                .collection('users')
+                .doc(user.uid)
+                .get();
 
-            console.log('👤 Auth state changed');
-            console.log('User object:', user);
-
-            if (!user) {
-                console.error('❌ No logged in user');
+            if (!adminDoc.exists || !adminDoc.data().isAdmin) {
 
                 document.body.innerHTML = `
                     <h1 style="padding:40px;text-align:center;color:red;">
-                        Access denied — no firebase user
+                        Admins only
                     </h1>
                 `;
                 return;
             }
 
-            console.log('✅ Logged in user UID:', user.uid);
-            console.log('📧 Email:', user.email);
+            loadCourses();
+            addLessonRow();
 
-            try {
+        } catch (err) {
 
-                console.log('⏳ Fetching Firestore user document...');
+            console.error('Admin verification failed:', err);
 
-                const adminDoc = await firebase.firestore()
-                    .collection('users')
-                    .doc(user.uid)
-                    .get();
-
-                console.log('📄 Firestore document exists:', adminDoc.exists);
-
-                if (adminDoc.exists) {
-                    console.log('📦 User document data:', adminDoc.data());
-                }
-
-                if (!adminDoc.exists) {
-
-                    console.error('❌ User document does not exist');
-
-                    document.body.innerHTML = `
-                        <h1 style="padding:40px;text-align:center;color:red;">
-                            User document not found
-                        </h1>
-                    `;
-                    return;
-                }
-
-                if (!adminDoc.data().isAdmin) {
-
-                    console.error('❌ isAdmin missing or false');
-
-                    document.body.innerHTML = `
-                        <h1 style="padding:40px;text-align:center;color:red;">
-                            Admin permission missing
-                        </h1>
-                    `;
-                    return;
-                }
-
-                console.log('✅ Admin verified');
-
-                loadCourses();
-                addLessonRow();
-
-            } catch (err) {
-
-                console.error('🔥 Firestore admin check failed:', err);
-
-                document.body.innerHTML = `
-                    <h1 style="padding:40px;text-align:center;color:red;">
-                        Firestore error
-                    </h1>
-                `;
-            }
-        });
-
-    } catch (e) {
-
-        console.error('🔥 Initialization failed:', e);
-
-        document.body.innerHTML = `
-            <h1 style="padding:40px;text-align:center;color:red;">
-                Firebase init failed
-            </h1>
-        `;
-    }
+            document.body.innerHTML = `
+                <h1 style="padding:40px;text-align:center;color:red;">
+                    Error loading admin
+                </h1>
+            `;
+        }
+    });
 });
 
 </script>
