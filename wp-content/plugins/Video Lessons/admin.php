@@ -3,9 +3,6 @@ if (!defined('ABSPATH')) exit;
 
 function display_video_admin() {
 
-    if (!current_user_can('administrator')) {
-        return '<p>Access denied.</p>';
-    }
 
     ob_start();
 
@@ -285,7 +282,16 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
 
 /* ---------------- INIT ---------------- */
 document.addEventListener('DOMContentLoaded', async () => {
+
     await waitForFirebase();
+
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+        document.body.innerHTML = '<h2 style="padding:40px;text-align:center;">Access denied</h2>';
+        return;
+    }
+
     loadCourses();
     addLessonRow();
 });
