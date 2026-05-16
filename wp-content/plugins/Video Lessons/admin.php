@@ -149,35 +149,34 @@ document.getElementById('add-lesson-btn').addEventListener('click', () => addLes
 document.getElementById('save-course-btn').addEventListener('click', async () => {
     const fb = getFirebase();
     const status = document.getElementById('status');
-    try {
+
+    try { 
         status.innerHTML = "Saving...";
+
+        const courseName = document.getElementById('course-name').value.trim();
+        if (!courseName) {
+            status.innerHTML = "❌ Course name is required!";
+            return;
+        }
+
+        // sanitize the name for Firestore doc ID
+        const docId = courseName.replace(/\s+/g, '_').replace(/[^\w\-]/g, '').toLowerCase();
+
+        // collect lessons
         const rows = document.querySelectorAll('#lessons-container > div');
         const lessons = [];
-        let order = 1;
         for (const row of rows) {
-            lessons.push({
-                title: row.querySelector('.lesson-title').value,
-                videoUrl: row.querySelector('.lesson-url').value,
-                order: order++
-            });
+            const title = row.querySelector('.lesson-title').value.trim();
+            const videoUrl = row.querySelector('.lesson-url').value.trim();
+            if (title && videoUrl) lessons.push({ title, videoUrl });
         }
 
-        const courseData = {
-            name: document.getElementById('course-name').value,
-            about: document.getElementById('course-about').value,
-            lessons: lessons,
-            updatedAt: fb.firestore.FieldValue.serverTimestamp()
-        };
+        // create/update the course doc
+        await fb.firestore().collection('courses').doc(docId).set({
+            lessons: lessons
+        });
 
-        let courseId = editingCourseId;
-        if (courseId) {
-            await fb.firestore().collection('courses').doc(courseId).update(courseData);
-        } else {
-            courseData.createdAt = fb.firestore.FieldValue.serverTimestamp();
-            const ref = await fb.firestore().collection('courses').add(courseData);
-            editingCourseId = ref.id;
-        }
-
+        editingCourseId = docId;
         status.innerHTML = "✅ Saved successfully!";
         loadCourses();
     } catch (e) {
