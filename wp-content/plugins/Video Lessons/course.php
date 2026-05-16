@@ -5,7 +5,7 @@ function display_course_page() {
     ob_start();
 
     $html_template_path = plugin_dir_path(__FILE__) . 'course.html';
-    $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<div id="course-container"></div>';
+    $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<div id="courses-list"></div>';
     echo $html_template;
 ?>
 
@@ -38,24 +38,6 @@ function getQueryParam(name) {
     return urlParams.get(name);
 }
 
-function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60).toString().padStart(2,'0');
-    const secs = Math.floor(seconds % 60).toString().padStart(2,'0');
-    return `${mins}:${secs}`;
-}
-
-function getYouTubeEmbedUrl(url) {
-    if (!url) return '';
-    const videoMatch = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/);
-    const listMatch = url.match(/[?&]list=([^&]+)/);
-    if (videoMatch) {
-        let embedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
-        if(listMatch) embedUrl += `?list=${listMatch[1]}`;
-        return embedUrl;
-    }
-    return url;
-}
-
 async function loadAllCourses() {
     const fb = await waitForFirebase();
     const container = document.getElementById('courses-list');
@@ -72,7 +54,7 @@ async function loadAllCourses() {
 
         snap.forEach(doc => {
             const data = doc.data();
-            // Use document ID as course name if data.name is missing
+            // Use document ID as fallback
             const courseName = data.name || doc.id;
 
             const div = document.createElement('div');
@@ -96,11 +78,22 @@ async function loadAllCourses() {
     }
 }
 
+// Make this function available globally if needed
+window.viewCourse = function(courseId) {
+    window.location.href = `?course_id=${courseId}`;
+}
 
-document.addEventListener('DOMContentLoaded', loadCoursePage);
+// On DOMContentLoaded, wait for Firebase and then load courses
+document.addEventListener('DOMContentLoaded', async () => {
+    await waitForFirebase();
+    await waitForUser(); // Optional, if you want to show only to logged-in users
+    loadAllCourses();
+});
 </script>
+
 <?php
 return ob_get_clean();
 }
 
 add_shortcode('course_page','display_course_page');
+?>
