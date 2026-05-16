@@ -3,9 +3,9 @@ if (!defined('ABSPATH')) exit;
 
 function display_video_admin() {
 
-ob_start();
+    ob_start();
 
-echo do_shortcode('[firebase_layout_page]');
+    echo do_shortcode('[firebase_layout_page]');
 ?>
 
 <section style="max-width:800px;margin:40px auto;padding:20px;font-family:Arial,sans-serif;">
@@ -19,12 +19,10 @@ echo do_shortcode('[firebase_layout_page]');
 <h2>Create / Edit Course</h2>
 
 <input id="course-name" type="text" placeholder="Course Name"
-style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;">
-
-<textarea id="course-about" placeholder="Course Summary (About)"
-style="width:100%;padding:12px;margin-bottom:24px;border:1px solid #ccc;border-radius:8px;min-height:100px;"></textarea>
+style="width:100%;padding:12px;margin-bottom:24px;border:1px solid #ccc;border-radius:8px;">
 
 <h3>Lessons</h3>
+
 <div id="lessons-container"></div>
 
 <button id="add-lesson-btn"
@@ -44,6 +42,8 @@ Save Course
 </section>
 
 <script>
+
+/* ---------------- FIREBASE SAFE ACCESS ---------------- */
 function getFirebase() {
     if (typeof firebase === 'undefined' || !firebase.firestore) {
         throw new Error("Firebase not ready. Check [firebase_layout_page].");
@@ -64,14 +64,15 @@ function waitForFirebase() {
 
 let editingCourseId = null;
 
+/* ---------------- RESET FORM ---------------- */
 function resetForm() {
     editingCourseId = null;
     document.getElementById('course-name').value = '';
-    document.getElementById('course-about').value = '';
     document.getElementById('lessons-container').innerHTML = '';
     addLessonRow();
 }
 
+/* ---------------- LOAD COURSES ---------------- */
 async function loadCourses() {
     const fb = getFirebase();
     const container = document.getElementById('courses-list');
@@ -80,16 +81,20 @@ async function loadCourses() {
     try {
         const snap = await fb.firestore().collection('courses').get();
         container.innerHTML = '';
-        if (snap.empty) { container.innerHTML = "<p>No courses yet.</p>"; return; }
+
+        if (snap.empty) {
+            container.innerHTML = "<p>No courses yet.</p>";
+            return;
+        }
 
         snap.forEach(doc => {
             const c = doc.data();
             const div = document.createElement('div');
-            div.style.cssText = "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;";
+            div.style.cssText =
+                "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;";
             div.innerHTML = `
                 <div>
-                    <b>${c.name || ''}</b><br>
-                    <small>${c.about || ''}</small>
+                    <b>${doc.id}</b>
                 </div>
                 <div>
                     <button onclick="editCourse('${doc.id}')">Edit</button>
@@ -98,12 +103,14 @@ async function loadCourses() {
             `;
             container.appendChild(div);
         });
+
     } catch (e) {
         console.error(e);
         container.innerHTML = "❌ Failed to load courses";
     }
 }
 
+/* ---------------- EDIT COURSE ---------------- */
 window.editCourse = async function(id) {
     const fb = getFirebase();
     editingCourseId = id;
@@ -111,46 +118,46 @@ window.editCourse = async function(id) {
     const doc = await fb.firestore().collection('courses').doc(id).get();
     const c = doc.data();
 
-    document.getElementById('course-name').value = c.name || '';
-    document.getElementById('course-about').value = c.about || '';
-
+    document.getElementById('course-name').value = id; // name = doc ID
     const container = document.getElementById('lessons-container');
     container.innerHTML = '';
+
     (c.lessons || []).forEach(l => addLessonRow(l.title, l.videoUrl));
 };
 
+/* ---------------- DELETE COURSE ---------------- */
 window.deleteCourse = async function(id) {
     if (!confirm('Delete course?')) return;
     const fb = getFirebase();
     await fb.firestore().collection('courses').doc(id).delete();
-    const lessons = await fb.firestore().collection('lessons').where('courseId','==',id).get();
-    const batch = fb.firestore().batch();
-    lessons.forEach(d => batch.delete(d.ref));
-    await batch.commit();
     loadCourses();
 };
 
+/* ---------------- ADD LESSON ROW ---------------- */
 function addLessonRow(title='', url='') {
     const row = document.createElement('div');
-    row.style.cssText = "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
+    row.style.cssText =
+        "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
     row.innerHTML = `
-        <input class="lesson-title" placeholder="Lesson Title" value="${title}" style="width:100%;margin-bottom:6px;">
+        <input class="lesson-title" placeholder="Title" value="${title}" style="width:100%;margin-bottom:6px;">
         <input class="lesson-url" placeholder="Video URL" value="${url}" style="width:100%;margin-bottom:6px;">
         <button class="delete-lesson" style="background:red;color:white;border:none;padding:6px 10px;margin-top:6px;border-radius:6px;">
             Delete Lesson
         </button>
     `;
-    row.querySelector('.delete-lesson').onclick = async () => row.remove();
+    row.querySelector('.delete-lesson').onclick = () => row.remove();
     document.getElementById('lessons-container').appendChild(row);
 }
 
-document.getElementById('add-lesson-btn').addEventListener('click', () => addLessonRow());
+document.getElementById('add-lesson-btn')
+.addEventListener('click', () => addLessonRow());
 
+/* ---------------- SAVE COURSE ---------------- */
 document.getElementById('save-course-btn').addEventListener('click', async () => {
     const fb = getFirebase();
     const status = document.getElementById('status');
 
-    try { 
+    try {
         status.innerHTML = "Saving...";
 
         const courseName = document.getElementById('course-name').value.trim();
@@ -159,10 +166,8 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
             return;
         }
 
-        // sanitize the name for Firestore doc ID
         const docId = courseName.replace(/\s+/g, '_').replace(/[^\w\-]/g, '').toLowerCase();
 
-        // collect lessons
         const rows = document.querySelectorAll('#lessons-container > div');
         const lessons = [];
         for (const row of rows) {
@@ -171,7 +176,6 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
             if (title && videoUrl) lessons.push({ title, videoUrl });
         }
 
-        // create/update the course doc
         await fb.firestore().collection('courses').doc(docId).set({
             lessons: lessons
         });
@@ -185,8 +189,10 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
     }
 });
 
+/* ---------------- INIT ---------------- */
 document.addEventListener('DOMContentLoaded', async () => {
     await waitForFirebase();
+
     firebase.auth().onAuthStateChanged(async (user) => {
         if (!user) {
             document.body.innerHTML = `<h1 style="padding:40px;text-align:center;color:red;">Access denied</h1>`;
@@ -196,6 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         addLessonRow();
     });
 });
+
 </script>
 
 <?php
