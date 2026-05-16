@@ -141,7 +141,6 @@ window.editCourse = async function(id) {
 
     const doc = await fb.firestore().collection('courses').doc(id).get();
     const c = doc.data();
-
     document.getElementById('course-name').value = c.name || '';
     document.getElementById('course-description').value = c.description || '';
     document.getElementById('course-thumbnail').value = c.thumbnail || '';
@@ -149,14 +148,9 @@ window.editCourse = async function(id) {
     const container = document.getElementById('lessons-container');
     container.innerHTML = '';
 
-    const lessonsSnap = await fb.firestore()
-        .collection('lessons')
-        .where('courseId','==',id)
-        .get();
-
-    lessonsSnap.forEach(l => {
-        const d = l.data();
-        addLessonRow(d.title, d.videoUrl, d.duration, l.id);
+    // Add lessons from the course document
+    (c.lessons || []).forEach(l => {
+    addLessonRow(l.title, l.videoUrl, l.duration || 0);
     });
 };
 
@@ -220,64 +214,48 @@ document.getElementById('add-lesson-btn')
 
 /* ---------------- SAVE COURSE ---------------- */
 document.getElementById('save-course-btn').addEventListener('click', async () => {
+  const fb = getFirebase();
+  const status = document.getElementById('status');
+  try {
+    status.innerHTML = "Saving...";
 
-    const fb = getFirebase();
-    const status = document.getElementById('status');
-
-    try {
-
-        status.innerHTML = "Saving...";
-
-        const courseData = {
-            name: document.getElementById('course-name').value,
-            description: document.getElementById('course-description').value,
-            thumbnail: document.getElementById('course-thumbnail').value,
-            updatedAt: fb.firestore.FieldValue.serverTimestamp()
-        };
-
-        let courseId = editingCourseId;
-
-        if (courseId) {
-            await fb.firestore().collection('courses').doc(courseId).update(courseData);
-        } else {
-            courseData.createdAt = fb.firestore.FieldValue.serverTimestamp();
-            const ref = await fb.firestore().collection('courses').add(courseData);
-            courseId = ref.id;
-            editingCourseId = courseId;
-        }
-
-        // delete old lessons
-        const oldLessons = await fb.firestore()
-            .collection('lessons')
-            .where('courseId','==',courseId)
-            .get();
-
-        const batch = fb.firestore().batch();
-        oldLessons.forEach(d => batch.delete(d.ref));
-        await batch.commit();
-
-        // add new lessons
-        const rows = document.querySelectorAll('#lessons-container > div');
-        let order = 1;
-
-        for (const row of rows) {
-
-            await fb.firestore().collection('lessons').add({
-                courseId,
-                title: row.querySelector('.lesson-title').value,
-                videoUrl: row.querySelector('.lesson-url').value,
-                duration: parseInt(row.querySelector('.lesson-duration').value) || 0,
-                order: order++
-            });
-        }
-
-        status.innerHTML = "✅ Saved successfully!";
-        loadCourses();
-
-    } catch (e) {
-        console.error(e);
-        status.innerHTML = "❌ " + e.message;
+    // Collect lessons from the form
+    const rows = document.querySelectorAll('#lessons-container > div');
+    const lessons = [];
+    let order = 1;
+    for (const row of rows) {
+      lessons.push({
+        title: row.querySelector('.lesson-title').value,
+        videoUrl: row.querySelector('.lesson-url').value,
+        duration: parseInt(row.querySelector('.lesson-duration').value) || 0,
+        order: order++
+      });
     }
+
+    const courseData = {
+      name: document.getElementById('course-name').value,
+      description: document.getElementById('course-description').value,
+      thumbnail: document.getElementById('course-thumbnail').value,
+      lessons: lessons, // <-- new structure
+      updatedAt: fb.firestore.FieldValue.serverTimestamp()
+    };
+
+    let courseId = editingCourseId;
+    if (courseId) {
+      await fb.firestore().collection('courses').doc(courseId).update(courseData);
+    } else {
+      courseData.createdAt = fb.firestore.FieldValue.serverTimestamp();
+      const ref = await fb.firestore().collection('courses').add(courseData);
+      courseId = ref.id;
+      editingCourseId = courseId;
+    }
+
+    status.innerHTML = "✅ Saved successfully!";
+    loadCourses();
+  } catch (e) {
+    console.error(e);
+    status.innerHTML = "❌ " + e.message;
+  }
 });
 
 /* ---------------- INIT ---------------- */
