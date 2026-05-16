@@ -44,7 +44,7 @@ async function loadAllCourses() {
     container.innerHTML = "Loading courses...";
 
     try {
-        const snap = await fb.db.collection('courses').get();
+        const snap = await fb.firestore().collection('courses').get();
         container.innerHTML = '';
 
         if (snap.empty) {
