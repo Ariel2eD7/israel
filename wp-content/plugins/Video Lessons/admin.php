@@ -3,10 +3,9 @@ if (!defined('ABSPATH')) exit;
 
 function display_video_admin() {
 
+ob_start();
 
-    ob_start();
-
-    echo do_shortcode('[firebase_layout_page]');
+echo do_shortcode('[firebase_layout_page]');
 ?>
 
 <section style="max-width:800px;margin:40px auto;padding:20px;font-family:Arial,sans-serif;">
@@ -22,14 +21,10 @@ function display_video_admin() {
 <input id="course-name" type="text" placeholder="Course Name"
 style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;">
 
-<textarea id="course-description" placeholder="Course Description"
-style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;min-height:100px;"></textarea>
-
-<input id="course-thumbnail" type="text" placeholder="Thumbnail URL"
-style="width:100%;padding:12px;margin-bottom:24px;border:1px solid #ccc;border-radius:8px;">
+<textarea id="course-about" placeholder="Course Summary (About)"
+style="width:100%;padding:12px;margin-bottom:24px;border:1px solid #ccc;border-radius:8px;min-height:100px;"></textarea>
 
 <h3>Lessons</h3>
-
 <div id="lessons-container"></div>
 
 <button id="add-lesson-btn"
@@ -49,8 +44,6 @@ Save Course
 </section>
 
 <script>
-
-/* ---------------- FIREBASE SAFE ACCESS ---------------- */
 function getFirebase() {
     if (typeof firebase === 'undefined' || !firebase.firestore) {
         throw new Error("Firebase not ready. Check [firebase_layout_page].");
@@ -58,7 +51,6 @@ function getFirebase() {
     return firebase;
 }
 
-/* Wait until Firebase is actually available */
 function waitForFirebase() {
     return new Promise(resolve => {
         const t = setInterval(() => {
@@ -72,226 +64,139 @@ function waitForFirebase() {
 
 let editingCourseId = null;
 
-/* ---------------- RESET FORM ---------------- */
 function resetForm() {
     editingCourseId = null;
-
     document.getElementById('course-name').value = '';
-    document.getElementById('course-description').value = '';
-    document.getElementById('course-thumbnail').value = '';
+    document.getElementById('course-about').value = '';
     document.getElementById('lessons-container').innerHTML = '';
-
     addLessonRow();
 }
 
-/* ---------------- LOAD COURSES ---------------- */
 async function loadCourses() {
-
     const fb = getFirebase();
     const container = document.getElementById('courses-list');
-
     container.innerHTML = "Loading...";
 
     try {
-
-        const snap = await fb.firestore()
-            .collection('courses')
-            .get();
-
+        const snap = await fb.firestore().collection('courses').get();
         container.innerHTML = '';
-
-        if (snap.empty) {
-            container.innerHTML = "<p>No courses yet.</p>";
-            return;
-        }
+        if (snap.empty) { container.innerHTML = "<p>No courses yet.</p>"; return; }
 
         snap.forEach(doc => {
-
             const c = doc.data();
-
             const div = document.createElement('div');
-            div.style.cssText =
-                "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;";
-
+            div.style.cssText = "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;";
             div.innerHTML = `
                 <div>
                     <b>${c.name || ''}</b><br>
-                    <small>${c.description || ''}</small>
+                    <small>${c.about || ''}</small>
                 </div>
                 <div>
                     <button onclick="editCourse('${doc.id}')">Edit</button>
                     <button onclick="deleteCourse('${doc.id}')" style="background:red;color:white;">Delete</button>
                 </div>
             `;
-
             container.appendChild(div);
         });
-
     } catch (e) {
         console.error(e);
         container.innerHTML = "❌ Failed to load courses";
     }
 }
 
-/* ---------------- EDIT COURSE ---------------- */
 window.editCourse = async function(id) {
-
     const fb = getFirebase();
     editingCourseId = id;
 
     const doc = await fb.firestore().collection('courses').doc(id).get();
     const c = doc.data();
+
     document.getElementById('course-name').value = c.name || '';
-    document.getElementById('course-description').value = c.description || '';
-    document.getElementById('course-thumbnail').value = c.thumbnail || '';
+    document.getElementById('course-about').value = c.about || '';
 
     const container = document.getElementById('lessons-container');
     container.innerHTML = '';
-
-    // Add lessons from the course document
-    (c.lessons || []).forEach(l => {
-    addLessonRow(l.title, l.videoUrl, l.duration || 0);
-    });
+    (c.lessons || []).forEach(l => addLessonRow(l.title, l.videoUrl));
 };
 
-/* ---------------- DELETE COURSE ---------------- */
 window.deleteCourse = async function(id) {
-
     if (!confirm('Delete course?')) return;
-
     const fb = getFirebase();
-
     await fb.firestore().collection('courses').doc(id).delete();
-
-    const lessons = await fb.firestore()
-        .collection('lessons')
-        .where('courseId','==',id)
-        .get();
-
+    const lessons = await fb.firestore().collection('lessons').where('courseId','==',id).get();
     const batch = fb.firestore().batch();
     lessons.forEach(d => batch.delete(d.ref));
     await batch.commit();
-
     loadCourses();
 };
 
-/* ---------------- ADD LESSON ROW ---------------- */
-function addLessonRow(title='', url='', duration=0, lessonId=null) {
-
+function addLessonRow(title='', url='') {
     const row = document.createElement('div');
-    row.dataset.lessonId = lessonId || '';
-
-    row.style.cssText =
-        "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
-
+    row.style.cssText = "border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;";
     row.innerHTML = `
-        <input class="lesson-title" placeholder="Title" value="${title}" style="width:100%;margin-bottom:6px;">
+        <input class="lesson-title" placeholder="Lesson Title" value="${title}" style="width:100%;margin-bottom:6px;">
         <input class="lesson-url" placeholder="Video URL" value="${url}" style="width:100%;margin-bottom:6px;">
-        <input class="lesson-duration" type="number" value="${duration}" style="width:100%;margin-bottom:6px;">
         <button class="delete-lesson" style="background:red;color:white;border:none;padding:6px 10px;margin-top:6px;border-radius:6px;">
             Delete Lesson
         </button>
     `;
-
-    row.querySelector('.delete-lesson').onclick = async () => {
-
-        const fb = getFirebase();
-
-        const id = row.dataset.lessonId;
-
-        if (id) {
-            await fb.firestore().collection('lessons').doc(id).delete();
-        }
-
-        row.remove();
-    };
-
+    row.querySelector('.delete-lesson').onclick = async () => row.remove();
     document.getElementById('lessons-container').appendChild(row);
 }
 
-document.getElementById('add-lesson-btn')
-.addEventListener('click', () => addLessonRow());
+document.getElementById('add-lesson-btn').addEventListener('click', () => addLessonRow());
 
-/* ---------------- SAVE COURSE ---------------- */
 document.getElementById('save-course-btn').addEventListener('click', async () => {
-  const fb = getFirebase();
-  const status = document.getElementById('status');
-  try {
-    status.innerHTML = "Saving...";
-
-    // Collect lessons from the form
-    const rows = document.querySelectorAll('#lessons-container > div');
-    const lessons = [];
-    let order = 1;
-    for (const row of rows) {
-      lessons.push({
-        title: row.querySelector('.lesson-title').value,
-        videoUrl: row.querySelector('.lesson-url').value,
-        duration: parseInt(row.querySelector('.lesson-duration').value) || 0,
-        order: order++
-      });
-    }
-
-    const courseData = {
-      name: document.getElementById('course-name').value,
-      description: document.getElementById('course-description').value,
-      thumbnail: document.getElementById('course-thumbnail').value,
-      lessons: lessons, // <-- new structure
-      updatedAt: fb.firestore.FieldValue.serverTimestamp()
-    };
-
-    let courseId = editingCourseId;
-    if (courseId) {
-      await fb.firestore().collection('courses').doc(courseId).update(courseData);
-    } else {
-      courseData.createdAt = fb.firestore.FieldValue.serverTimestamp();
-      const ref = await fb.firestore().collection('courses').add(courseData);
-      courseId = ref.id;
-      editingCourseId = courseId;
-    }
-
-    status.innerHTML = "✅ Saved successfully!";
-    loadCourses();
-  } catch (e) {
-    console.error(e);
-    status.innerHTML = "❌ " + e.message;
-  }
-});
-
-/* ---------------- INIT ---------------- */
-document.addEventListener('DOMContentLoaded', async () => {
-
-    console.log('🚀 DOM loaded');
-
-    await waitForFirebase();
-
-    console.log('✅ Firebase ready');
-
-    firebase.auth().onAuthStateChanged(async (user) => {
-
-        console.log('👤 Auth state changed');
-        console.log('User:', user);
-
-        if (!user) {
-
-            console.log('❌ User not logged in');
-
-            document.body.innerHTML = `
-                <h1 style="padding:40px;text-align:center;color:red;">
-                    Access denied
-                </h1>
-            `;
-
-            return;
+    const fb = getFirebase();
+    const status = document.getElementById('status');
+    try {
+        status.innerHTML = "Saving...";
+        const rows = document.querySelectorAll('#lessons-container > div');
+        const lessons = [];
+        let order = 1;
+        for (const row of rows) {
+            lessons.push({
+                title: row.querySelector('.lesson-title').value,
+                videoUrl: row.querySelector('.lesson-url').value,
+                order: order++
+            });
         }
 
-        console.log('✅ User logged in:', user.email);
+        const courseData = {
+            name: document.getElementById('course-name').value,
+            about: document.getElementById('course-about').value,
+            lessons: lessons,
+            updatedAt: fb.firestore.FieldValue.serverTimestamp()
+        };
 
+        let courseId = editingCourseId;
+        if (courseId) {
+            await fb.firestore().collection('courses').doc(courseId).update(courseData);
+        } else {
+            courseData.createdAt = fb.firestore.FieldValue.serverTimestamp();
+            const ref = await fb.firestore().collection('courses').add(courseData);
+            editingCourseId = ref.id;
+        }
+
+        status.innerHTML = "✅ Saved successfully!";
+        loadCourses();
+    } catch (e) {
+        console.error(e);
+        status.innerHTML = "❌ " + e.message;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await waitForFirebase();
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (!user) {
+            document.body.innerHTML = `<h1 style="padding:40px;text-align:center;color:red;">Access denied</h1>`;
+            return;
+        }
         loadCourses();
         addLessonRow();
     });
 });
-
 </script>
 
 <?php
