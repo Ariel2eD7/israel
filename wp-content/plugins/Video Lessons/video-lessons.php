@@ -48,6 +48,8 @@ async function waitForUser() {
     });
 }
 
+
+
 // Load courses
 async function loadCourses() {
     const firebaseObj = await waitForFirebase();
@@ -62,22 +64,22 @@ async function loadCourses() {
     }
 
     try {
-        // Get courses the user has access to
-        const coursesSnapshot = await firebaseObj.db
-            .collection('courses')
-            .orderBy('name')
-            .get();
+        // Get all courses, no orderBy to avoid missing name issues
+        const coursesSnapshot = await firebaseObj.db.collection('courses').get();
 
         const courses = [];
         coursesSnapshot.forEach(doc => {
             const data = doc.data();
             courses.push({
                 id: doc.id,
-                name: data.name || 'Unnamed Course',
+                name: data.name || doc.id,        // fallback to document ID
                 description: data.description || '',
                 thumbnail: data.thumbnail || '',
             });
         });
+
+        // Optional: sort alphabetically by name (after fallback applied)
+        courses.sort((a, b) => a.name.localeCompare(b.name));
 
         function renderCourses(filteredCourses) {
             container.innerHTML = '';
@@ -88,39 +90,35 @@ async function loadCourses() {
 
             filteredCourses.forEach(course => {
                 const card = document.createElement('div');
-card.style.cssText = `
-background-color: #E8F2FC !important;
-  position: relative; 
-  height: 110px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px;
-  border: 0px solid #ddd;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #f5f6fa;
-`;
+                card.style.cssText = `
+                    background-color: #E8F2FC !important;
+                    position: relative; 
+                    height: 110px;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 12px;
+                    padding: 10px;
+                    border: 0px solid #ddd;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    background: #f5f6fa;
+                `;
 
-card.innerHTML = `
-  ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
-  <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
-    <strong style="font-size:16px;">${course.name}</strong>
-    <span style="font-size:13px; color:#666;">${course.description}</span>
-  </div>
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-       xmlns="http://www.w3.org/2000/svg"
-       style="cursor:pointer; position:absolute; bottom:12px; right:12px;">
-    <circle cx="16" cy="16" r="16" fill="#268AFF"/>
-    <path d="M13 10L19 16L13 22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-`;
-
-
-
+                card.innerHTML = `
+                    ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
+                    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
+                        <strong style="font-size:16px;">${course.name}</strong>
+                        <span style="font-size:13px; color:#666;">${course.description}</span>
+                    </div>
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="cursor:pointer; position:absolute; bottom:12px; right:12px;">
+                        <circle cx="16" cy="16" r="16" fill="#268AFF"/>
+                        <path d="M13 10L19 16L13 22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
 
                 card.addEventListener('click', () => {
-                    // Redirect to lessons page (to be implemented)
                     window.location.href = `/course-page?course_id=${encodeURIComponent(course.id)}`;
                 });
                 container.appendChild(card);
@@ -131,7 +129,7 @@ card.innerHTML = `
         renderCourses(courses);
 
         // Search functionality
-        searchInput.addEventListener('input', () => {
+        searchInput?.addEventListener('input', () => {
             const q = searchInput.value.toLowerCase().trim();
             const filtered = courses.filter(c => c.name.toLowerCase().includes(q));
             renderCourses(filtered);
