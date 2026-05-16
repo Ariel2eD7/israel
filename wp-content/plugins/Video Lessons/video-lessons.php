@@ -32,7 +32,7 @@ async function waitForFirebase() {
             } else {
                 setTimeout(check, 100);
             }
-        };
+        }; 
         check();
     });
 }
