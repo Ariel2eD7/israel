@@ -1,16 +1,29 @@
 <?php
+/**
+ * Plugin Name: Video Lessons Dashboard
+ * Description: Show courses dashboard for logged-in users via Firebase.
+ * Version: 1.0
+ * Author: Your Name
+ */
+
 if (!defined('ABSPATH')) exit;
 
-function display_course_page() {
+include_once plugin_dir_path(__FILE__) . 'course.php';
+include_once plugin_dir_path(__FILE__) . 'admin.php';
+
+
+
+function display_video_dashboard() {
     ob_start();
 
-    $html_template_path = plugin_dir_path(__FILE__) . 'course.html';
-    $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<section id="course-container"></section>';
+    // Load HTML template
+    $html_template_path = plugin_dir_path(__FILE__) . 'video-dashboard.html';
+    $html_template = file_exists($html_template_path) ? file_get_contents($html_template_path) : '<div id="video-courses-container"></div>';
     echo $html_template;
-?>
+    ?>
 
 <script>
-// Wait for Firebase
+// Wait until Firebase is ready
 async function waitForFirebase() {
     return new Promise(resolve => {
         const check = () => {
@@ -19,12 +32,12 @@ async function waitForFirebase() {
             } else {
                 setTimeout(check, 100);
             }
-        };
+        }; 
         check();
     });
 }
 
-// Wait for logged-in user
+// Wait for current user
 async function waitForUser() {
     const { auth } = await waitForFirebase();
     return new Promise(resolve => {
@@ -35,95 +48,105 @@ async function waitForUser() {
     });
 }
 
-// Convert YouTube URL to embed
-function convertYouTubeToEmbed(url) {
-    if (!url) return '';
-    const videoMatch = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/);
-    const listMatch = url.match(/[?&]list=([^&]+)/);
-    if (videoMatch) {
-        let embedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
-        if(listMatch) embedUrl += `?list=${listMatch[1]}`;
-        return embedUrl;
-    }
-    return url;
-}
 
-// Play lesson video
-function playVideo(url) {
-    const player = document.getElementById('video-player');
-    if (!player) return;
-    player.src = url.includes('youtube.com') || url.includes('youtu.be') ? convertYouTubeToEmbed(url) : url;
-}
 
-// Load course and lessons
-async function loadCoursePage() {
-    const fb = await waitForFirebase();
+// Load courses
+async function loadCourses() {
+    const firebaseObj = await waitForFirebase();
     const user = await waitForUser();
-    const container = document.getElementById('course-container');
+
+    const container = document.getElementById('video-courses-container');
+    const searchInput = document.getElementById('video-course-search');
 
     if (!user) {
-        container.innerHTML = '<p>Please log in to view this course.</p>';
-        return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const courseId = params.get('course_id');
-    if (!courseId) {
-        container.innerHTML = '<p>Invalid course ID.</p>';
+        container.innerHTML = '<p>Please log in to see your courses.</p>';
         return;
     }
 
     try {
-        const docSnap = await fb.db.collection('courses').doc(courseId).get();
-        if (!docSnap.exists) {
-            container.innerHTML = '<p>Course not found.</p>';
-            return;
-        }
+        // Get all courses, no orderBy to avoid missing name issues
+        const coursesSnapshot = await firebaseObj.db.collection('courses').get();
 
-        const data = docSnap.data();
-        const lessons = data.lessons || [];
+        const courses = [];
+        coursesSnapshot.forEach(doc => {
+            const data = doc.data();
+            courses.push({
+                id: doc.id,
+                name: data.name || doc.id,        // fallback to document ID
+                description: data.description || '',
+                thumbnail: data.thumbnail || '',
+            });
+        });
 
-        // Set course title
-        const titleElem = document.getElementById('course-title');
-        if (titleElem) titleElem.innerHTML = data.name || courseId;
+        // Optional: sort alphabetically by name (after fallback applied)
+        courses.sort((a, b) => a.name.localeCompare(b.name));
 
-        // Set lessons count
-        const lessonsElem = document.getElementById('lessons-value');
-        if (lessonsElem) lessonsElem.innerHTML = lessons.length + " Lessons";
-
-        // Render lessons list
-        const tabContent = document.getElementById('tab-content');
-        if (tabContent) {
-            tabContent.innerHTML = '';
-            if (lessons.length === 0) {
-                tabContent.innerHTML = '<p>No lessons available.</p>';
-            } else {
-                lessons.forEach((lesson, idx) => {
-                    const lessonDiv = document.createElement('div');
-                    lessonDiv.style.padding = '10px';
-                    lessonDiv.style.borderBottom = '1px solid #eee';
-                    lessonDiv.style.cursor = 'pointer';
-                    lessonDiv.innerHTML = `<strong>${lesson.title}</strong>`;
-                    lessonDiv.addEventListener('click', () => playVideo(lesson.videoUrl));
-                    tabContent.appendChild(lessonDiv);
-
-                    // Auto-play first lesson
-                    if (idx === 0) playVideo(lesson.videoUrl);
-                });
+        function renderCourses(filteredCourses) {
+            container.innerHTML = '';
+            if (filteredCourses.length === 0) {
+                container.innerHTML = '<p>No courses found.</p>';
+                return;
             }
+
+            filteredCourses.forEach(course => {
+                const card = document.createElement('div');
+                card.style.cssText = `
+                    background-color: #E8F2FC !important;
+                    position: relative; 
+                    height: 110px;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 12px;
+                    padding: 10px;
+                    border: 0px solid #ddd;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    background: #f5f6fa;
+                `;
+
+                card.innerHTML = `
+                    ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
+                    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
+                        <strong style="font-size:16px;">${course.name}</strong>
+                        <span style="font-size:13px; color:#666;">${course.description}</span>
+                    </div>
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="cursor:pointer; position:absolute; bottom:12px; right:12px;">
+                        <circle cx="16" cy="16" r="16" fill="#268AFF"/>
+                        <path d="M13 10L19 16L13 22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+
+                card.addEventListener('click', () => {
+                    window.location.href = `/course-page?course_id=${encodeURIComponent(course.id)}`;
+                });
+                container.appendChild(card);
+            });
         }
+
+        // Initial render
+        renderCourses(courses);
+
+        // Search functionality
+        searchInput?.addEventListener('input', () => {
+            const q = searchInput.value.toLowerCase().trim();
+            const filtered = courses.filter(c => c.name.toLowerCase().includes(q));
+            renderCourses(filtered);
+        });
 
     } catch (err) {
-        console.error('Error loading course:', err);
-        container.innerHTML = '<p>Error loading course.</p>';
+        console.error('Error loading courses:', err);
+        container.innerHTML = '<p>Error loading courses.</p>';
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadCoursePage);
+document.addEventListener('DOMContentLoaded', loadCourses);
 </script>
 
 <?php
-return ob_get_clean();
+    return ob_get_clean();
 }
 
-add_shortcode('course_page','display_course_page');
+// Register shortcode
+add_shortcode('video_lessons', 'display_video_dashboard');
