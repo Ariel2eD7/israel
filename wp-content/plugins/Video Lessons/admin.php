@@ -62,6 +62,13 @@ function waitForFirebase() {
     });
 }
 
+function sanitizeDocId(name) {
+    // Trim, replace spaces with underscores, remove forbidden Firestore characters
+    return name.trim()
+               .replace(/\s+/g, '_')
+               .replace(/[\/\[\]\*\?"<>|#%&]/g, '');
+}
+
 let editingCourseId = null;
 
 /* ---------------- RESET FORM ---------------- */
@@ -160,14 +167,20 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
     try {
         status.innerHTML = "Saving...";
 
+        // Get course name
         const courseName = document.getElementById('course-name').value.trim();
         if (!courseName) {
             status.innerHTML = "❌ Course name is required!";
             return;
         }
 
-        const docId = courseName.replace(/\s+/g, '_').replace(/[^\w\-]/g, '').toLowerCase();
+        // Sanitize course name for Firestore document ID
+        const docId = courseName
+            .replace(/\s+/g, '_')       // spaces → underscores
+            .replace(/[\/\[\]\*\?"<>|#%&]/g, '')  // remove forbidden chars
+            .toLowerCase();
 
+        // Collect lessons
         const rows = document.querySelectorAll('#lessons-container > div');
         const lessons = [];
         for (const row of rows) {
@@ -176,7 +189,9 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
             if (title && videoUrl) lessons.push({ title, videoUrl });
         }
 
+        // Save course data with name and lessons
         await fb.firestore().collection('courses').doc(docId).set({
+            name: courseName,   // store original name
             lessons: lessons
         });
 
