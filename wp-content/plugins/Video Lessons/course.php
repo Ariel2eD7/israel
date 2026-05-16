@@ -56,92 +56,43 @@ function getYouTubeEmbedUrl(url) {
     return url;
 }
 
-async function loadCoursePage() {
-    const firebaseObj = await waitForFirebase();
-    const user = await waitForUser();
-    const courseId = getQueryParam('course_id'); // doc ID
-    const container = document.getElementById('course-container');
-
-    if (!user) { container.innerHTML = '<p>Please log in to view this course.</p>'; return; }
-    if (!courseId) { container.innerHTML = '<p>No course selected.</p>'; return; }
+async function loadAllCourses() {
+    const fb = await waitForFirebase();
+    const container = document.getElementById('courses-list');
+    container.innerHTML = "Loading courses...";
 
     try {
-        const courseDoc = await firebaseObj.db.collection('courses').doc(courseId).get();
-        if (!courseDoc.exists) { container.innerHTML = '<p>Course not found.</p>'; return; }
+        const snap = await fb.firestore().collection('courses').get();
+        container.innerHTML = '';
 
-        const course = courseDoc.data();
-        const lessons = course.lessons || [];
-
-        let totalDuration = 0; // optional if you have no duration now
-
-        const videoPlayer = document.getElementById('video-player');
-        const tabContent = document.getElementById('tab-content');
-        const courseTitleElem = document.getElementById('course-title');
-
-        // Use doc ID as course name
-        courseTitleElem.textContent = courseId;
-
-        document.getElementById('about-course-text').textContent = 'No course summary available.';
-
-        document.getElementById('duration-value').textContent = formatTime(totalDuration);
-        document.getElementById('lessons-value').textContent = `${lessons.length} Lessons`;
-
-        if (lessons[0]?.videoUrl) {
-            videoPlayer.src = getYouTubeEmbedUrl(lessons[0].videoUrl) + '?autoplay=0';
+        if (snap.empty) {
+            container.innerHTML = "<p>No courses yet.</p>";
+            return;
         }
 
-        function renderLessonsTab() {
-            tabContent.innerHTML = lessons.map((l, idx) => `
-                <div class="lesson-card" data-url="${l.videoUrl || ''}" style="
-                    display:flex; align-items:center; justify-content:space-between;
-                    padding:12px; border-radius:12px; background:#fafafa;
-                    margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05);
-                    cursor:pointer;
-                ">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="color:#666; width:50px; height:50px; background-color: #E8F2FC; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:bold;">
-                            ${idx+1}
-                        </div>
-                        <div>
-                            <div style="font-weight:600; font-size:14px;">${l.title || 'Lesson'}</div>
-                        </div>
-                    </div>
-                    <div style="font-size:20px; color:#666;">▶</div>
+        snap.forEach(doc => {
+            const data = doc.data();
+            // Use document ID as course name if data.name is missing
+            const courseName = data.name || doc.id;
+
+            const div = document.createElement('div');
+            div.style.cssText =
+                "padding:10px;border:1px solid #ddd;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;";
+
+            div.innerHTML = `
+                <div>
+                    <b>${courseName}</b>
                 </div>
-            `).join('');
-
-            document.querySelectorAll('#tab-content .lesson-card').forEach(item => {
-                item.addEventListener('click', () => {
-                    const url = item.getAttribute('data-url');
-                    if (url) videoPlayer.src = getYouTubeEmbedUrl(url) + '?autoplay=1';
-                });
-            });
-        }
-
-        renderLessonsTab();
-
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tabButtons.forEach(b => {
-                    b.classList.remove('active');
-                    b.style.borderBottom = '3px solid transparent';
-                    b.style.color = '#0073e6';
-                });
-                btn.classList.add('active');
-                btn.style.borderBottom = '3px solid #0073e6';
-                btn.style.color = '#0073e6';
-
-                const tab = btn.getAttribute('data-tab');
-                if (tab === 'lessons') renderLessonsTab();
-                else if (tab === 'description') tabContent.innerHTML = 'No description available.';
-                else if (tab === 'reviews') tabContent.innerHTML = '<p>No reviews yet.</p>';
-            });
+                <div>
+                    <button onclick="viewCourse('${doc.id}')">View</button>
+                </div>
+            `;
+            container.appendChild(div);
         });
 
-    } catch (err) {
-        console.error('Error loading course page:', err);
-        container.innerHTML = '<p>Error loading course.</p>';
+    } catch (e) {
+        console.error(e);
+        container.innerHTML = "❌ Failed to load courses";
     }
 }
 
