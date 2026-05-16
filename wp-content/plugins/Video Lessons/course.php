@@ -40,7 +40,7 @@ function getQueryParam(name) {
 
 async function loadAllCourses() {
     const fb = await waitForFirebase();
-    const container = document.getElementById('courses-list');
+    const container = document.getElementById('course-container'); // the actual container on that page
     container.innerHTML = "Loading courses...";
 
     try {
