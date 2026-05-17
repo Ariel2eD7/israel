@@ -109,12 +109,18 @@ async function loadCourse() {
             const item = document.createElement('div');
 
             item.style.cssText = `
-                padding:14px;
-                border:1px solid #ddd;
-                border-radius:12px;
-                margin-bottom:12px;
-                cursor:pointer;
-                background:#fff;
+                background-color: #E8F2FC !important;
+                position: relative; 
+                height: 110px;
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 10px;
+                border: 0px solid #ddd;
+                border-radius: 8px;
+                cursor: pointer;
+                background: #f5f6fa;
+
             `;
 
             item.innerHTML = `
