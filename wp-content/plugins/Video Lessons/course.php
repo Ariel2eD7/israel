@@ -146,9 +146,13 @@ async function loadCourse() {
                     justify-content:flex-start;
                 ">
                     <strong style="
+                        display:block;
                         font-size:16px;
                         color:#10155B;
                         margin-bottom:6px;
+                        max-width:200px;
+                        word-wrap:break-word;
+                        overflow-wrap:break-word;
                     ">
                         ${index + 1}. ${lesson.title || 'Untitled Lesson'}
                     </strong>
