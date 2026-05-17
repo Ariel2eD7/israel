@@ -141,6 +141,7 @@ async function loadCourse() {
 
                 <div style="
                     flex:1;
+                    min-width:0;
                     display:flex;
                     flex-direction:column;
                     justify-content:flex-start;
@@ -150,9 +151,9 @@ async function loadCourse() {
                         font-size:16px;
                         color:#10155B;
                         margin-bottom:6px;
-                        max-width:200px;
-                        word-wrap:break-word;
+                        white-space:normal;
                         overflow-wrap:break-word;
+                        word-break:break-word;
                     ">
                         ${index + 1}. ${lesson.title || 'Untitled Lesson'}
                     </strong>
