@@ -106,9 +106,29 @@ async function loadCourses() {
 
                 card.innerHTML = `
                     ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
-                    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
-                        <strong style=" display:block; font-size:16px; white-space:normal; word-break:break-all; overflow-wrap:anywhere;">${course.name}</strong>
-                        <span style="font-size:13px; color:#666;">${course.description}</span>
+                    <div style="
+                        flex:1;
+                        min-width:0;
+                        display:flex;
+                        flex-direction:column;
+                        justify-content:flex-start;
+                    ">
+                        <strong style="
+                            display:block;
+                            font-size:16px;
+                            white-space:normal;
+                            word-break:break-all;
+                            overflow-wrap:anywhere;
+                        ">
+                            ${course.name}
+                        </strong>
+
+                        <span style="
+                            font-size:13px;
+                            color:#666;
+                        ">
+                            ${course.description}
+                        </span>
                     </div>
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
                         xmlns="http://www.w3.org/2000/svg"
