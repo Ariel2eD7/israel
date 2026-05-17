@@ -107,7 +107,7 @@ async function loadCourse() {
         lessons.forEach((lesson, index) => {
 
             const item = document.createElement('div');
- 
+
             item.style.cssText = `
                 background-color: #E8F2FC !important;
                 position: relative;
@@ -141,19 +141,14 @@ async function loadCourse() {
 
                 <div style="
                     flex:1;
-                    min-width:0;
                     display:flex;
                     flex-direction:column;
                     justify-content:flex-start;
                 ">
                     <strong style="
-                        display:block;
                         font-size:16px;
                         color:#10155B;
                         margin-bottom:6px;
-                        white-space:normal;
-                        overflow-wrap:break-word;
-                        word-break:break-word;
                     ">
                         ${index + 1}. ${lesson.title || 'Untitled Lesson'}
                     </strong>
