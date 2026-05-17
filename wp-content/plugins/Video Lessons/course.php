@@ -110,29 +110,92 @@ async function loadCourse() {
 
             item.style.cssText = `
                 background-color: #E8F2FC !important;
-                position: relative; 
-                height: 110px;
+                position: relative;
+                min-height: 90px;
                 display: flex;
                 align-items: flex-start;
                 gap: 12px;
-                padding: 10px;
-                border: 0px solid #ddd;
-                border-radius: 8px;
+                padding: 14px;
+                border-radius: 12px;
                 cursor: pointer;
-                background: #f5f6fa;
-
+                margin-bottom: 14px;
+                transition: 0.2s ease;
             `;
 
             item.innerHTML = `
-                <div style="font-weight:600;">
-                    ${index + 1}. ${lesson.title || 'Untitled Lesson'}
+                <div style="
+                    width:60px;
+                    height:60px;
+                    min-width:60px;
+                    border-radius:10px;
+                    background:#268AFF;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    margin-top:2px;
+                ">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
                 </div>
+
+                <div style="
+                    flex:1;
+                    display:flex;
+                    flex-direction:column;
+                    justify-content:flex-start;
+                ">
+                    <strong style="
+                        font-size:16px;
+                        color:#10155B;
+                        margin-bottom:6px;
+                    ">
+                        ${index + 1}. ${lesson.title || 'Untitled Lesson'}
+                    </strong>
+
+                    <span style="
+                        font-size:13px;
+                        color:#666;
+                    ">
+                        Tap to watch lesson
+                    </span>
+                </div>
+
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style="
+                        position:absolute;
+                        bottom:12px;
+                        right:12px;
+                    ">
+                    <circle cx="16" cy="16" r="16" fill="#268AFF"/>
+                    <path d="M13 10L19 16L13 22"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
             `;
 
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateY(-2px)';
+            });
+
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateY(0px)';
+            });
+
             item.addEventListener('click', () => {
+
                 const embedUrl = convertYoutubeUrl(lesson.videoUrl);
 
                 document.getElementById('video-player').src = embedUrl;
+
+                // active lesson effect
+                document.querySelectorAll('.lesson-active')
+                    .forEach(el => el.classList.remove('lesson-active'));
+
+                item.classList.add('lesson-active');
 
                 window.scrollTo({
                     top: 0,
