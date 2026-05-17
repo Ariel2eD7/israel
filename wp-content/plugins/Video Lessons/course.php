@@ -107,7 +107,7 @@ async function loadCourse() {
         lessons.forEach((lesson, index) => {
 
             const item = document.createElement('div');
-
+ 
             item.style.cssText = `
                 background-color: #E8F2FC !important;
                 position: relative;
