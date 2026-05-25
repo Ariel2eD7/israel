@@ -15,6 +15,7 @@ function display_video_admin() {
 
 
 <h2>Create / Edit Course</h2>
+<h3 id="form-mode-title">Create New Course</h3>
 
 <input id="course-name" type="text" placeholder="Course Name"
 style="width:100%;padding:12px;margin-bottom:24px;border:1px solid #ccc;border-radius:8px;">
@@ -45,6 +46,15 @@ Save Course
 </section>
 
 <script>
+
+    function resetForm() {
+    editingCourseId = null;
+    document.getElementById('course-name').value = '';
+    document.getElementById('lessons-container').innerHTML = '';
+    addLessonRow();
+
+    document.getElementById('form-mode-title').innerText = "Create New Course";
+}
 
 /* ---------------- FIREBASE SAFE ACCESS ---------------- */
 function getFirebase() {
@@ -128,7 +138,10 @@ window.editCourse = async function(id) {
     const doc = await fb.firestore().collection('courses').doc(id).get();
     const c = doc.data();
 
-    document.getElementById('course-name').value = id; // name = doc ID
+    document.getElementById('form-mode-title').innerText = "Edit Course";
+
+    document.getElementById('course-name').value = c.name;
+
     const container = document.getElementById('lessons-container');
     container.innerHTML = '';
 
@@ -212,6 +225,7 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
         editingCourseId = docId;
         status.innerHTML = "✅ Saved successfully!";
         loadCourses();
+        resetForm(); // 🔥 add this
 
     } catch (e) {
         console.error(e);
