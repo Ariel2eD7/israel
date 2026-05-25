@@ -72,9 +72,10 @@ async function loadCourses() {
             const data = doc.data();
             courses.push({
                 id: doc.id,
-                name: data.name || doc.id,        // fallback to document ID
+                name: data.name || doc.id,
                 description: data.description || '',
                 thumbnail: data.thumbnail || '',
+                lessonsCount: (data.lessons && Array.isArray(data.lessons)) ? data.lessons.length : 0
             });
         });
 
@@ -106,6 +107,7 @@ async function loadCourses() {
 
                 card.innerHTML = `
                     ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
+
                     <div style="
                         flex:1;
                         min-width:0;
@@ -113,6 +115,7 @@ async function loadCourses() {
                         flex-direction:column;
                         justify-content:flex-start;
                     ">
+
                         <strong style="
                             display:block;
                             font-size:16px;
@@ -125,11 +128,25 @@ async function loadCourses() {
 
                         <span style="
                             font-size:13px;
+                            color:#0073e6;
+                            font-weight:600;
+                            margin-top:4px;
+                            display:block;
+                        ">
+                            ${course.lessonsCount} Videos
+                        </span>
+
+                        <span style="
+                            font-size:13px;
                             color:#666;
+                            margin-top:4px;
+                            display:block;
                         ">
                             ${course.description}
                         </span>
+
                     </div>
+
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         style="cursor:pointer; position:absolute; bottom:12px; right:12px;">
