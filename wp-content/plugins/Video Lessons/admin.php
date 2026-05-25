@@ -12,9 +12,7 @@ function display_video_admin() {
 
 <h2>Courses Admin</h2>
 
-<div id="courses-list" style="margin-bottom:30px;">Loading courses...</div>
 
-<hr>
 
 <h2>Create / Edit Course</h2>
 
@@ -38,6 +36,11 @@ Save Course
 </button>
 
 <div id="status" style="margin-top:20px;"></div>
+
+<hr>
+
+<div id="courses-list" style="margin-bottom:30px;">Loading courses...</div>
+
 
 </section>
 
