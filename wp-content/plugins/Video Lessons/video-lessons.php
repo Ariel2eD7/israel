@@ -72,10 +72,9 @@ async function loadCourses() {
             const data = doc.data();
             courses.push({
                 id: doc.id,
-                name: data.name || doc.id,
+                name: data.name || doc.id,        // fallback to document ID
                 description: data.description || '',
                 thumbnail: data.thumbnail || '',
-                lessonsCount: data.lessons?.length || 0
             });
         });
 
@@ -107,15 +106,29 @@ async function loadCourses() {
 
                 card.innerHTML = `
                     ${course.thumbnail ? `<img src="${course.thumbnail}" style="width:80px;height:90px;border-radius:8px;object-fit:cover;">` : ''}
-                    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
-                        <strong style="font-size:16px;">${course.name}</strong>
-                        <div style="font-size:13px; color:#666;">
-                            ${course.description}
-                        </div>
+                    <div style="
+                        flex:1;
+                        min-width:0;
+                        display:flex;
+                        flex-direction:column;
+                        justify-content:flex-start;
+                    ">
+                        <strong style="
+                            display:block;
+                            font-size:16px;
+                            white-space:normal;
+                            word-break:break-all;
+                            overflow-wrap:anywhere;
+                        ">
+                            ${course.name}
+                        </strong>
 
-                        <div style="margin-top:6px; font-size:12px; color:#268AFF; font-weight:600;">
-                            ${course.lessonsCount} lesson${course.lessonsCount === 1 ? '' : 's'}
-                        </div>
+                        <span style="
+                            font-size:13px;
+                            color:#666;
+                        ">
+                            ${course.description}
+                        </span>
                     </div>
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
                         xmlns="http://www.w3.org/2000/svg"
