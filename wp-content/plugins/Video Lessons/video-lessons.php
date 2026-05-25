@@ -77,6 +77,7 @@ async function loadCourses() {
                 thumbnail: data.thumbnail || '',
                 lessonsCount: (data.lessons && Array.isArray(data.lessons)) ? data.lessons.length : 0
             });
+            console.log("COURSE RAW DATA:", doc.id, data);
         });
 
         // Optional: sort alphabetically by name (after fallback applied)
