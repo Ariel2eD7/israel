@@ -167,37 +167,49 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
     try {
         status.innerHTML = "Saving...";
 
-        // Get course name
         const courseName = document.getElementById('course-name').value.trim();
         if (!courseName) {
             status.innerHTML = "❌ Course name is required!";
             return;
         }
 
-        // Sanitize course name for Firestore document ID
         const docId = courseName
-            .replace(/\s+/g, '_')       // spaces → underscores
-            .replace(/[\/\[\]\*\?"<>|#%&]/g, '')  // remove forbidden chars
+            .replace(/\s+/g, '_')
+            .replace(/[\/\[\]\*\?"<>|#%&]/g, '')
             .toLowerCase();
+
+        // ✅ CHECK IF COURSE ALREADY EXISTS
+        const existingDoc = await fb.firestore()
+            .collection('courses')
+            .doc(docId)
+            .get();
+
+        // ❗ If it exists AND we are NOT editing the same course → block
+        if (existingDoc.exists && editingCourseId !== docId) {
+            status.innerHTML = "❌ A course with this name already exists!";
+            return;
+        }
 
         // Collect lessons
         const rows = document.querySelectorAll('#lessons-container > div');
         const lessons = [];
+
         for (const row of rows) {
             const title = row.querySelector('.lesson-title').value.trim();
             const videoUrl = row.querySelector('.lesson-url').value.trim();
             if (title && videoUrl) lessons.push({ title, videoUrl });
         }
 
-        // Save course data with name and lessons
+        // Save (safe now)
         await fb.firestore().collection('courses').doc(docId).set({
-            name: courseName,   // store original name
+            name: courseName,
             lessons: lessons
         });
 
         editingCourseId = docId;
         status.innerHTML = "✅ Saved successfully!";
         loadCourses();
+
     } catch (e) {
         console.error(e);
         status.innerHTML = "❌ " + e.message;
