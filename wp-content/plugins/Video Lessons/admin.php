@@ -47,15 +47,6 @@ Save Course
 
 <script>
 
-    function resetForm() {
-    editingCourseId = null;
-    document.getElementById('course-name').value = '';
-    document.getElementById('lessons-container').innerHTML = '';
-    addLessonRow();
-
-    document.getElementById('form-mode-title').innerText = "Create New Course";
-}
-
 /* ---------------- FIREBASE SAFE ACCESS ---------------- */
 function getFirebase() {
     if (typeof firebase === 'undefined' || !firebase.firestore) {
@@ -87,10 +78,15 @@ let editingCourseId = null;
 /* ---------------- RESET FORM ---------------- */
 function resetForm() {
     editingCourseId = null;
+
     document.getElementById('course-name').value = '';
     document.getElementById('lessons-container').innerHTML = '';
+
     addLessonRow();
+
+    document.getElementById('form-mode-title').innerText = "Create New Course";
 }
+
 
 /* ---------------- LOAD COURSES ---------------- */
 async function loadCourses() {
@@ -139,13 +135,18 @@ window.editCourse = async function(id) {
     const c = doc.data();
 
     document.getElementById('form-mode-title').innerText = "Edit Course";
-
     document.getElementById('course-name').value = c.name;
 
     const container = document.getElementById('lessons-container');
     container.innerHTML = '';
 
     (c.lessons || []).forEach(l => addLessonRow(l.title, l.videoUrl));
+
+    // ✅ ADD IT HERE (end of function)
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 };
 
 /* ---------------- DELETE COURSE ---------------- */
@@ -225,7 +226,10 @@ document.getElementById('save-course-btn').addEventListener('click', async () =>
         editingCourseId = docId;
         status.innerHTML = "✅ Saved successfully!";
         loadCourses();
-        resetForm(); // 🔥 add this
+
+        setTimeout(() => {
+            resetForm();
+        }, 500);
 
     } catch (e) {
         console.error(e);
